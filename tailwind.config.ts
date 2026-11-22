@@ -9,6 +9,13 @@ const config: Config = {
       fontFamily: {
         display: ["var(--font-display)", "Impact", "Arial Narrow", "sans-serif"],
         sans: ["var(--font-sans)", "system-ui", "Segoe UI", "Roboto", "Arial", "sans-serif"],
+        serif: ["var(--font-serif)", "Georgia", "serif"],
+      },
+      colors: {
+        porcelain: { DEFAULT: "#F6F4EE", 2: "#EFECE3" },
+        klein: { DEFAULT: "#2B36E8", deep: "#1F28B8" },
+        signal: "#E8542B",
+        ink: "#161512",
       },
     },
   },

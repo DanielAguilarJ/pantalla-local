@@ -115,6 +115,61 @@ html.tv-mode body {
   padding: var(--pad);
 }
 .idle-title { font-size: 12vmin; }
+.idle-logo { font-size: 14vmin; }
+
+/* ===================== Marca WorldBrain ===================== */
+
+.brand-logo {
+  display: inline-block;
+  white-space: nowrap;
+  line-height: 1;
+  font-family: var(--font-serif), Georgia, serif;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.brand-logo-word i { font-style: italic; }
+.brand-logo-suffix {
+  margin-left: 0.4em;
+  font-family: var(--font-sans), Arial, sans-serif;
+  font-size: 0.42em;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  vertical-align: 0.35em;
+}
+.brand-bug {
+  position: absolute;
+  z-index: 45;
+  top: 3.2vmin;
+  right: 3.5vmin;
+  padding: 0.9vmin 1.8vmin 0.8vmin;
+  border-radius: 99vmin;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 3.4vmin;
+  box-shadow: 0 0.6vmin 2vmin rgba(0, 0, 0, 0.12);
+}
+.brand-bug.brand-tl { right: auto; left: 6vmin; top: 6vmin; box-shadow: none; }
+
+.contact-pill {
+  display: inline-block;
+  padding: 1vmin 2.6vmin 1vmin 2vmin;
+  border-radius: 99vmin;
+  background: var(--accent);
+  color: var(--accent-ink);
+  white-space: nowrap;
+}
+.contact-icon { width: 1.1em; height: 1.1em; margin-right: 0.35em; vertical-align: -0.2em; }
+.contact-pill-label {
+  font-weight: 800;
+  font-size: 2.4vmin;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: 0.25em;
+}
+.contact-pill-number { margin-left: 0.6em; font-size: 4.6vmin; }
+.contact-pill .contact-icon { font-size: 4vmin; }
 .idle-sub { margin-top: 3vmin; font-size: 3.4vmin; font-weight: 600; opacity: 0.85; }
 .idle-dot {
   display: inline-block;
@@ -268,7 +323,7 @@ html.tv-mode body {
 
 @media (orientation: portrait) {
   .s-mockup { flex-direction: column; }
-  .mk-copy { width: 100%; padding-right: 0; padding-bottom: 2vmin; align-self: auto; }
+  .mk-copy { width: 100%; padding-right: 0; padding-top: 5vmin; padding-bottom: 2vmin; align-self: auto; }
   .mk-headline { font-size: 10vmin; font-size: clamp(2.5rem, 10.5vmin, 14rem); }
   .mk-device-wrap { width: 100%; height: auto; flex: 1; padding-bottom: calc(var(--q) * 0.35); }
   .mk-qr { left: auto; right: 3.5vmin; bottom: 3.5vmin; }
@@ -579,6 +634,7 @@ html.tv-mode body {
   position: absolute;
   top: var(--pad);
   left: var(--pad);
+  right: 34vmin; /* deja libre la esquina del logo */
   font-weight: 800;
   font-size: 2.6vmin;
   letter-spacing: 0.08em;
@@ -615,6 +671,21 @@ html.tv-mode body {
 @keyframes tk-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 @keyframes tk-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
 .tk-item { display: inline-block; padding-top: 0.12em; }
+/* Logo fijo a la izquierda de la cinta superior, estilo noticiero. */
+.tk-brand {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 3vmin;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 5.6vmin;
+  box-shadow: 1.5vmin 0 2vmin rgba(0, 0, 0, 0.18);
+}
 .tk-sep { display: inline-block; width: 1.4vmin; height: 1.4vmin; margin: 0 3vmin; border-radius: 50%; background: currentColor; vertical-align: middle; }
 
 .tk-main { position: relative; flex: 1; overflow: hidden; }
@@ -827,6 +898,45 @@ html.tv-mode body {
   .fl-headline { font-size: 9.6vmin; }
   .fl-course { font-size: 4.4vmin; }
   .fl-burst { width: 34vmin; height: 34vmin; }
+}
+
+/* ===================== Showreel oficial de un programa ===================== */
+
+.sr-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.sr-head { position: absolute; z-index: 5; top: 3.2vmin; left: 3.5vmin; }
+.sr-logo {
+  padding: 0.9vmin 1.8vmin 0.8vmin;
+  border-radius: 99vmin;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 3.4vmin;
+}
+.sr-panel {
+  position: absolute;
+  z-index: 5;
+  left: 3.5vmin;
+  bottom: 3.5vmin;
+  max-width: calc(100% - var(--q) - 12vmin);
+  padding: 2.4vmin 3.2vmin 2.6vmin;
+  border-radius: 2vmin;
+  background: var(--bg);
+  color: var(--ink);
+  box-shadow: 0 1vmin 3vmin rgba(0, 0, 0, 0.2);
+  animation: rise-in 0.7s cubic-bezier(0.2, 1.2, 0.3, 1) 0.8s both;
+}
+.sr-title { font-size: 7vmin; }
+.sr-meta { margin-top: 1.2vmin; font-size: 3vmin; font-weight: 700; }
+.sr-benefit { text-transform: uppercase; letter-spacing: 0.06em; }
+.sr-dot { display: inline-block; width: 1vmin; height: 1vmin; margin: 0 1.6vmin; border-radius: 50%; background: currentColor; vertical-align: middle; }
+
+@media (orientation: portrait) {
+  /* El showreel es 16:9: en vertical va al centro, con marca arriba y ficha + QR abajo. */
+  .sr-video { top: 24vh; height: 56.25vw; }
+  .sr-head { top: 8vh; left: 0; right: 0; text-align: center; }
+  .sr-logo { font-size: 6vmin; background: transparent; }
+  .sr-panel { top: calc(24vh + 56.25vw + 4vmin); bottom: auto; max-width: calc(100% - var(--q) - 11vmin); box-shadow: none; padding-left: 0; background: transparent; }
+  .sr-title { font-size: 10vmin; }
+  .sr-meta { font-size: 4vmin; }
 }
 
 /* Vista previa en /admin: sin cursor oculto */

@@ -3,7 +3,8 @@
 import { QrBadge } from "../QrCode";
 import type { CommercialPlay } from "../engine";
 import { useOrientation } from "../useOrientation";
-import { CheckIcon, CourseImage, PointerIcon, StaggerWords } from "./shared";
+import { BRAND } from "@/lib/brand";
+import { BrandBug, CheckIcon, CourseImage, PointerIcon, PriceOrContact, StaggerWords } from "./shared";
 
 /** Escena 1 · Smartphone/laptop 3D flotante con la landing real del curso y un cursor que hace clic. */
 export function SceneMockup({ play }: { play: CommercialPlay }) {
@@ -21,7 +22,7 @@ export function SceneMockup({ play }: { play: CommercialPlay }) {
             <span className="dev-dot" />
           </>
         ) : (
-          <span>Inscripción en línea</span>
+          <span>{BRAND.siteLabel}</span>
         )}
       </div>
       <div className="dev-hero">
@@ -29,7 +30,7 @@ export function SceneMockup({ play }: { play: CommercialPlay }) {
       </div>
       <div className="dev-body">
         <div className="dev-title display">{course.title}</div>
-        {course.price ? <div className="dev-price">{course.price}</div> : null}
+        <div className="dev-price">{course.price || BRAND.noPriceBadge}</div>
         <div className="dev-btn-wrap">
           <span className="dev-btn display">
             <span className="btn-a">Inscribirme</span>
@@ -55,13 +56,9 @@ export function SceneMockup({ play }: { play: CommercialPlay }) {
         <div className="mk-headline display">
           <StaggerWords text={course.hook_headline} startMs={350} stepMs={120} />
         </div>
-        {course.price ? (
-          <div className="mk-price">
-            <span className="price-pill display pop-in" style={{ animationDelay: "1400ms" }}>
-              {course.price}
-            </span>
-          </div>
-        ) : null}
+        <div className="mk-price">
+          <PriceOrContact price={course.price} delayMs={1400} />
+        </div>
       </div>
 
       <div className="mk-device-wrap">
@@ -83,6 +80,7 @@ export function SceneMockup({ play }: { play: CommercialPlay }) {
         </div>
       </div>
 
+      <BrandBug />
       <QrBadge url={course.course_url} dark={palette.qrDark} className="mk-qr" />
     </div>
   );

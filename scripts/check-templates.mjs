@@ -3,25 +3,35 @@ import { readFileSync } from "node:fs";
 
 const file = new URL("../data/benfrank-templates.json", import.meta.url);
 const data = JSON.parse(readFileSync(file, "utf8"));
+const AUDIENCES = new Set(["todos", "ninos", "jovenes", "adultos"]);
+const HEADLINE_VARS = /{{(curso|noticia|precio|beneficio)}}/;
+const SUB_VARS = /{{(curso|noticia|precio|beneficio|edad)}}/;
 const errors = [];
 
 if (data.headlines.length !== 50) errors.push(`Se esperaban 50 fórmulas y hay ${data.headlines.length}.`);
 
-const ids = new Set();
-for (const { id, text } of data.headlines) {
-  if (ids.has(id)) errors.push(`ID duplicado: ${id}`);
-  ids.add(id);
-  const words = text.trim().split(/\s+/).filter(Boolean);
-  if (words.length > 8) errors.push(`${id} tiene ${words.length} palabras: "${text}"`);
-  const unknown = (text.match(/{{\s*([a-z]+)\s*}}/g) || []).filter((p) => !/{{(curso|noticia|precio)}}/.test(p));
-  if (unknown.length) errors.push(`${id} usa placeholders desconocidos: ${unknown.join(", ")}`);
+function check(list, allowed, maxWords, label) {
+  const ids = new Set();
+  for (const { id, text, audience } of list) {
+    if (ids.has(id)) errors.push(`${label}: ID duplicado ${id}`);
+    ids.add(id);
+    if (!AUDIENCES.has(audience)) errors.push(`${label} ${id}: audience inválida "${audience}"`);
+    const words = text.trim().split(/\s+/).filter(Boolean);
+    if (maxWords && words.length > maxWords) errors.push(`${id} tiene ${words.length} palabras: "${text}"`);
+    const unknown = (text.match(/{{\s*[a-z]+\s*}}/g) || []).filter((p) => !allowed.test(p));
+    if (unknown.length) errors.push(`${id} usa placeholders desconocidos: ${unknown.join(", ")}`);
+  }
 }
-
-const withNews = data.headlines.filter((h) => h.text.includes("{{noticia}}")).length;
-const withCourse = data.headlines.filter((h) => h.text.includes("{{curso}}")).length;
+check(data.headlines, HEADLINE_VARS, 8, "headline");
+check(data.subheadlines, SUB_VARS, 0, "subheadline");
 
 if (errors.length) {
   console.error(errors.join("\n"));
   process.exit(1);
 }
-console.log(`OK: ${data.headlines.length} fórmulas (≤ 8 palabras). Con {{curso}}: ${withCourse}. Con {{noticia}}: ${withNews}.`);
+const count = (fn) => data.headlines.filter(fn).length;
+const byAudience = [...AUDIENCES].map((a) => `${a}: ${count((h) => h.audience === a)}`).join(", ");
+console.log(
+  `OK: ${data.headlines.length} fórmulas (≤ 8 palabras). Por público → ${byAudience}. ` +
+    `Con {{curso}}: ${count((h) => h.text.includes("{{curso}}"))}, con {{noticia}}: ${count((h) => h.text.includes("{{noticia}}"))}.`,
+);

@@ -1,4 +1,5 @@
 import type { Course, MakePayload, NewsItem, StoredContent, SyncReport, SyncTrigger } from "../types";
+import { enabledPrograms, enrichCourse, isDisabled, profileFor, programAsCourse } from "../catalog";
 import { generateHooks, withHooks } from "../copy";
 import { dailySeedInZone } from "../seed";
 import { getKeys, KEYS, setKey } from "../storage";
@@ -68,6 +69,7 @@ export async function runFallbackSync({ trigger, force = false }: RunOptions): P
   const seed = serverSeed(now);
   const sources = state[KEYS.sources] || [];
   const rssUrl = state[KEYS.settings]?.newsRssUrl || DEFAULT_NEWS_RSS;
+  const disabled = state[KEYS.settings]?.catalogDisabled || [];
 
   // 1) Noticias del día (si fallan, se conservan las últimas conocidas).
   let news: NewsItem[] = [];
@@ -92,18 +94,26 @@ export async function runFallbackSync({ trigger, force = false }: RunOptions): P
     if (r.course) scrapedCourses.push(r.course);
   });
 
-  // 3) Ganchos con el banco local de fórmulas (semilla = fecha del día).
-  const hooked = scrapedCourses.map((c) => ({ ...c, ...generateHooks({ seed, course: c, news }) }));
+  // 3) Ganchos con el banco local de fórmulas (semilla = fecha del día), afinados por público del programa.
+  const rehook = (c: Course): Course => {
+    const enriched = enrichCourse(c);
+    return { ...enriched, ...generateHooks({ seed, course: enriched, news, profile: profileFor(c) }) };
+  };
+  const hooked = scrapedCourses.map(rehook);
   // Los cursos de Make se conservan: con copy original si siguen frescos, con copy renovado si no.
   const makeCourses = (make?.payload.courses || []).map((c) =>
-    makeFresh ? withHooks(c, seed, news) : { ...c, ...generateHooks({ seed, course: c, news }) },
+    makeFresh ? withHooks(enrichCourse(c), seed, news, profileFor(c)) : rehook(c),
   );
-  const courses = dedupeByUrl([...hooked, ...makeCourses]).slice(0, MAX_COURSES);
+  // El catálogo oficial de WorldBrain completa la rotación: la pantalla nunca se queda sin programas.
+  const catalogCourses = enabledPrograms(disabled).map((p) => rehook(programAsCourse(p)));
+  const courses = dedupeByUrl([...hooked, ...makeCourses, ...catalogCourses])
+    .filter((c) => !isDisabled(c, disabled))
+    .slice(0, MAX_COURSES);
 
   const videos = make?.payload.instagram_videos || previous?.payload.instagram_videos || [];
 
   if (!courses.length && !videos.length) {
-    report.reason = "No hay cursos (ni URLs de respaldo válidas ni datos previos de Make.com) ni videos. Se conserva el contenido anterior.";
+    report.reason = "No hay cursos (ni URLs de respaldo válidas, ni catálogo activo, ni datos previos de Make.com) ni videos. Se conserva el contenido anterior.";
     await setKey(KEYS.lastReport, report);
     return report;
   }

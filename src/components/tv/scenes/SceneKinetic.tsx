@@ -3,7 +3,7 @@
 import type { CSSProperties } from "react";
 import { QrBadge } from "../QrCode";
 import type { CommercialPlay } from "../engine";
-import { ArrowIcon, splitWords, StaggerWords } from "./shared";
+import { ArrowIcon, BrandBug, PriceOrContact, splitWords, StaggerWords } from "./shared";
 
 const UNDERLINE_PATH = "M2 18 C 40 6, 80 26, 120 14 S 190 4, 230 16 S 280 22, 298 10";
 
@@ -58,17 +58,14 @@ export function SceneKinetic({ play }: { play: CommercialPlay }) {
           {course.title}
         </div>
         <div className="kn-b-row">
-          {course.price ? (
-            <span className="price-pill display pop-in" style={{ animationDelay: "8000ms" }}>
-              {course.price}
-            </span>
-          ) : null}
+          <PriceOrContact price={course.price} delayMs={8000} />
           <span className="cta display pop-in" style={{ animationDelay: "8300ms" }}>
             Inscribirme <ArrowIcon />
           </span>
         </div>
       </div>
 
+      <BrandBug />
       <QrBadge url={course.course_url} dark={palette.qrDark} className="qr-br" />
     </div>
   );

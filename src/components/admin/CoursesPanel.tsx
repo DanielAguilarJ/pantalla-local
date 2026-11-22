@@ -3,6 +3,7 @@
 import { useState, type ChangeEvent } from "react";
 import type { AdminState } from "@/lib/admin-state";
 import type { FallbackCourseSource } from "@/lib/types";
+import { CatalogCard } from "./CatalogCard";
 import { api, Button, Card, Field, Notice } from "./ui";
 
 interface Draft {
@@ -83,10 +84,13 @@ export function CoursesPanel({ state, refresh }: { state: AdminState; refresh: (
 
   return (
     <div className="space-y-4">
-      <Card title="Agregar URL de curso de respaldo">
+      <CatalogCard disabled={state.settings.catalogDisabled || []} refresh={refresh} />
+
+      <Card title="Agregar URL extra de respaldo">
         <p className="mb-3 text-sm text-stone-600">
-          Se usan cuando Make.com lleva más de {state.status.staleHours} h sin enviar datos (o al forzar la sincronización). El
-          servidor lee título, imagen y precio de la página y redacta el gancho con el banco local de fórmulas.
+          Para cursos o promociones que no están en el catálogo. Se usan cuando Make.com lleva más de {state.status.staleHours} h
+          sin enviar datos (o al forzar la sincronización): el servidor lee título, imagen y precio de la página y redacta el
+          gancho con el banco local de fórmulas.
         </p>
         <SourceForm
           initial={EMPTY}
@@ -97,7 +101,7 @@ export function CoursesPanel({ state, refresh }: { state: AdminState; refresh: (
 
       {error ? <Notice tone="error">{error}</Notice> : null}
 
-      <Card title={`URLs de respaldo (${state.sources.length})`}>
+      <Card title={`URLs extra de respaldo (${state.sources.length})`}>
         {state.sources.length === 0 ? (
           <p className="text-sm text-stone-500">Sin URLs todavía.</p>
         ) : (

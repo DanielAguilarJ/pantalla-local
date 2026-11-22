@@ -1,14 +1,33 @@
-# Pantalla Local · Señalización digital para LG webOS
+# Pantalla WorldBrain México · Señalización digital para LG webOS
 
-Next.js 15 (App Router) + TypeScript + Tailwind CSS 3. Tres piezas:
+Pantalla de escaparate de [WorldBrain México](https://ultravelozmente.com/), en producción en
+`https://pantalla-local.vercel.app/tv`. Next.js 15 (App Router) + TypeScript + Tailwind CSS 3.
 
 | Ruta | Qué hace |
 | --- | --- |
-| `/tv` | Reproductor 24/7 para el navegador de la LG (reels, comerciales animados y anuncios manuales). |
-| `/admin` | Panel móvil con contraseña: subir anuncios, URLs de cursos de respaldo, forzar sincronización y vista previa 9:16 / 16:9. |
-| `POST /api/webhook/make` | Recibe el JSON diario de Make.com (`Authorization: Bearer $SYNC_SECRET`). |
+| `/tv` | Reproductor 24/7 para el navegador de la LG (reels, showreels, comerciales animados y anuncios manuales). |
+| `/admin` | Panel móvil con contraseña: anuncios, programas del catálogo, URLs extra, sincronización, conexión con Make.com y vista previa 9:16 / 16:9. |
+| `POST /api/webhook/make` | Recibe el JSON diario de Make.com (`Authorization: Bearer $SYNC_SECRET`). Guía: [docs/make-com.md](docs/make-com.md). |
+| `GET /api/catalog` | Programas activos de WorldBrain en el formato del contrato, para que Make.com no tenga que hacer scraping. |
 | `GET /api/cron/fallback-sync` | Motor de respaldo sin IA (Vercel Cron). Solo actúa si Make.com lleva > 26 h sin enviar datos. |
 | `GET /api/playlist` | JSON que consume la TV cada 15 min. |
+
+## WorldBrain en la pantalla
+
+- **Catálogo oficial** (`data/worldbrain-catalog.json`): los 17 programas de ultravelozmente.com con descripción, imagen,
+  edades, público y palabra clave de beneficio. La TV lo muestra desde el primer minuto (aunque Make.com no haya enviado
+  nada) y el motor de respaldo lo usa siempre. Se apagan/encienden programas en `/admin → Cursos`.
+- **Showreels**: los 14 programas con video en el sitio aportan su showreel (30 s, con logo, ficha y QR) cuando Instagram
+  trae menos de 3 reels.
+- **Copy por público** (`data/benfrank-templates.json`): 50 fórmulas de ≤ 8 palabras etiquetadas para niños (le hablan a
+  mamás y papás), jóvenes, adultos o todos. Solo usan datos reales del sitio (grupos de máx. 7, desde 2000, sede en
+  Cuautitlán Izcalli); nunca inventan precios ni promesas.
+- **Marca**: tipografías Geist + Instrument Serif, logotipo de texto World*Brain*, paleta Porcelana + Azul Klein entre
+  las 6 paletas anti-reflejo, y el WhatsApp de informes (55 7810 7837) donde un curso no tiene precio publicado.
+- **Proxy `/wb-media/*`**: ultravelozmente.com envía `Cross-Origin-Resource-Policy: same-origin`, así que el navegador
+  bloquea sus imágenes y videos dentro de otro dominio. `next.config.ts` reescribe `/wb-media/*` hacia
+  `https://ultravelozmente.com/images/*` para que lleguen como mismo origen. Si cambia la ruta de las imágenes del
+  sitio, hay que actualizar el catálogo.
 
 ## Por qué Next 15 y Tailwind 3 (y no Next 16 / Tailwind 4)
 
@@ -37,7 +56,7 @@ npm run check:templates
 npm run build && npm run check:tv
 ```
 
-`/tv?demo=1` usa contenido de demostración. `/tv?preview=1&demo=1&scene=mockup` (o `kinetic`, `ticker`, `split`, `flash`)
+`/tv?demo=1` usa el catálogo con noticias y un anuncio manual de ejemplo. `/tv?preview=1&demo=1&scene=mockup` (o `kinetic`, `ticker`, `split`, `flash`)
 muestra solo una escena; `scene` se ignora fuera de `preview=1`.
 
 ## Despliegue en Vercel
@@ -51,7 +70,7 @@ muestra solo una escena; `scene` se ignora fuera de `preview=1`.
 
 ## Contrato con Make.com
 
-`POST https://TU-DOMINIO/api/webhook/make` con `Authorization: Bearer <SYNC_SECRET>` y este JSON:
+`POST https://pantalla-local.vercel.app/api/webhook/make` con `Authorization: Bearer <SYNC_SECRET>` y este JSON:
 
 ```json
 {
@@ -80,7 +99,7 @@ Si `hook_headline`/`hook_subheadline` llegan vacíos, se completan con `data/ben
 
 ## Configurar la LG
 
-Abre `https://TU-DOMINIO/tv` en el navegador de webOS, ponlo en pantalla completa y desactiva el ahorro de energía /
+Abre `https://pantalla-local.vercel.app/tv` en el navegador de webOS, ponlo en pantalla completa y desactiva el ahorro de energía /
 apagado automático. Si la TV no gira el contenido del navegador al montarla en vertical, revisa la opción de rotación de
 pantalla del modelo: el layout responde a la orientación que reporte el navegador.
 

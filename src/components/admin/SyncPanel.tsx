@@ -1,16 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { AdminState, ContentSummary } from "@/lib/admin-state";
 import type { SyncReport } from "@/lib/types";
+import { MakeCard } from "./MakeCard";
 import { api, Button, Card, Notice, timeAgo } from "./ui";
 
 function Summary({ label, data, active }: { label: string; data: ContentSummary | null; active: boolean }) {
   return (
-    <div className={`rounded-xl border p-3 ${active ? "border-[#0033FF] bg-blue-50" : "border-stone-200"}`}>
+    <div className={`rounded-xl border p-3 ${active ? "border-[#2B36E8] bg-blue-50" : "border-stone-200"}`}>
       <div className="flex items-center justify-between">
         <p className="text-sm font-bold text-stone-900">{label}</p>
-        {active ? <span className="rounded-full bg-[#0033FF] px-2 py-0.5 text-xs font-semibold text-white">En pantalla</span> : null}
+        {active ? <span className="rounded-full bg-[#2B36E8] px-2 py-0.5 text-xs font-semibold text-white">En pantalla</span> : null}
       </div>
       {data ? (
         <>
@@ -56,10 +57,7 @@ function ReportView({ report }: { report: SyncReport }) {
 export function SyncPanel({ state, refresh }: { state: AdminState; refresh: () => Promise<void> }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [origin, setOrigin] = useState("");
   const { status } = state;
-
-  useEffect(() => setOrigin(window.location.origin), []);
 
   const force = async () => {
     setBusy(true);
@@ -80,6 +78,9 @@ export function SyncPanel({ state, refresh }: { state: AdminState; refresh: () =
         <div className="space-y-2">
           <Summary label="Make.com" data={status.make} active={status.active === "make"} />
           <Summary label="Motor de respaldo (sin IA)" data={status.fallback} active={status.active === "fallback"} />
+          {status.active === null ? (
+            <Notice tone="info">En pantalla: catálogo oficial de WorldBrain con copys automáticos y showreels del sitio.</Notice>
+          ) : null}
         </div>
         <p className="mt-3 text-xs text-stone-500">
           Si Make.com pasa más de {status.staleHours} h sin enviar datos, el cron diario y las propias pantallas activan el respaldo
@@ -104,12 +105,7 @@ export function SyncPanel({ state, refresh }: { state: AdminState; refresh: () =
         ) : null}
       </Card>
 
-      <Card title="Datos para Make.com">
-        <p className="text-sm text-stone-600">Webhook (POST, JSON):</p>
-        <code className="mt-1 block break-all rounded-lg bg-stone-100 p-2 text-xs">{origin}/api/webhook/make</code>
-        <p className="mt-2 text-sm text-stone-600">Header:</p>
-        <code className="mt-1 block break-all rounded-lg bg-stone-100 p-2 text-xs">Authorization: Bearer &lt;SYNC_SECRET&gt;</code>
-      </Card>
+      <MakeCard syncSecretConfigured={status.syncSecretConfigured} lastMakeAt={status.make?.receivedAt || null} />
 
       <Card title="Sistema">
         <ul className="space-y-1 text-sm text-stone-700">

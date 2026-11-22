@@ -149,7 +149,7 @@ export function AdsPanel({ state, refresh }: { state: AdminState; refresh: () =>
             ) : null}
             {progress !== null ? (
               <div className="h-2 w-full overflow-hidden rounded-full bg-stone-200">
-                <div className="h-full bg-[#0033FF] transition-all" style={{ width: `${Math.round(progress)}%` }} />
+                <div className="h-full bg-[#2B36E8] transition-all" style={{ width: `${Math.round(progress)}%` }} />
               </div>
             ) : null}
             {error ? <Notice tone="error">{error}</Notice> : null}

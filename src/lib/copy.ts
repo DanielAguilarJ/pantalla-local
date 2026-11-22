@@ -2,9 +2,19 @@ import templates from "@data/benfrank-templates.json";
 import type { Course, NewsItem } from "./types";
 import { pick, rngFrom, shuffle, type Rng } from "./seed";
 
+export type CopyAudience = "ninos" | "jovenes" | "adultos";
+
 interface Template {
   id: string;
+  audience: string; // "todos" | CopyAudience
   text: string;
+}
+
+/** Datos del programa que afinan el copy (vienen del catálogo de WorldBrain cuando el curso está ahí). */
+export interface CopyProfile {
+  audience: CopyAudience[];
+  benefit: string;
+  ages: string;
 }
 
 const HEADLINES: Template[] = templates.headlines;
@@ -49,7 +59,8 @@ export function newsTopic(headline: string): string | null {
   // Nombres propios (mayúscula inicial, no la primera palabra salvo siglas).
   for (let i = 0; i < w.length; i++) {
     const token = w[i].replace(/[.,:;!?¡¿]+$/g, "");
-    const isAcronym = /^[A-ZÁÉÍÓÚÑ0-9]{2,}$/.test(token);
+    // Siglas cortas (UNAM, IPN, SEP, IA); una palabra larga en mayúsculas suele ser énfasis, no un nombre.
+    const isAcronym = /^[A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ0-9]{1,4}$/.test(token);
     const isProper = /^[A-ZÁÉÍÓÚÑ][a-záéíóúñü]{2,}$/.test(token) && i > 0;
     if ((isAcronym || isProper) && !STOPWORDS.has(token.toLowerCase())) {
       const nextTok = (w[i + 1] || "").replace(/[.,:;!?¡¿]+$/g, "");
@@ -67,22 +78,40 @@ interface Vars {
   curso: string;
   noticia: string | null;
   precio: string;
+  beneficio: string;
+  edad: string;
 }
 
 function fill(text: string, vars: Vars): string | null {
-  if (text.includes("{{noticia}}") && !vars.noticia) return null;
-  if (text.includes("{{precio}}") && !vars.precio) return null;
-  if (text.includes("{{curso}}") && !vars.curso) return null;
-  const out = text
-    .replace(/{{curso}}/g, vars.curso)
-    .replace(/{{noticia}}/g, vars.noticia || "")
-    .replace(/{{precio}}/g, vars.precio);
+  const values: Record<string, string> = {
+    curso: vars.curso,
+    noticia: vars.noticia || "",
+    precio: vars.precio,
+    beneficio: vars.beneficio,
+    // "Todas las edades" -> "Para todas las edades."
+    edad: vars.edad && !/^\d/.test(vars.edad) ? vars.edad.charAt(0).toLowerCase() + vars.edad.slice(1) : vars.edad,
+  };
+  let missing = false;
+  const out = text.replace(/{{(\w+)}}/g, (_, key: string) => {
+    const v = values[key];
+    if (!v) missing = true;
+    return v || "";
+  });
+  if (missing) return null;
   // Mayúscula inicial tras sustituir (p. ej. "{{noticia}} va y viene").
   return out.charAt(0).toUpperCase() + out.slice(1);
 }
 
-function fromBank(rng: Rng, bank: Template[], vars: Vars, maxWords: number): string {
-  for (const tpl of shuffle(rng, bank)) {
+/**
+ * Elige una fórmula del banco. Si se conoce el público del programa, ~65% de las veces prueba primero
+ * las fórmulas de ese público (p. ej. "Tu hijo…" para MatheKids) y después las generales.
+ * Si no se conoce, solo usa las generales ("todos"), para no hablarle de "tu hijo" a un curso ejecutivo.
+ */
+function fromBank(rng: Rng, bank: Template[], vars: Vars, maxWords: number, audience: CopyAudience[]): string {
+  const general = shuffle(rng, bank.filter((t) => t.audience === "todos"));
+  const specific = shuffle(rng, bank.filter((t) => (audience as string[]).includes(t.audience)));
+  const ordered = rng() < 0.65 ? specific.concat(general) : general.concat(specific);
+  for (const tpl of ordered) {
     const text = fill(tpl.text, vars);
     if (text && words(text).length <= maxWords) return text;
   }
@@ -117,27 +146,31 @@ export interface HookInput {
   seed: string;
   course: Pick<Course, "id" | "title" | "description" | "price">;
   news: NewsItem[];
+  profile?: CopyProfile;
 }
 
 /** Genera hook_headline + hook_subheadline deterministas para (día, curso). */
-export function generateHooks({ seed, course, news }: HookInput): { hook_headline: string; hook_subheadline: string } {
+export function generateHooks({ seed, course, news, profile }: HookInput): { hook_headline: string; hook_subheadline: string } {
   const rng = rngFrom("hooks", seed, course.id);
   const related = relatedNews(rng, course, news);
   const vars: Vars = {
     curso: shortCourseName(course.title),
     noticia: related ? newsTopic(related.headline) : null,
     precio: course.price.trim(),
+    beneficio: profile?.benefit || "",
+    edad: profile?.ages || "",
   };
+  const audience = profile?.audience || [];
   return {
-    hook_headline: fromBank(rng, HEADLINES, vars, 10),
-    hook_subheadline: fromBank(rng, SUBHEADLINES, vars, 16),
+    hook_headline: fromBank(rng, HEADLINES, vars, 10, audience),
+    hook_subheadline: fromBank(rng, SUBHEADLINES, vars, 16, audience),
   };
 }
 
 /** Rellena ganchos vacíos sin tocar los que ya vienen (p. ej. redactados por Make.com). */
-export function withHooks(course: Course, seed: string, news: NewsItem[]): Course {
+export function withHooks(course: Course, seed: string, news: NewsItem[], profile?: CopyProfile): Course {
   if (course.hook_headline.trim() && course.hook_subheadline.trim()) return course;
-  const hooks = generateHooks({ seed, course, news });
+  const hooks = generateHooks({ seed, course, news, profile });
   return {
     ...course,
     hook_headline: course.hook_headline.trim() || hooks.hook_headline,
