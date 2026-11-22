@@ -1,0 +1,93 @@
+# Pantalla Local · Señalización digital para LG webOS
+
+Next.js 15 (App Router) + TypeScript + Tailwind CSS 3. Tres piezas:
+
+| Ruta | Qué hace |
+| --- | --- |
+| `/tv` | Reproductor 24/7 para el navegador de la LG (reels, comerciales animados y anuncios manuales). |
+| `/admin` | Panel móvil con contraseña: subir anuncios, URLs de cursos de respaldo, forzar sincronización y vista previa 9:16 / 16:9. |
+| `POST /api/webhook/make` | Recibe el JSON diario de Make.com (`Authorization: Bearer $SYNC_SECRET`). |
+| `GET /api/cron/fallback-sync` | Motor de respaldo sin IA (Vercel Cron). Solo actúa si Make.com lleva > 26 h sin enviar datos. |
+| `GET /api/playlist` | JSON que consume la TV cada 15 min. |
+
+## Por qué Next 15 y Tailwind 3 (y no Next 16 / Tailwind 4)
+
+Next 16 y Tailwind 4 exigen Chrome 111+. Las LG con webOS 6–24 traen Chromium 79–108.
+Este proyecto apunta a **webOS 6.0 o superior (Chromium 79+)**. `npm run check:tv` (después de `npm run build`)
+verifica que el JS de `/tv` sea ES2019 y que su CSS no use propiedades que Chromium 79 no entiende.
+
+## Variables de entorno
+
+Copia `.env.example` a `.env.local`. Mínimo:
+
+- `SYNC_SECRET`: token que enviará Make.com.
+- `ADMIN_PASSWORD`: contraseña de `/admin`.
+- `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` (o `KV_REST_API_URL` + `KV_REST_API_TOKEN`): almacenamiento persistente.
+  Sin ellas se usa `/tmp/signage-state.json`, que **solo sirve en local**.
+- `BLOB_READ_WRITE_TOKEN`: Vercel Blob para subir imágenes/videos desde el celular. El Blob Store debe ser **público**.
+- Opcional: `CRON_SECRET` (Vercel lo manda al cron), `SIGNAGE_TZ` (zona horaria de la semilla del servidor, por defecto `America/Mexico_City`).
+
+## Desarrollo
+
+```bash
+npm install
+npm run dev          # http://localhost:3000/tv?demo=1  y  http://localhost:3000/admin
+npm run typecheck
+npm run check:templates
+npm run build && npm run check:tv
+```
+
+`/tv?demo=1` usa contenido de demostración. `/tv?preview=1&demo=1&scene=mockup` (o `kinetic`, `ticker`, `split`, `flash`)
+muestra solo una escena; `scene` se ignora fuera de `preview=1`.
+
+## Despliegue en Vercel
+
+1. Importa el repositorio en Vercel.
+2. Storage → conecta **Upstash Redis** (Marketplace) y un **Blob Store público**. Vercel crea las variables solas.
+3. Agrega `SYNC_SECRET` y `ADMIN_PASSWORD` (y opcionalmente `CRON_SECRET`) y vuelve a desplegar.
+4. `vercel.json` programa el cron una vez al día (`0 11 * * *` UTC ≈ 5:00 en CDMX), que es lo que permite el plan Hobby.
+   Además, si el contenido activo tiene más de 26 h, la propia consulta de la TV a `/api/playlist` dispara el respaldo
+   en segundo plano (máximo un intento cada 30 min), así que no depende solo del cron.
+
+## Contrato con Make.com
+
+`POST https://TU-DOMINIO/api/webhook/make` con `Authorization: Bearer <SYNC_SECRET>` y este JSON:
+
+```json
+{
+  "generated_at": "ISO-8601",
+  "instagram_videos": [{ "id": "string", "mp4_url": "string" }],
+  "courses": [{ "id": "", "title": "", "description": "", "image_url": "", "course_url": "",
+                "price": "", "hook_headline": "", "hook_subheadline": "" }],
+  "daily_news": [{ "headline": "string", "source": "string" }]
+}
+```
+
+Respuestas: `200` (guardado; incluye `dropped` si se descartó algún elemento inválido), `401`, `400` (JSON roto),
+`413` (> 1 MB), `422` (estructura inválida; se conserva el contenido anterior). Las claves extra se eliminan.
+Si `hook_headline`/`hook_subheadline` llegan vacíos, se completan con `data/benfrank-templates.json`.
+
+## Cómo funciona `/tv`
+
+- **Cola**: ~40% reels, ~35% comerciales, ~25% anuncios manuales; nunca dos del mismo tipo seguidos y ningún ítem se repite
+  hasta agotar los de su tipo (`src/lib/queue.ts`).
+- **Comerciales de 12 s** (`src/components/tv/scenes`): 5 escenas en CSS/SVG/Canvas. Paleta, orden de escenas, patrón
+  generativo y dispositivo se derivan de la fecha local de la TV (`YYYY-MM-DD`), así que cambian solos cada día.
+  Cada comercial lleva un QR SVG generado al vuelo con `course_url`.
+- **Anti-congelamiento**: `pause()` + `removeAttribute('src')` + `load()` antes de desmontar cada `<video>`, watchdog si el
+  video se atasca 15 s, Wake Lock + `<video>` 1×1 en bucle, sincronización cada 15 min sin cortar el anuncio, y recarga
+  limpia cada 6 h durante una transición **solo si el servidor respondió hace menos de 90 s**.
+
+## Configurar la LG
+
+Abre `https://TU-DOMINIO/tv` en el navegador de webOS, ponlo en pantalla completa y desactiva el ahorro de energía /
+apagado automático. Si la TV no gira el contenido del navegador al montarla en vertical, revisa la opción de rotación de
+pantalla del modelo: el layout responde a la orientación que reporte el navegador.
+
+## Avisos
+
+- El feed de Google Noticias indica en su `<copyright>` que es para uso personal y no comercial. Para un escaparate
+  comercial conviene usar un RSS cuya licencia lo permita (se cambia en `/admin` → Cursos → Feed de noticias).
+- Las URLs `.mp4` de Instagram son enlaces firmados del CDN que caducan (parámetro `oe=`). Si Make.com deja de enviar
+  datos, los reels viejos acabarán fallando y el reproductor los saltará al instante (`onError`), mientras los
+  comerciales siguen renovándose.

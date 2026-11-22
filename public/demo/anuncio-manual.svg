@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920">
+  <rect width="1080" height="1920" fill="#FAF7F0"/>
+  <rect x="60" y="60" width="960" height="1800" fill="none" stroke="#0033FF" stroke-width="24"/>
+  <text x="540" y="760" fill="#0033FF" font-family="Arial Black, Arial, sans-serif" font-size="150" font-weight="900" text-anchor="middle">ANUNCIO</text>
+  <text x="540" y="930" fill="#0033FF" font-family="Arial Black, Arial, sans-serif" font-size="150" font-weight="900" text-anchor="middle">MANUAL</text>
+  <text x="540" y="1120" fill="#FF5A1F" font-family="Arial, sans-serif" font-size="64" font-weight="700" text-anchor="middle">Subido desde /admin</text>
+</svg>

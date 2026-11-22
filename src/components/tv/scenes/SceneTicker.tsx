@@ -1,0 +1,86 @@
+"use client";
+
+import { Fragment, type CSSProperties } from "react";
+import type { NewsItem } from "@/lib/types";
+import { QrBadge } from "../QrCode";
+import type { CommercialPlay } from "../engine";
+import { CourseImage } from "./shared";
+
+/** Repite los titulares hasta tener suficiente texto para un bucle continuo sin huecos. */
+function tickerItems(news: NewsItem[], fallback: string): string[] {
+  const base = news.length ? news.map((n) => n.headline) : [fallback];
+  const out: string[] = [];
+  let chars = 0;
+  while (chars < 220 || out.length < 3) {
+    for (const h of base) {
+      out.push(h);
+      chars += h.length;
+    }
+  }
+  return out;
+}
+
+function Track({ items, reverse, seconds }: { items: string[]; reverse?: boolean; seconds: number }) {
+  // Contenido duplicado: animar de 0 a -50% da un bucle infinito perfecto.
+  const doubled = items.concat(items);
+  return (
+    <div className={`tk-track${reverse ? " rev" : ""}`} style={{ animationDuration: `${seconds}s` }}>
+      {doubled.map((h, i) => (
+        <Fragment key={i}>
+          <span className="tk-item">{h}</span>
+          <span className="tk-sep" />
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
+/** Escena 3 · Cintas de noticias arriba y abajo; al centro, la noticia del día y luego el curso relacionado. */
+export function SceneTicker({ play }: { play: CommercialPlay }) {
+  const { course, palette, featuredNews } = play;
+  const items = tickerItems(play.news, course.hook_headline);
+  const seconds = Math.max(25, Math.round(items.join(" ").length / 9));
+  const courseAt = featuredNews ? "4300ms" : "400ms";
+
+  return (
+    <div className="slide s-ticker" style={{ "--t-course": courseAt } as CSSProperties}>
+      <div className="tk-band tk-top display">
+        <Track items={items} seconds={seconds} />
+      </div>
+
+      <div className="tk-main">
+        {featuredNews ? (
+          <div className="fill tk-intro">
+            <div className="tk-intro-label">{play.tickerIntro}</div>
+            <div className="tk-intro-news display">«{featuredNews.headline}»</div>
+            {featuredNews.source ? <div className="tk-intro-src">{featuredNews.source}</div> : null}
+          </div>
+        ) : null}
+
+        <div className="fill tk-course">
+          <div className="tk-img-wrap">
+            <div className="tk-img">
+              <CourseImage src={course.image_url} title={course.title} />
+            </div>
+          </div>
+          <div className="tk-text">
+            <div className="tk-hook">{course.hook_headline}</div>
+            <div className="tk-title display">{course.title}</div>
+            {course.hook_subheadline ? <div className="tk-benefit">{course.hook_subheadline}</div> : null}
+            {course.price ? (
+              <div className="tk-price">
+                <span className="price-pill display">{course.price}</span>
+              </div>
+            ) : null}
+          </div>
+        </div>
+
+        <QrBadge url={course.course_url} dark={palette.qrDark} className="tk-qr" />
+      </div>
+
+      <div className="tk-band tk-bottom display">
+        <Track items={items.slice().reverse()} reverse seconds={Math.round(seconds * 1.15)} />
+      </div>
+    </div>
+  );
+}

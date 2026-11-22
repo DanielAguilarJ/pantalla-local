@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <rect width="800" height="500" fill="#1D6F42"/>
+  <g fill="#FFFFFF" opacity="0.16">
+    <rect x="40" y="60" width="720" height="2"/><rect x="40" y="140" width="720" height="2"/>
+    <rect x="40" y="220" width="720" height="2"/><rect x="40" y="300" width="720" height="2"/>
+    <rect x="40" y="380" width="720" height="2"/><rect x="200" y="60" width="2" height="320"/>
+    <rect x="400" y="60" width="2" height="320"/><rect x="600" y="60" width="2" height="320"/>
+  </g>
+  <g fill="#B8F2E6">
+    <rect x="90" y="300" width="70" height="80" rx="6"/><rect x="250" y="240" width="70" height="140" rx="6"/>
+    <rect x="450" y="180" width="70" height="200" rx="6"/><rect x="650" y="110" width="70" height="270" rx="6"/>
+  </g>
+  <text x="400" y="460" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="54" font-weight="700" text-anchor="middle">EXCEL · NEGOCIOS</text>
+</svg>
