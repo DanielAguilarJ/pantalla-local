@@ -5,7 +5,7 @@ import { shortCourseName } from "@/lib/copy";
 import { GenerativeCanvas } from "../GenerativeCanvas";
 import { QrBadge } from "../QrCode";
 import type { CommercialPlay } from "../engine";
-import { ArrowIcon, CourseImage, StaggerWords } from "./shared";
+import { ArrowIcon, BrandBug, CourseImage, PriceOrContact, StaggerWords } from "./shared";
 
 /** Escena 4 · Mitad patrón generativo (Canvas + SVG), mitad oferta del curso. */
 export function SceneSplit({ play }: { play: CommercialPlay }) {
@@ -53,17 +53,14 @@ export function SceneSplit({ play }: { play: CommercialPlay }) {
           </div>
         ) : null}
         <div className="sp-row">
-          {course.price ? (
-            <span className="price-pill display pop-in" style={{ animationDelay: "2800ms" }}>
-              {course.price}
-            </span>
-          ) : null}
+          <PriceOrContact price={course.price} delayMs={2800} />
           <span className="cta display pop-in" style={{ animationDelay: "3100ms" }}>
             Inscribirme <ArrowIcon />
           </span>
         </div>
       </div>
 
+      <BrandBug />
       <QrBadge url={course.course_url} dark={palette.qrDark} className="qr-br" />
     </div>
   );

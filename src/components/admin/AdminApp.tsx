@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import type { AdminState } from "@/lib/admin-state";
+import { BrandLogo } from "@/components/BrandLogo";
 import { AdsPanel } from "./AdsPanel";
 import { CoursesPanel } from "./CoursesPanel";
 import { PreviewPanel } from "./PreviewPanel";
@@ -38,10 +39,13 @@ export function AdminApp({ initial }: { initial: AdminState }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F0] pb-10">
-      <header className="sticky top-0 z-10 border-b border-stone-200 bg-[#FAF7F0]/95 backdrop-blur">
+    <div className="min-h-screen bg-[#F6F4EE] pb-10">
+      <header className="sticky top-0 z-10 border-b border-stone-200 bg-[#F6F4EE]/95 backdrop-blur">
         <div className="mx-auto flex max-w-xl items-center justify-between px-4 pt-3">
-          <h1 className="font-display text-2xl uppercase text-[#0033FF]">Pantalla Local</h1>
+          <h1 className="text-3xl text-[#161512]">
+            <BrandLogo />
+            <span className="ml-2 align-middle font-sans text-xs font-semibold uppercase tracking-widest text-[#2B36E8]">Pantalla</span>
+          </h1>
           <Button variant="ghost" onClick={logout}>
             Salir
           </Button>

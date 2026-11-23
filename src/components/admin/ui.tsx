@@ -49,7 +49,7 @@ export function Card({ title, children, actions }: { title?: string; children: R
 
 type Variant = "primary" | "secondary" | "danger" | "ghost";
 const VARIANTS: Record<Variant, string> = {
-  primary: "bg-[#0033FF] text-white active:bg-[#0029cc] disabled:bg-stone-300",
+  primary: "bg-[#2B36E8] text-white active:bg-[#1F28B8] disabled:bg-stone-300",
   secondary: "bg-stone-100 text-stone-900 active:bg-stone-200 disabled:text-stone-400",
   danger: "bg-red-50 text-red-700 active:bg-red-100",
   ghost: "bg-transparent text-stone-700 active:bg-stone-100",
@@ -74,7 +74,7 @@ export function Field({ label, hint, ...props }: InputHTMLAttributes<HTMLInputEl
       <span className="mb-1 block text-sm font-medium text-stone-700">{label}</span>
       <input
         {...props}
-        className="block min-h-11 w-full rounded-xl border border-stone-300 bg-white px-3 text-base text-stone-900 outline-none focus:border-[#0033FF] focus:ring-2 focus:ring-[#0033FF]/20"
+        className="block min-h-11 w-full rounded-xl border border-stone-300 bg-white px-3 text-base text-stone-900 outline-none focus:border-[#2B36E8] focus:ring-2 focus:ring-[#2B36E8]/20"
       />
       {hint ? <span className="mt-1 block text-xs text-stone-500">{hint}</span> : null}
     </label>

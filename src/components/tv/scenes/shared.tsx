@@ -1,6 +1,8 @@
 "use client";
 
 import { Fragment, useState, type CSSProperties } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
+import { BRAND } from "@/lib/brand";
 import { shortCourseName } from "@/lib/copy";
 
 export function splitWords(text: string): string[] {
@@ -45,6 +47,50 @@ export function CourseImage({ src, title, style }: { src: string; title: string;
   }
   // eslint-disable-next-line @next/next/no-img-element
   return <img src={src} alt="" decoding="async" style={style} onError={() => setFailed(true)} />;
+}
+
+/** Logo de WorldBrain sobre una ficha del color de fondo (legible encima de cualquier escena). */
+export function BrandBug({ className = "" }: { className?: string }) {
+  return (
+    <div className={`brand-bug fade-in ${className}`} style={{ animationDelay: "300ms" }}>
+      <BrandLogo />
+    </div>
+  );
+}
+
+/** Precio si el curso lo trae; si no (el sitio de WorldBrain no publica precios), el WhatsApp de informes. */
+export function PriceOrContact({ price, delayMs }: { price: string; delayMs: number }) {
+  if (price) {
+    return (
+      <span className="price-pill display pop-in" style={{ animationDelay: `${delayMs}ms` }}>
+        {price}
+      </span>
+    );
+  }
+  return (
+    <span className="contact-pill pop-in" style={{ animationDelay: `${delayMs}ms` }}>
+      <ChatIcon />
+      <span className="contact-pill-label">Informes</span>
+      <span className="contact-pill-number display">{BRAND.whatsappDisplay}</span>
+    </span>
+  );
+}
+
+function ChatIcon() {
+  return (
+    <svg className="icon contact-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinejoin="round"
+      />
+      <circle cx="8.5" cy="12" r="1.3" fill="currentColor" />
+      <circle cx="12" cy="12" r="1.3" fill="currentColor" />
+      <circle cx="15.5" cy="12" r="1.3" fill="currentColor" />
+    </svg>
+  );
 }
 
 // Íconos en SVG: las fuentes de la TV no siempre traen glifos como → o ✓ (se verían como cuadritos).

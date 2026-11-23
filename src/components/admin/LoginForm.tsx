@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
 import { api, Button, Field, Notice } from "./ui";
 
 export function LoginForm({ configured }: { configured: boolean }) {
@@ -22,11 +23,13 @@ export function LoginForm({ configured }: { configured: boolean }) {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#FAF7F0] p-4">
+    <main className="flex min-h-screen items-center justify-center bg-[#F6F4EE] p-4">
       <form onSubmit={submit} className="w-full max-w-sm space-y-4 rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
         <div>
-          <h1 className="font-display text-3xl uppercase text-[#0033FF]">Pantalla Local</h1>
-          <p className="text-sm text-stone-600">Panel de administración</p>
+          <h1 className="text-4xl text-[#161512]">
+            <BrandLogo />
+          </h1>
+          <p className="mt-1 text-sm text-stone-600">Pantalla del local · Panel de administración</p>
         </div>
         {!configured ? (
           <Notice tone="error">Falta la variable de entorno ADMIN_PASSWORD en el servidor.</Notice>

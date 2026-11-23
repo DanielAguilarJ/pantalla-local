@@ -2,7 +2,8 @@
 
 import { QrBadge } from "../QrCode";
 import type { CommercialPlay } from "../engine";
-import { ArrowIcon, StaggerWords } from "./shared";
+import { BRAND } from "@/lib/brand";
+import { ArrowIcon, BrandBug, StaggerWords } from "./shared";
 
 function burstPoints(spikes: number, outer: number, inner: number): string {
   const pts: string[] = [];
@@ -53,11 +54,12 @@ export function SceneFlash({ play }: { play: CommercialPlay }) {
             <polygon points={BURST} />
           </svg>
           <div className="fl-burst-text display">
-            <span className="fl-burst-inner">{course.price || "¡Ya!"}</span>
+            <span className="fl-burst-inner">{course.price || BRAND.noPriceBadge}</span>
           </div>
         </div>
       </div>
 
+      <BrandBug className="brand-tl" />
       <QrBadge url={course.course_url} dark={palette.qrDark} className="fl-qr" />
     </div>
   );

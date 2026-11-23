@@ -1,44 +1,10 @@
 {
-  "instagram_videos": [
-    { "id": "demo-reel-1", "mp4_url": "/demo/demo-reel.mp4" }
-  ],
-  "courses": [
-    {
-      "id": "demo-excel",
-      "title": "Curso de Excel para Negocios",
-      "description": "Tablas dinámicas, fórmulas y tableros para decidir con datos en tu negocio.",
-      "image_url": "/demo/curso-excel.svg",
-      "course_url": "https://example.com/cursos/excel-negocios",
-      "price": "$899 MXN",
-      "hook_headline": "Tu jefe no sabe Excel. Tú sí.",
-      "hook_subheadline": "Tablas dinámicas y tableros en 4 semanas, sin rollo."
-    },
-    {
-      "id": "demo-marketing",
-      "title": "Marketing Digital desde Cero",
-      "description": "Aprende a vender en redes sociales con contenido, anuncios y métricas que sí importan.",
-      "image_url": "/demo/curso-marketing.svg",
-      "course_url": "https://example.com/cursos/marketing-digital",
-      "price": "$1,290 MXN",
-      "hook_headline": "",
-      "hook_subheadline": ""
-    },
-    {
-      "id": "demo-ia",
-      "title": "Taller de Inteligencia Artificial para Emprendedores",
-      "description": "Automatiza tareas y crea contenido con herramientas de IA aplicadas a tu negocio.",
-      "image_url": "/demo/curso-ia.svg",
-      "course_url": "https://example.com/cursos/ia-emprendedores",
-      "price": "$1,490 MXN",
-      "hook_headline": "",
-      "hook_subheadline": ""
-    }
-  ],
+  "note": "Solo para /tv?demo=1. Los cursos y showreels del demo salen del catálogo real (data/worldbrain-catalog.json).",
   "daily_news": [
-    { "headline": "Apple presenta nuevas funciones de productividad para estudiantes", "source": "Demo Noticias" },
-    { "headline": "Crece la demanda de perfiles con habilidades digitales en México", "source": "Demo Noticias" },
-    { "headline": "Excel incorpora asistentes para analizar datos en lenguaje natural", "source": "Demo Noticias" },
-    { "headline": "Pequeños negocios apuestan por vender en redes sociales esta temporada", "source": "Demo Noticias" }
+    { "headline": "Crece la demanda de habilidades digitales entre estudiantes mexicanos", "source": "Demo Noticias" },
+    { "headline": "La lectura de comprensión vuelve al centro de la conversación educativa", "source": "Demo Noticias" },
+    { "headline": "Robótica y programación ganan espacio en las actividades extraescolares", "source": "Demo Noticias" },
+    { "headline": "Aspirantes se preparan para los exámenes de ingreso a bachillerato y universidad", "source": "Demo Noticias" }
   ],
   "manual": [
     { "id": "demo-manual-1", "kind": "image", "src": "/demo/anuncio-manual.svg", "durationSec": 6 }

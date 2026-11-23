@@ -130,6 +130,9 @@ export const SourceInputSchema = z.object({
   image_url: optionalHttpUrl.optional(),
 });
 
-export const SettingsSchema = z.object({
-  newsRssUrl: httpUrl,
-});
+export const SettingsSchema = z
+  .object({
+    newsRssUrl: httpUrl,
+    catalogDisabled: z.array(z.string().trim().min(1).max(80)).max(50),
+  })
+  .partial();

@@ -4,11 +4,13 @@ import { Fragment, type CSSProperties } from "react";
 import type { NewsItem } from "@/lib/types";
 import { QrBadge } from "../QrCode";
 import type { CommercialPlay } from "../engine";
-import { CourseImage } from "./shared";
+import { BrandLogo } from "@/components/BrandLogo";
+import { BRAND } from "@/lib/brand";
+import { CourseImage, PriceOrContact } from "./shared";
 
 /** Repite los titulares hasta tener suficiente texto para un bucle continuo sin huecos. */
-function tickerItems(news: NewsItem[], fallback: string): string[] {
-  const base = news.length ? news.map((n) => n.headline) : [fallback];
+function tickerItems(news: NewsItem[], fallback: readonly string[]): string[] {
+  const base = news.length ? news.map((n) => n.headline) : fallback.slice();
   const out: string[] = [];
   let chars = 0;
   while (chars < 220 || out.length < 3) {
@@ -38,7 +40,8 @@ function Track({ items, reverse, seconds }: { items: string[]; reverse?: boolean
 /** Escena 3 · Cintas de noticias arriba y abajo; al centro, la noticia del día y luego el curso relacionado. */
 export function SceneTicker({ play }: { play: CommercialPlay }) {
   const { course, palette, featuredNews } = play;
-  const items = tickerItems(play.news, course.hook_headline);
+  // Sin noticias del día, las cintas muestran datos reales de WorldBrain en vez de repetir el gancho.
+  const items = tickerItems(play.news, BRAND.tickerFacts);
   const seconds = Math.max(25, Math.round(items.join(" ").length / 9));
   const courseAt = featuredNews ? "4300ms" : "400ms";
 
@@ -46,6 +49,9 @@ export function SceneTicker({ play }: { play: CommercialPlay }) {
     <div className="slide s-ticker" style={{ "--t-course": courseAt } as CSSProperties}>
       <div className="tk-band tk-top display">
         <Track items={items} seconds={seconds} />
+        <div className="tk-brand">
+          <BrandLogo showSuffix={false} />
+        </div>
       </div>
 
       <div className="tk-main">
@@ -67,11 +73,9 @@ export function SceneTicker({ play }: { play: CommercialPlay }) {
             <div className="tk-hook">{course.hook_headline}</div>
             <div className="tk-title display">{course.title}</div>
             {course.hook_subheadline ? <div className="tk-benefit">{course.hook_subheadline}</div> : null}
-            {course.price ? (
-              <div className="tk-price">
-                <span className="price-pill display">{course.price}</span>
-              </div>
-            ) : null}
+            <div className="tk-price">
+              <PriceOrContact price={course.price} delayMs={0} />
+            </div>
           </div>
         </div>
 

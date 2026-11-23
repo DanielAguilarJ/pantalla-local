@@ -20,6 +20,7 @@ export interface AdminState {
     storage: "redis" | "file";
     blob: boolean;
     onVercel: boolean;
+    syncSecretConfigured: boolean;
     staleHours: number;
     make: ContentSummary | null;
     fallback: ContentSummary | null;
@@ -49,11 +50,15 @@ export async function loadAdminState(): Promise<AdminState> {
   return {
     ads: s[KEYS.ads] || [],
     sources: s[KEYS.sources] || [],
-    settings: s[KEYS.settings] || { newsRssUrl: DEFAULT_NEWS_RSS },
+    settings: {
+      newsRssUrl: s[KEYS.settings]?.newsRssUrl || DEFAULT_NEWS_RSS,
+      catalogDisabled: s[KEYS.settings]?.catalogDisabled || [],
+    },
     status: {
       storage: storageBackend(),
       blob: blobConfigured(),
       onVercel: !!process.env.VERCEL,
+      syncSecretConfigured: !!process.env.SYNC_SECRET,
       staleHours: MAKE_STALE_HOURS,
       make: summarize(s[KEYS.make]),
       fallback: summarize(s[KEYS.fallback]),

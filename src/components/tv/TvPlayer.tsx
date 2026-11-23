@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
+import { BRAND } from "@/lib/brand";
 import { PALETTES, paletteCssVars, paletteForSeed, type Palette } from "@/lib/palettes";
 import { WeightedQueue } from "@/lib/queue";
 import { dailySeed } from "@/lib/seed";
@@ -16,6 +18,7 @@ import {
 } from "./engine";
 import { ImageSlide } from "./ImageSlide";
 import { KeepAwake } from "./KeepAwake";
+import { ShowreelSlide } from "./ShowreelSlide";
 import { SlideBoundary } from "./SlideBoundary";
 import { VideoSlide } from "./VideoSlide";
 
@@ -26,6 +29,7 @@ const TICK_MS = 30_000;
 
 type Current =
   | { key: number; type: "reel"; src: string }
+  | { key: number; type: "showreel"; reel: PlaylistReel; info: NonNullable<PlaylistReel["showreel"]> }
   | { key: number; type: "manual-video"; src: string }
   | { key: number; type: "manual-image"; src: string; durationSec: number }
   | { key: number; type: "commercial"; play: CommercialPlay };
@@ -34,6 +38,7 @@ type Current =
 function maxMsFor(c: Current): number {
   if (c.type === "commercial") return COMMERCIAL_MS + 10_000;
   if (c.type === "manual-image") return c.durationSec * 1000 + 25_000;
+  if (c.type === "showreel" && c.reel.maxSec) return c.reel.maxSec * 1000 + 25_000;
   return 16 * 60_000;
 }
 
@@ -99,7 +104,8 @@ export function TvPlayer({ initial, demo, preview, forceScene }: Props) {
 
     if (next.type === "reel") {
       setPalette(today);
-      show({ key, type: "reel", src: next.item.src });
+      const info = next.item.showreel;
+      show(info ? { key, type: "showreel", reel: next.item, info } : { key, type: "reel", src: next.item.src });
     } else if (next.type === "manual") {
       setPalette(today);
       show(
@@ -194,6 +200,8 @@ export function TvPlayer({ initial, demo, preview, forceScene }: Props) {
   let slide: ReactNode = null;
   if (current) {
     if (current.type === "reel") slide = <VideoSlide src={current.src} fit="cover" onDone={onDone} />;
+    else if (current.type === "showreel")
+      slide = <ShowreelSlide reel={current.reel} info={current.info} palette={palette} onDone={onDone} />;
     else if (current.type === "manual-video") slide = <VideoSlide src={current.src} fit="auto" onDone={onDone} />;
     else if (current.type === "manual-image")
       slide = <ImageSlide src={current.src} durationSec={current.durationSec} onDone={onDone} />;
@@ -210,9 +218,9 @@ export function TvPlayer({ initial, demo, preview, forceScene }: Props) {
 
       {empty ? (
         <div className="slide idle">
-          <div className="idle-title display">Pantalla lista</div>
+          <BrandLogo className="idle-logo" />
           <div className="idle-sub">
-            {preview ? "Aún no hay contenido: envía datos desde Make.com o agrega anuncios y cursos aquí en /admin." : "Muy pronto, novedades aquí."}
+            {preview ? "Aún no hay contenido: envía datos desde Make.com o activa programas en /admin." : BRAND.tagline}
           </div>
           <span className="idle-dot" />
         </div>

@@ -7,7 +7,7 @@ import "./tv.css";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = { title: "Pantalla" };
+export const metadata: Metadata = { title: "Pantalla · WorldBrain México", referrer: "no-referrer" };
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 

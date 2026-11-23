@@ -64,6 +64,8 @@ export interface FallbackCourseSource {
 
 export interface Settings {
   newsRssUrl: string;
+  /** IDs de programas del catálogo de WorldBrain que NO deben aparecer en pantalla. */
+  catalogDisabled?: string[];
 }
 
 export type SyncTrigger = "cron" | "manual" | "lazy";
@@ -83,6 +85,10 @@ export interface SyncReport {
 export interface PlaylistReel {
   id: string;
   src: string;
+  /** Corta la reproducción a los N segundos (showreels largos del sitio). */
+  maxSec?: number;
+  /** Presente cuando el video es el showreel oficial de un programa (se muestra con marca y QR). */
+  showreel?: { title: string; course_url: string; benefit: string; ages: string };
 }
 
 export interface PlaylistManual {
@@ -95,7 +101,7 @@ export interface PlaylistManual {
 export interface Playlist {
   version: string;
   serverTime: string;
-  source: ContentSource | "demo" | "empty";
+  source: ContentSource | "catalog" | "demo";
   contentReceivedAt: string | null;
   reels: PlaylistReel[];
   courses: Course[];

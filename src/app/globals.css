@@ -9,3 +9,22 @@ html {
 body {
   font-family: var(--font-sans), system-ui, "Segoe UI", Roboto, Arial, sans-serif;
 }
+
+/* Logotipo de texto de WorldBrain (también se usa en /tv, donde tv.css lo extiende). */
+.brand-logo {
+  font-family: var(--font-serif), Georgia, serif;
+  white-space: nowrap;
+  line-height: 1;
+}
+.brand-logo-word i {
+  font-style: italic;
+}
+.brand-logo-suffix {
+  margin-left: 0.4em;
+  font-family: var(--font-sans), Arial, sans-serif;
+  font-size: 0.4em;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  vertical-align: 0.35em;
+}

@@ -7,7 +7,7 @@ import { isAdmin } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Admin · Pantalla Local",
+  title: "Admin · Pantalla WorldBrain",
   robots: { index: false, follow: false },
 };
 
