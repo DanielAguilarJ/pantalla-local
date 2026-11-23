@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { isSceneId, isSpotId } from "@/components/tv/engine";
+import { isPreviewTarget } from "@/components/tv/engine";
 import { TvPlayer } from "@/components/tv/TvPlayer";
 import { paletteById } from "@/lib/palettes";
 import { buildPlaylist, demoPlaylist } from "@/lib/playlist";
@@ -19,6 +19,7 @@ type SearchParams = Promise<Record<string, string | string[] | undefined>>;
  * /tv?preview=1  -> vista previa dentro de /admin (sin wake lock ni recargas)
  * /tv?preview=1&scene=mockup|kinetic|ticker|split|flash|cover|index|scan -> solo esa escena de curso
  * /tv?preview=1&scene=testimonial|method|numbers|ritual|stages|contact|hours|gallery -> solo ese anuncio de marca
+ * /tv?preview=1&scene=endcard -> solo cierres (QR a WhatsApp + teléfono gigante)
  * /tv?preview=1&palette=acido|worldbrain|coral|menta|senal|chicle   -> fija una paleta (solo vista previa)
  */
 export default async function TvPage({ searchParams }: { searchParams: SearchParams }) {
@@ -35,7 +36,7 @@ export default async function TvPage({ searchParams }: { searchParams: SearchPar
   }
 
   // forceScene solo en vista previa: la pantalla real nunca queda fija en una escena por un parámetro olvidado.
-  const forceScene = preview && (isSceneId(sp.scene) || isSpotId(sp.scene)) ? sp.scene : undefined;
+  const forceScene = preview && isPreviewTarget(sp.scene) ? sp.scene : undefined;
 
   const forcePalette = preview && typeof sp.palette === "string" ? paletteById(sp.palette) : undefined;
 

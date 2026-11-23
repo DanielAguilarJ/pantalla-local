@@ -99,10 +99,11 @@ export function ManagedVideo({ src, fit, maxMs, onDone, className = "" }: Manage
     if (ref.current && ref.current.getAttribute("src")) finish();
   };
 
+  // `src` se asigna en el layout effect (no en el JSX): así el video de fondo de KeepAwake se libera antes
+  // de que este video pida el decodificador. webOS solo reproduce un video a la vez.
   return (
     <video
       ref={ref}
-      src={src}
       className={`media-${mode} ${className}`}
       autoPlay
       muted

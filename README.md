@@ -42,6 +42,32 @@ En la rotación, los anuncios de marca ocupan ~37 % de los comerciales (los test
 Para revisar un diseño: `/tv?preview=1&scene=<id>&palette=<acido|worldbrain|coral|menta|senal|chicle>`, o desde
 `/admin → Vista previa → Diseño`.
 
+## Cierre después de cada anuncio
+
+Al terminar cada anuncio (comerciales, showreels, reels y anuncios manuales) aparecen 6 s de cierre
+(`src/components/tv/EndCard.tsx`): el fondo estalla al color de acento, «Escanea y pide informes», la oferta real
+del programa, un **QR gigante a WhatsApp** (≈ 22 cm en vertical en la StanbyMe 2, se escanea a ~2 m) con mensaje
+prellenado «Hola, quiero informes de <programa> (vi la pantalla)» y el **55 7810 7837** a 14 vmin (≈ 4,8 cm).
+El texto «(vi la pantalla)» permite contar en WhatsApp cuántos prospectos llegan por la pantalla.
+No se muestra después de los dos anuncios que ya son un QR/teléfono gigante (`scan` y `contact`).
+Vista previa: `/tv?preview=1&scene=endcard`.
+
+## Pantalla siempre activa
+
+Un «toque simulado» desde la página no sirve: el navegador no deja que una página genere toques reales y los eventos
+sintéticos no reinician el temporizador de la TV. Lo que sí respeta webOS es su regla publicada: **no lanza el
+salvapantallas mientras se reproduce un video a pantalla completa**, y solo admite un video a la vez. Por eso
+`KeepAwake.tsx`:
+
+- reproduce `public/ambient.mp4` (320×180, 14 KB, en bucle) a pantalla completa debajo de cada anuncio que no es
+  video (comerciales, cierres, imágenes), tapado por el fondo del anuncio;
+- lo libera justo antes de que empiece un video de anuncio (nunca hay dos videos con `src` a la vez);
+- cada 15 s revisa que siga sonando y lo reinicia si se detuvo o se atascó; también vuelve a pedir la Screen Wake Lock.
+
+En la TV hay que dejar apagado lo que el código no puede controlar: **Ahorro de energía**, el **apagado automático
+por inactividad** (en muchos modelos LG está en los temporizadores como «Apagado automático de 4 horas») y cualquier
+temporizador de apagado. La StanbyMe 2 debe estar **conectada a la corriente**: con batería el sistema puede suspenderse.
+
 ## Técnicas de publicidad aplicadas
 
 | Técnica | Cómo se aplica |
@@ -143,7 +169,8 @@ Si `hook_headline`/`hook_subheadline` llegan vacíos, se completan con `data/ben
   generativo y dispositivo se derivan de la fecha local de la TV (`YYYY-MM-DD`), así que cambian solos cada día.
   Cada comercial lleva un QR SVG generado al vuelo con `course_url`.
 - **Anti-congelamiento**: `pause()` + `removeAttribute('src')` + `load()` antes de desmontar cada `<video>`, watchdog si el
-  video se atasca 15 s, Wake Lock + `<video>` 1×1 en bucle, sincronización cada 15 min sin cortar el anuncio, y recarga
+  video se atasca 15 s, video de fondo a pantalla completa + Wake Lock (ver «Pantalla siempre activa»),
+  sincronización cada 15 min sin cortar el anuncio, y recarga
   limpia cada 6 h durante una transición **solo si el servidor respondió hace menos de 90 s**.
 
 ## Configurar la LG

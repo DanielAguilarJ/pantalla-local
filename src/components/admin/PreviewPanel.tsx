@@ -8,6 +8,7 @@ type Mode = "portrait" | "landscape";
 /** Diseños que se pueden ver por separado (?scene=…). "" = la rotación real de la pantalla. */
 const DESIGNS: { id: string; label: string }[] = [
   { id: "", label: "Rotación real (todo)" },
+  { id: "endcard", label: "Cierre · QR + WhatsApp gigante (tras cada anuncio)" },
   { id: "cover", label: "Curso · Portada editorial" },
   { id: "index", label: "Curso · Índice de programas" },
   { id: "scan", label: "Curso · QR gigante «Apunta tu cámara»" },
