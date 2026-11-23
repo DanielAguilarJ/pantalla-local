@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { hasBearer } from "@/lib/auth";
 import { validateMakePayload } from "@/lib/schema";
-import { KEYS, setKey } from "@/lib/storage";
+import { KEYS, setKey, storageIsShared } from "@/lib/storage";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -14,6 +14,18 @@ export async function POST(req: Request) {
   }
   if (!hasBearer(req, process.env.SYNC_SECRET)) {
     return NextResponse.json({ ok: false, error: "No autorizado" }, { status: 401 });
+  }
+  // Responder 200 sin almacenamiento compartido haría creer a Make.com que todo salió bien
+  // mientras la pantalla nunca ve los datos. Mejor un error claro que Make marque como fallido.
+  if (!storageIsShared()) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error:
+          "Falta Upstash Redis en Vercel (UPSTASH_REDIS_REST_URL/TOKEN o KV_REST_API_URL/TOKEN). Sin él la pantalla no puede leer lo que envía Make.com. Conéctalo en Vercel → Storage y vuelve a desplegar.",
+      },
+      { status: 503 },
+    );
   }
 
   const declared = Number(req.headers.get("content-length") || 0);
@@ -38,7 +50,15 @@ export async function POST(req: Request) {
   }
 
   const receivedAt = new Date().toISOString();
-  await setKey(KEYS.make, { source: "make", receivedAt, payload: result.payload });
+  try {
+    await setKey(KEYS.make, { source: "make", receivedAt, payload: result.payload });
+  } catch (err) {
+    console.error("[webhook] No se pudo guardar el contenido:", err);
+    return NextResponse.json(
+      { ok: false, error: "No se pudo guardar en el almacenamiento (revisa las credenciales de Upstash Redis). Make.com puede reintentar." },
+      { status: 503 },
+    );
+  }
 
   return NextResponse.json({
     ok: true,

@@ -21,6 +21,12 @@ Comprobación rápida (sin token debe responder **401**, no 500):
 curl -i -X POST https://pantalla-local.vercel.app/api/webhook/make -H "content-type: application/json" -d "{}"
 ```
 
+Y el almacenamiento debe ser compartido (`"storage":"redis"`, `"storageShared":true`):
+
+```bash
+curl https://pantalla-local.vercel.app/api/health
+```
+
 ## 2. Módulo HTTP final del escenario
 
 | Campo | Valor |
@@ -32,7 +38,7 @@ curl -i -X POST https://pantalla-local.vercel.app/api/webhook/make -H "content-t
 | Parse response | Sí |
 
 Respuestas: **200** guardado (revisa `dropped` si viene algo), **401** token distinto a `SYNC_SECRET`,
-**422** estructura inválida (se conserva lo anterior), **500** falta `SYNC_SECRET` en Vercel.
+**422** estructura inválida (se conserva lo anterior), **500** falta `SYNC_SECRET` en Vercel, **503** falta conectar Upstash Redis (sin él la pantalla no ve lo que manda Make).
 
 ## 3. Catálogo para Make
 
@@ -89,6 +95,6 @@ PASO 5 · Enviar a la pantalla
       "daily_news": [{ "headline": "...", "source": "..." }]
     }
 - Respuesta esperada: HTTP 200 con {"ok": true, "saved": {...}}. Si "dropped" trae elementos, revisar esos campos.
-- Si responde 401 el token no coincide con SYNC_SECRET; 422 el JSON no tiene la estructura; 500 falta configurar SYNC_SECRET en Vercel.
+- Si responde 401 el token no coincide con SYNC_SECRET; 422 el JSON no tiene la estructura; 500 falta configurar SYNC_SECRET en Vercel; 503 falta conectar Upstash Redis en Vercel.
 - Ante cualquier error, enviarme una notificación por correo.
 ```

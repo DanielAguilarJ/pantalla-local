@@ -45,6 +45,6 @@ PASO 5 · Enviar a la pantalla
       "daily_news": [{ "headline": "...", "source": "..." }]
     }
 - Respuesta esperada: HTTP 200 con {"ok": true, "saved": {...}}. Si "dropped" trae elementos, revisar esos campos.
-- Si responde 401 el token no coincide con SYNC_SECRET; 422 el JSON no tiene la estructura; 500 falta configurar SYNC_SECRET en Vercel.
+- Si responde 401 el token no coincide con SYNC_SECRET; 422 el JSON no tiene la estructura; 500 falta configurar SYNC_SECRET en Vercel; 503 falta conectar Upstash Redis en Vercel.
 - Ante cualquier error, enviarme una notificación por correo.`;
 }
