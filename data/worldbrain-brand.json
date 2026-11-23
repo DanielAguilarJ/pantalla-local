@@ -43,6 +43,28 @@
       { "audience": "adultos", "label": "Jóvenes y adultos", "ages": "15+ años", "summary": "Lectura, memoria y comunicación" }
     ]
   },
+  "contact": {
+    "kicker": "Hablar con un asesor",
+    "headline": "El siguiente paso empieza con una conversación.",
+    "sub": "Cuéntanos qué quieres aprender y te ayudamos a encontrar un programa para tu edad, tu objetivo y tu forma de avanzar."
+  },
+  "hours": {
+    "kicker": "Horario de atención",
+    "note": "Sede central en Cuautitlán Izcalli · Opciones en línea",
+    "week": [
+      { "day": 0, "label": "Domingo", "open": null, "close": null },
+      { "day": 1, "label": "Lunes", "open": "09:00", "close": "18:00" },
+      { "day": 2, "label": "Martes", "open": "09:00", "close": "18:00" },
+      { "day": 3, "label": "Miércoles", "open": "09:00", "close": "18:00" },
+      { "day": 4, "label": "Jueves", "open": "09:00", "close": "18:00" },
+      { "day": 5, "label": "Viernes", "open": "09:00", "close": "17:00" },
+      { "day": 6, "label": "Sábado", "open": "08:00", "close": "15:00" }
+    ]
+  },
+  "gallery": {
+    "kicker": "Galería de programas",
+    "headline": "Diecisiete rutas. Un mismo destino: aprender mejor."
+  },
   "numbers": {
     "kicker": "WorldBrain en números",
     "headline": "Aprender mejor se entrena.",

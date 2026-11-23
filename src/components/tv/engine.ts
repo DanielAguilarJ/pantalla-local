@@ -7,13 +7,13 @@ import type { Course, NewsItem, Playlist, PlaylistManual, PlaylistReel } from "@
 
 export const COMMERCIAL_MS = 12_000;
 
-/** Escenas de comercial de un curso (1–5 originales, 6–7 pensadas primero para pantalla vertical). */
-export type SceneId = "mockup" | "kinetic" | "ticker" | "split" | "flash" | "cover" | "index";
-export const SCENES: SceneId[] = ["mockup", "kinetic", "ticker", "split", "flash", "cover", "index"];
+/** Escenas de comercial de un curso (1–5 originales; 6–8 pensadas primero para pantalla vertical). */
+export type SceneId = "mockup" | "kinetic" | "ticker" | "split" | "flash" | "cover" | "index" | "scan";
+export const SCENES: SceneId[] = ["mockup", "kinetic", "ticker", "split", "flash", "cover", "index", "scan"];
 
 /** Anuncios institucionales de WorldBrain (no dependen de un solo curso). */
-export type SpotId = "testimonial" | "method" | "numbers" | "ritual" | "stages";
-export const SPOTS: SpotId[] = ["testimonial", "method", "numbers", "ritual", "stages"];
+export type SpotId = "testimonial" | "method" | "numbers" | "ritual" | "stages" | "contact" | "hours" | "gallery";
+export const SPOTS: SpotId[] = ["testimonial", "method", "numbers", "ritual", "stages", "contact", "hours", "gallery"];
 
 export type PatternId = "truchet" | "rings" | "stripes" | "dots" | "blocks";
 const PATTERNS: PatternId[] = ["truchet", "rings", "stripes", "dots", "blocks"];

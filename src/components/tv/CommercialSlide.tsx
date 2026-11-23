@@ -7,6 +7,7 @@ import { SceneFlash } from "./scenes/SceneFlash";
 import { SceneIndex } from "./scenes/SceneIndex";
 import { SceneKinetic } from "./scenes/SceneKinetic";
 import { SceneMockup } from "./scenes/SceneMockup";
+import { SceneScan } from "./scenes/SceneScan";
 import { SceneSplit } from "./scenes/SceneSplit";
 import { SceneTicker } from "./scenes/SceneTicker";
 import { BrandSpot } from "./spots/BrandSpot";
@@ -23,6 +24,20 @@ export function CommercialSlide({ play, onDone }: { play: CommercialPlay; onDone
     return () => clearTimeout(t);
   }, []);
 
+  return (
+    <>
+      <PlayBody play={play} />
+      {/* Cortinilla de entrada (acento → pop) y barra de progreso de 12 s: el "acabado" común de todos los anuncios. */}
+      <div className="ad-chrome" aria-hidden="true">
+        <span className="ad-wipe w1" />
+        <span className="ad-wipe w2" />
+        <span className="ad-progress" style={{ animationDuration: `${COMMERCIAL_MS}ms` }} />
+      </div>
+    </>
+  );
+}
+
+function PlayBody({ play }: { play: CommercialPlay }) {
   if (play.kind === "brand") return <BrandSpot play={play} />;
   switch (play.scene) {
     case "mockup":
@@ -37,6 +52,8 @@ export function CommercialSlide({ play, onDone }: { play: CommercialPlay; onDone
       return <SceneCover play={play} />;
     case "index":
       return <SceneIndex play={play} />;
+    case "scan":
+      return <SceneScan play={play} />;
     default:
       return <SceneFlash play={play} />;
   }

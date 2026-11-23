@@ -10,6 +10,7 @@ const DESIGNS: { id: string; label: string }[] = [
   { id: "", label: "Rotación real (todo)" },
   { id: "cover", label: "Curso · Portada editorial" },
   { id: "index", label: "Curso · Índice de programas" },
+  { id: "scan", label: "Curso · QR gigante «Apunta tu cámara»" },
   { id: "mockup", label: "Curso · Celular / laptop 3D" },
   { id: "kinetic", label: "Curso · Tipografía cinética" },
   { id: "ticker", label: "Curso · Noticias + gancho" },
@@ -20,6 +21,9 @@ const DESIGNS: { id: string; label: string }[] = [
   { id: "numbers", label: "Marca · En números" },
   { id: "ritual", label: "Marca · Los 5 Minutos" },
   { id: "stages", label: "Marca · Programas por etapa" },
+  { id: "contact", label: "Marca · WhatsApp gigante" },
+  { id: "hours", label: "Marca · Horario en vivo" },
+  { id: "gallery", label: "Marca · Muro de programas" },
 ];
 
 // Tamaño "virtual" de la pantalla dentro del iframe. El layout usa vw/vh/vmin, así que se ve igual que en la TV.

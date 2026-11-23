@@ -5,6 +5,7 @@ import type { Palette } from "@/lib/palettes";
 import type { PlaylistReel } from "@/lib/types";
 import { ManagedVideo } from "./ManagedVideo";
 import { QrBadge } from "./QrCode";
+import { PhoneCta } from "./scenes/shared";
 
 type Showreel = NonNullable<PlaylistReel["showreel"]>;
 
@@ -38,6 +39,7 @@ export function ShowreelSlide({
           <span className="sr-dot" />
           {info.ages}
         </div>
+        <PhoneCta size="s" className="sr-phone" />
       </div>
       <QrBadge url={info.course_url} dark={palette.qrDark} className="qr-br" />
     </div>
