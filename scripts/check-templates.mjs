@@ -4,8 +4,8 @@ import { readFileSync } from "node:fs";
 const file = new URL("../data/benfrank-templates.json", import.meta.url);
 const data = JSON.parse(readFileSync(file, "utf8"));
 const AUDIENCES = new Set(["todos", "ninos", "jovenes", "adultos"]);
-const HEADLINE_VARS = /{{(curso|noticia|precio|beneficio)}}/;
-const SUB_VARS = /{{(curso|noticia|precio|beneficio|edad)}}/;
+const HEADLINE_VARS = /{{(curso|noticia|precio|beneficio|oferta)}}/;
+const SUB_VARS = /{{(curso|noticia|precio|beneficio|edad|oferta)}}/;
 const errors = [];
 
 if (data.headlines.length !== 50) errors.push(`Se esperaban 50 fórmulas y hay ${data.headlines.length}.`);

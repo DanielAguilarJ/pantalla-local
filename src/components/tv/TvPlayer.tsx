@@ -6,6 +6,7 @@ import { BRAND } from "@/lib/brand";
 import { PALETTES, paletteCssVars, paletteForSeed, type Palette } from "@/lib/palettes";
 import { WeightedQueue } from "@/lib/queue";
 import { dailySeed } from "@/lib/seed";
+import { daypartAt, type Daypart } from "@/lib/sede-time";
 import type { Playlist, PlaylistManual, PlaylistReel } from "@/lib/types";
 import { CommercialSlide } from "./CommercialSlide";
 import {
@@ -78,6 +79,8 @@ export function TvPlayer({ initial, demo, preview, forceScene, forcePalette }: P
   const commercialCount = useRef(0);
   const spotCounts = useRef<Record<string, number>>({});
   const versionRef = useRef("");
+  const playlistRef = useRef<Playlist | null>(null);
+  const daypartRef = useRef<Daypart>(daypartAt(new Date()));
   const lastSyncRef = useRef(0);
   const lastAdvanceRef = useRef(Date.now());
   const bootRef = useRef(Date.now());
@@ -146,7 +149,10 @@ export function TvPlayer({ initial, demo, preview, forceScene, forcePalette }: P
   const applyPlaylist = useCallback(
     (p: Playlist) => {
       versionRef.current = p.version;
-      const sources = toSources(p);
+      playlistRef.current = p;
+      daypartRef.current = daypartAt(new Date());
+      // Pesos por franja horaria: el público que más pasa frente al local a esta hora ve más sus programas.
+      const sources = toSources(p, daypartRef.current);
       if (!forceScene) queueRef.current?.setSources(sources);
       else {
         const commercial = sources.commercial.filter((s) =>
@@ -208,6 +214,8 @@ export function TvPlayer({ initial, demo, preview, forceScene, forcePalette }: P
       }
       const c = currentRef.current;
       if (c && now - lastAdvanceRef.current > maxMsFor(c)) advance();
+      // Cambió la franja (p. ej. 12:00 → salida de escuelas): se recalculan los pesos sin cortar el anuncio.
+      if (playlistRef.current && daypartAt(new Date()) !== daypartRef.current) applyPlaylist(playlistRef.current);
     };
     const interval = setInterval(() => void tick(), TICK_MS);
     const onOnline = () => void sync();
@@ -216,7 +224,7 @@ export function TvPlayer({ initial, demo, preview, forceScene, forcePalette }: P
       clearInterval(interval);
       window.removeEventListener("online", onOnline);
     };
-  }, [sync, advance, preview]);
+  }, [sync, advance, preview, applyPlaylist]);
 
   let slide: ReactNode = null;
   if (current) {

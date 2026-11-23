@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { sedeClock } from "@/lib/sede-time";
 import { BRAND_CONTENT, type BrandPlay } from "../engine";
 import { EdFooter, Masthead, Stage } from "./kit";
 
@@ -21,33 +22,6 @@ export interface HoursStatus {
   headline: string;
   detail: string;
   today: number;
-}
-
-const SEDE_TZ = "America/Mexico_City";
-const WEEKDAYS: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
-
-/**
- * Día y minuto actuales en la hora de la sede (Cuautitlán Izcalli), aunque la TV tenga mal su zona horaria.
- * Si el navegador no soporta zonas IANA, se usa el reloj local.
- */
-export function sedeClock(now: Date): { day: number; mins: number } {
-  try {
-    const parts = new Intl.DateTimeFormat("en-US", {
-      timeZone: SEDE_TZ,
-      weekday: "short",
-      hour: "2-digit",
-      minute: "2-digit",
-      hourCycle: "h23",
-    }).formatToParts(now);
-    const get = (t: string) => parts.find((p) => p.type === t)?.value || "";
-    const day = WEEKDAYS[get("weekday")];
-    const hour = Number(get("hour")) % 24;
-    const minute = Number(get("minute"));
-    if (day !== undefined && Number.isFinite(hour) && Number.isFinite(minute)) return { day, mins: hour * 60 + minute };
-  } catch {
-    /* sin soporte de zonas horarias */
-  }
-  return { day: now.getDay(), mins: now.getHours() * 60 + now.getMinutes() };
 }
 
 /** Estado en vivo en hora de la sede: abierto ahora, abre más tarde hoy, o el próximo día de atención. */

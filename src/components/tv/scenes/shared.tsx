@@ -81,6 +81,29 @@ export function BrandBug({ className = "" }: { className?: string }) {
   );
 }
 
+/** Palabra de impacto para sellos y estrellas según la oferta publicada ("GRATIS", "SIN COSTO", "CORTESÍA"). */
+export function offerWord(offer: string): string {
+  if (/gratis|gratuit/i.test(offer)) return "Gratis";
+  if (/sin costo/i.test(offer)) return "Sin costo";
+  if (/cortes/i.test(offer)) return "Cortesía";
+  return "";
+}
+
+function mentions(text: string, offerShort: string): boolean {
+  return !!offerShort && text.toLowerCase().indexOf(offerShort.toLowerCase()) >= 0;
+}
+
+/** Etiqueta de oferta del QR: vacía si el titular ya la dice (repetir la misma frase tres veces resta fuerza). */
+export function offerTag(headline: string, offerShort: string): string {
+  return mentions(headline, offerShort) ? "" : offerShort;
+}
+
+/** Texto del botón: la oferta concreta si existe; si el titular ya la dijo, un verbo de acción. */
+export function ctaLabel(offerShort: string, headline = ""): string {
+  if (!offerShort) return "Inscribirme";
+  return mentions(headline, offerShort) ? "Aparta tu lugar" : offerShort;
+}
+
 /** Precio si el curso lo trae; si no (el sitio de WorldBrain no publica precios), el WhatsApp de informes. */
 export function PriceOrContact({ price, delayMs }: { price: string; delayMs: number }) {
   if (price) {

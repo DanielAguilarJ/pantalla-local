@@ -15,6 +15,8 @@ export interface CopyProfile {
   audience: CopyAudience[];
   benefit: string;
   ages: string;
+  /** Oferta corta publicada por el programa (vacía si no hay). */
+  offer?: string;
 }
 
 const HEADLINES: Template[] = templates.headlines;
@@ -80,6 +82,7 @@ interface Vars {
   precio: string;
   beneficio: string;
   edad: string;
+  oferta: string;
 }
 
 function fill(text: string, vars: Vars): string | null {
@@ -88,6 +91,7 @@ function fill(text: string, vars: Vars): string | null {
     noticia: vars.noticia || "",
     precio: vars.precio,
     beneficio: vars.beneficio,
+    oferta: vars.oferta,
     // "Todas las edades" -> "Para todas las edades."
     edad: vars.edad && !/^\d/.test(vars.edad) ? vars.edad.charAt(0).toLowerCase() + vars.edad.slice(1) : vars.edad,
   };
@@ -110,7 +114,13 @@ function fill(text: string, vars: Vars): string | null {
 function fromBank(rng: Rng, bank: Template[], vars: Vars, maxWords: number, audience: CopyAudience[]): string {
   const general = shuffle(rng, bank.filter((t) => t.audience === "todos"));
   const specific = shuffle(rng, bank.filter((t) => (audience as string[]).includes(t.audience)));
-  const ordered = rng() < 0.65 ? specific.concat(general) : general.concat(specific);
+  let ordered = rng() < 0.65 ? specific.concat(general) : general.concat(specific);
+  // Si el programa publica una oferta (clase muestra, diagnóstico...), la mitad de las veces se usa primero:
+  // "gratis" es la palabra más poderosa de la publicidad de respuesta directa.
+  if (vars.oferta && rng() < 0.5) {
+    const withOffer = ordered.filter((t) => t.text.indexOf("{{oferta}}") >= 0);
+    ordered = withOffer.concat(ordered.filter((t) => t.text.indexOf("{{oferta}}") < 0));
+  }
   for (const tpl of ordered) {
     const text = fill(tpl.text, vars);
     if (text && words(text).length <= maxWords) return text;
@@ -159,6 +169,7 @@ export function generateHooks({ seed, course, news, profile }: HookInput): { hoo
     precio: course.price.trim(),
     beneficio: profile?.benefit || "",
     edad: profile?.ages || "",
+    oferta: profile?.offer || "",
   };
   const audience = profile?.audience || [];
   return {

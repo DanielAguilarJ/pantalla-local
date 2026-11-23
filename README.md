@@ -42,6 +42,25 @@ En la rotación, los anuncios de marca ocupan ~37 % de los comerciales (los test
 Para revisar un diseño: `/tv?preview=1&scene=<id>&palette=<acido|worldbrain|coral|menta|senal|chicle>`, o desde
 `/admin → Vista previa → Diseño`.
 
+## Técnicas de publicidad aplicadas
+
+| Técnica | Cómo se aplica |
+| --- | --- |
+| **Oferta irresistible y real** | `data/worldbrain-catalog.json` trae `offer`, `offer_short` y `urgency` copiados de la página de cada programa (15 de 17 publican clase muestra, diagnóstico o cita sin costo). La oferta se cuelga sobre el QR, va en el botón, en sellos («GRATIS», «SIN COSTO», «CORTESÍA») y en fórmulas de copy `{{oferta}}`. Nunca se inventa: si la página no publica oferta, no aparece. |
+| **Escasez real** | «Grupos de máximo 7» y las frases de cupo que publica el sitio (Homeschool, Admisión, Universidad Dominical) como segunda línea de la etiqueta del QR. |
+| **Una idea por anuncio** | Si el titular ya dice la oferta, la etiqueta y el botón no la repiten (el botón pasa a «Aparta tu lugar»). |
+| **Cuadro congelado** | El QR y el cierre aparecen antes de 1 s: quien pasa caminando mira 2–3 s. |
+| **Quitar fricción** | «Sin descargar nada · solo abre la cámara» en el anuncio de QR gigante; WhatsApp en todos los cierres. |
+| **Segmentación por franja (dayparting)** | `src/lib/sede-time.ts`, con hora de CDMX: 12–16 h (salida de escuelas) los programas infantiles salen ~70 % de las veces; 16–20 h jóvenes; noche y domingo, adultos y los anuncios de WhatsApp y horario cuentan doble. |
+| **Prueba social** | 12 testimonios reales del sitio con nombre y resultado, con más frecuencia que los demás anuncios de marca. |
+
+### Calibración para la LG StanbyMe 2 de 27″ (27LX6TYGA)
+
+Área visible ≈ 59,8 × 33,6 cm (QHD 2560 × 1440), así que **1 vmin ≈ 3,4 mm** en cualquier orientación.
+Titulares ≥ 8 vmin (≈ 2,7 cm, se leen a 3–5 m), texto de apoyo ≥ 3,4 vmin, letra chica ≥ 2,3 vmin (≈ 8 mm).
+El QR mide 31 vmin en vertical (≈ 10,5 cm, se escanea a ~1 m) y 54 vmin en la escena `scan` (≈ 18 cm, ~1,8 m).
+Las capturas de revisión se hicieron a 1440 × 2560 y 2560 × 1440.
+
 ## WorldBrain en la pantalla
 
 - **Catálogo oficial** (`data/worldbrain-catalog.json`): los 17 programas de ultravelozmente.com con descripción, imagen,

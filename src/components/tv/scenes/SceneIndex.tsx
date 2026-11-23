@@ -52,10 +52,15 @@ export function SceneIndex({ play }: { play: CoursePlay }) {
       </div>
 
       <div className="ix-detail">
+        {featured.offer ? (
+          <div className="ix-offer ed-up" style={{ animationDelay: "3300ms" }}>
+            {featured.offer}
+          </div>
+        ) : null}
         <div className="ix-hook display ed-up" style={{ animationDelay: "3500ms" }}>
           {course.hook_headline}
         </div>
-        {course.hook_subheadline ? (
+        {course.hook_subheadline && !featured.offer ? (
           <div className="ix-sub ed-up" style={{ animationDelay: "3800ms" }}>
             {course.hook_subheadline}
           </div>

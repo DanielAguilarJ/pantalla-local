@@ -35,7 +35,7 @@ function showreels(disabled: readonly string[]): PlaylistReel[] {
       id: `showreel-${p.id}`,
       src: tvMediaUrl(p.showreel_url),
       maxSec: SHOWREEL_MAX_SEC,
-      showreel: { title: p.title, course_url: p.course_url, benefit: p.benefit, ages: p.ages },
+      showreel: { title: p.title, course_url: p.course_url, benefit: p.benefit, ages: p.ages, offer: p.offer_short },
     }));
 }
 

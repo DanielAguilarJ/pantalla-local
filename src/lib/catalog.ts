@@ -9,6 +9,12 @@ export interface CatalogProgram extends Course {
   ages: string;
   audience: Audience[];
   showreel_url: string;
+  /** Oferta publicada en la página del programa (p. ej. "Clase muestra gratis + diagnóstico de nivel"). */
+  offer: string;
+  /** Versión corta para etiquetas (≤ 26 caracteres). */
+  offer_short: string;
+  /** Escasez real publicada en la página (p. ej. "Cupos limitados por semana"). */
+  urgency: string;
 }
 
 export const CATALOG: CatalogProgram[] = (catalogData.programs as Array<Omit<CatalogProgram, "hook_headline" | "hook_subheadline">>).map(
@@ -61,7 +67,7 @@ export function programAsCourse(p: CatalogProgram): Course {
 /** Público, beneficio y edades del programa, para que el copy automático le hable a quien corresponde. */
 export function profileFor(course: Pick<Course, "id" | "course_url">): CopyProfile | undefined {
   const p = findProgram(course);
-  return p ? { audience: p.audience, benefit: p.benefit, ages: p.ages } : undefined;
+  return p ? { audience: p.audience, benefit: p.benefit, ages: p.ages, offer: p.offer_short } : undefined;
 }
 
 export function isDisabled(course: Pick<Course, "id" | "course_url">, disabledIds: readonly string[]): boolean {

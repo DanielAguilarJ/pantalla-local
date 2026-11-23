@@ -4,7 +4,7 @@ import type { CSSProperties } from "react";
 import { shortCourseName } from "@/lib/copy";
 import type { CoursePlay } from "../engine";
 import { EdFooter, issueLabel, LetterRise, Masthead, pad2, Reveal, Stage } from "../spots/kit";
-import { CourseImage } from "./shared";
+import { CourseImage, offerWord } from "./shared";
 
 /**
  * Escena 6 · Portada editorial (pensada para 9:16).
@@ -25,6 +25,13 @@ export function SceneCover({ play }: { play: CoursePlay }) {
           <CourseImage src={course.image_url} title={course.title} />
         </div>
         <div className="cv-curtain" />
+        {featured.offer ? (
+          // Sello sobre la foto: la oferta real es la razón número uno para detenerse.
+          <div className="cv-sticker" aria-hidden="true">
+            <span className="cv-sticker-word display">{offerWord(featured.offer)}</span>
+            <span className="cv-sticker-text">{featured.offerShort.replace(/\s*(gratis|gratuita?|sin costo|de cortesía)$/i, "")}</span>
+          </div>
+        ) : null}
         <div className="ed-mono cv-caption">
           Fig. {pad2(featured.number)} — {course.title}
           {featured.ages ? ` · ${featured.ages}` : ""}

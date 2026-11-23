@@ -10,7 +10,8 @@ export const dynamic = "force-dynamic";
  * Catálogo público de programas de WorldBrain México (solo datos que ya están en ultravelozmente.com).
  * Make.com lo lee para armar `courses` sin tener que hacer scraping del sitio:
  * cada elemento ya trae los campos del contrato del webhook (hook_* vacíos para que la IA los redacte),
- * más `benefit`, `ages` y `audience` como contexto para el copy.
+ * más `benefit`, `ages`, `audience`, `offer`, `offer_short` y `urgency` (copiados de la página de cada programa)
+ * como contexto para el copy.
  */
 export async function GET() {
   const settings = await getKey(KEYS.settings);
@@ -36,6 +37,9 @@ export async function GET() {
       benefit: p.benefit,
       ages: p.ages,
       audience: p.audience,
+      offer: p.offer,
+      offer_short: p.offer_short,
+      urgency: p.urgency,
     })),
   });
 }

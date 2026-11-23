@@ -71,19 +71,41 @@ function ScanIcon() {
  * alrededor para atraer la mirada (solo transform/opacity; las esquinas nunca tapan los módulos del QR).
  * La posición la decide cada escena vía className.
  */
-export function QrBadge({ url, dark, className = "" }: { url: string; dark: string; className?: string }) {
+export function QrBadge({
+  url,
+  dark,
+  className = "",
+  offer = "",
+  urgency = "",
+}: {
+  url: string;
+  dark: string;
+  className?: string;
+  /** Oferta real del programa: se cuelga como etiqueta sobre el QR (la razón para escanear). */
+  offer?: string;
+  /** Escasez real publicada (p. ej. "Cupos limitados por semana"): segunda línea de la etiqueta. */
+  urgency?: string;
+}) {
   return (
-    <div className={`qr-badge ${className}`}>
-      <span className="qr-pulse" aria-hidden="true" />
-      <span className="qr-corner c-tl" aria-hidden="true" />
-      <span className="qr-corner c-tr" aria-hidden="true" />
-      <span className="qr-corner c-bl" aria-hidden="true" />
-      <span className="qr-corner c-br" aria-hidden="true" />
-      <div className="qr-card">
-        <QrCode value={url} dark={dark} className="qr-svg" />
-        <div className="qr-label">
-          <ScanIcon />
-          <span>Escanea para ver temario</span>
+    <div className={`qr-badge ${className}${offer ? " has-offer" : ""}`}>
+      {offer ? (
+        <div className="qr-offer">
+          <span className="qr-offer-txt">{offer}</span>
+          {urgency ? <span className="qr-offer-urg">{urgency}</span> : null}
+        </div>
+      ) : null}
+      <div className="qr-frame">
+        <span className="qr-pulse" aria-hidden="true" />
+        <span className="qr-corner c-tl" aria-hidden="true" />
+        <span className="qr-corner c-tr" aria-hidden="true" />
+        <span className="qr-corner c-bl" aria-hidden="true" />
+        <span className="qr-corner c-br" aria-hidden="true" />
+        <div className="qr-card">
+          <QrCode value={url} dark={dark} className="qr-svg" />
+          <div className="qr-label">
+            <ScanIcon />
+            <span>Escanea para ver temario</span>
+          </div>
         </div>
       </div>
     </div>

@@ -41,7 +41,7 @@ export function ShowreelSlide({
         </div>
         <PhoneCta size="s" className="sr-phone" />
       </div>
-      <QrBadge url={info.course_url} dark={palette.qrDark} className="qr-br" />
+      <QrBadge url={info.course_url} dark={palette.qrDark} className="qr-br" offer={info.offer} />
     </div>
   );
 }

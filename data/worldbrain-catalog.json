@@ -1,6 +1,6 @@
 {
   "source": "https://ultravelozmente.com/ (índice de programas, noviembre 2026)",
-  "note": "Catálogo base de WorldBrain México. La pantalla lo usa cuando Make.com no envía cursos y Make.com puede leerlo en GET /api/catalog. El sitio no publica precios, por eso price va vacío.",
+  "note": "Catálogo base de WorldBrain México. La pantalla lo usa cuando Make.com no envía cursos y Make.com puede leerlo en GET /api/catalog. El sitio no publica precios, por eso price va vacío. offer/offer_short/urgency copian la oferta publicada en la página de cada programa (vacío si la página no publica una).",
   "programs": [
     {
       "id": "fotolectura",
@@ -11,8 +11,14 @@
       "price": "",
       "benefit": "velocidad",
       "ages": "15+ años",
-      "audience": ["jovenes", "adultos"],
-      "showreel_url": ""
+      "audience": [
+        "jovenes",
+        "adultos"
+      ],
+      "showreel_url": "",
+      "offer": "",
+      "offer_short": "",
+      "urgency": ""
     },
     {
       "id": "mathekids",
@@ -23,8 +29,13 @@
       "price": "",
       "benefit": "precisión",
       "ages": "6–12 años",
-      "audience": ["ninos"],
-      "showreel_url": ""
+      "audience": [
+        "ninos"
+      ],
+      "showreel_url": "",
+      "offer": "Clase muestra y diagnóstico sin costo",
+      "offer_short": "Clase muestra gratis",
+      "urgency": ""
     },
     {
       "id": "juniormath",
@@ -35,8 +46,13 @@
       "price": "",
       "benefit": "confianza",
       "ages": "6–12 años",
-      "audience": ["ninos"],
-      "showreel_url": "https://ultravelozmente.com/images/juniormath-showreel-720.mp4"
+      "audience": [
+        "ninos"
+      ],
+      "showreel_url": "https://ultravelozmente.com/images/juniormath-showreel-720.mp4",
+      "offer": "Clase muestra gratis",
+      "offer_short": "Clase muestra gratis",
+      "urgency": ""
     },
     {
       "id": "lectoescritura",
@@ -47,8 +63,13 @@
       "price": "",
       "benefit": "fluidez",
       "ages": "4–8 años",
-      "audience": ["ninos"],
-      "showreel_url": "https://ultravelozmente.com/images/lectoescritura-showreel-720.mp4"
+      "audience": [
+        "ninos"
+      ],
+      "showreel_url": "https://ultravelozmente.com/images/lectoescritura-showreel-720.mp4",
+      "offer": "Clase gratis con evaluación de nivel lector",
+      "offer_short": "Clase gratis",
+      "urgency": ""
     },
     {
       "id": "robotics-code",
@@ -59,8 +80,14 @@
       "price": "",
       "benefit": "creación",
       "ages": "7–17 años",
-      "audience": ["ninos", "jovenes"],
-      "showreel_url": "https://ultravelozmente.com/images/robotics-showreel-720.mp4"
+      "audience": [
+        "ninos",
+        "jovenes"
+      ],
+      "showreel_url": "https://ultravelozmente.com/images/robotics-showreel-720.mp4",
+      "offer": "Primera clase gratis",
+      "offer_short": "1.ª clase gratis",
+      "urgency": ""
     },
     {
       "id": "fastkids",
@@ -71,8 +98,15 @@
       "price": "",
       "benefit": "fluency",
       "ages": "Todas las edades",
-      "audience": ["ninos", "jovenes", "adultos"],
-      "showreel_url": "https://ultravelozmente.com/images/fastkids-showreel-720.mp4"
+      "audience": [
+        "ninos",
+        "jovenes",
+        "adultos"
+      ],
+      "showreel_url": "https://ultravelozmente.com/images/fastkids-showreel-720.mp4",
+      "offer": "Clase muestra gratis + diagnóstico de nivel",
+      "offer_short": "Clase muestra gratis",
+      "urgency": ""
     },
     {
       "id": "ciencia-astronomia",
@@ -83,8 +117,13 @@
       "price": "",
       "benefit": "asombro",
       "ages": "Niños",
-      "audience": ["ninos"],
-      "showreel_url": "https://ultravelozmente.com/images/ciencia-astronomia-showreel-720.mp4"
+      "audience": [
+        "ninos"
+      ],
+      "showreel_url": "https://ultravelozmente.com/images/ciencia-astronomia-showreel-720.mp4",
+      "offer": "Clase muestra sin costo y sin compromiso",
+      "offer_short": "Clase muestra sin costo",
+      "urgency": ""
     },
     {
       "id": "homeschool-veloz",
@@ -95,8 +134,14 @@
       "price": "",
       "benefit": "libertad",
       "ages": "Primaria a prepa",
-      "audience": ["ninos", "jovenes"],
-      "showreel_url": "https://ultravelozmente.com/images/homeschool-showreel-720.mp4"
+      "audience": [
+        "ninos",
+        "jovenes"
+      ],
+      "showreel_url": "https://ultravelozmente.com/images/homeschool-showreel-720.mp4",
+      "offer": "Sesión informativa gratuita",
+      "offer_short": "Sesión informativa gratis",
+      "urgency": "Cupos limitados por semana"
     },
     {
       "id": "memoria-prodigiosa",
@@ -107,8 +152,14 @@
       "price": "",
       "benefit": "retención",
       "ages": "15+ años",
-      "audience": ["jovenes", "adultos"],
-      "showreel_url": "https://ultravelozmente.com/images/memoria-prodigiosa-showreel-720.mp4"
+      "audience": [
+        "jovenes",
+        "adultos"
+      ],
+      "showreel_url": "https://ultravelozmente.com/images/memoria-prodigiosa-showreel-720.mp4",
+      "offer": "Clase muestra gratis de 45 minutos",
+      "offer_short": "Clase muestra gratis",
+      "urgency": ""
     },
     {
       "id": "admision-universitaria",
@@ -119,8 +170,13 @@
       "price": "",
       "benefit": "estrategia",
       "ages": "Jóvenes",
-      "audience": ["jovenes"],
-      "showreel_url": "https://ultravelozmente.com/images/admision-universitaria-showreel-720.mp4"
+      "audience": [
+        "jovenes"
+      ],
+      "showreel_url": "https://ultravelozmente.com/images/admision-universitaria-showreel-720.mp4",
+      "offer": "Diagnóstico de cortesía + simulador de regalo",
+      "offer_short": "Diagnóstico de cortesía",
+      "urgency": "Cupo limitado · grupos reducidos"
     },
     {
       "id": "comipems",
@@ -131,8 +187,13 @@
       "price": "",
       "benefit": "aspiración",
       "ages": "Secundaria",
-      "audience": ["jovenes"],
-      "showreel_url": "https://ultravelozmente.com/images/comipems-showreel-720.mp4"
+      "audience": [
+        "jovenes"
+      ],
+      "showreel_url": "https://ultravelozmente.com/images/comipems-showreel-720.mp4",
+      "offer": "Diagnóstico gratuito en línea o presencial",
+      "offer_short": "Diagnóstico gratis",
+      "urgency": ""
     },
     {
       "id": "regularizacion-express",
@@ -143,8 +204,14 @@
       "price": "",
       "benefit": "rescate",
       "ages": "Niños y jóvenes",
-      "audience": ["ninos", "jovenes"],
-      "showreel_url": ""
+      "audience": [
+        "ninos",
+        "jovenes"
+      ],
+      "showreel_url": "",
+      "offer": "Clase de diagnóstico sin costo",
+      "offer_short": "Diagnóstico sin costo",
+      "urgency": ""
     },
     {
       "id": "grandes-lideres",
@@ -155,8 +222,14 @@
       "price": "",
       "benefit": "carisma",
       "ages": "Niños y jóvenes",
-      "audience": ["ninos", "jovenes"],
-      "showreel_url": "https://ultravelozmente.com/images/grandes-lideres-showreel-720.mp4"
+      "audience": [
+        "ninos",
+        "jovenes"
+      ],
+      "showreel_url": "https://ultravelozmente.com/images/grandes-lideres-showreel-720.mp4",
+      "offer": "Sesión diagnóstica de 60 minutos sin costo",
+      "offer_short": "Sesión diagnóstica gratis",
+      "urgency": ""
     },
     {
       "id": "neurocomunicacion",
@@ -167,8 +240,13 @@
       "price": "",
       "benefit": "influencia",
       "ages": "Adultos",
-      "audience": ["adultos"],
-      "showreel_url": "https://ultravelozmente.com/images/neurocomunicacion-showreel-720.mp4"
+      "audience": [
+        "adultos"
+      ],
+      "showreel_url": "https://ultravelozmente.com/images/neurocomunicacion-showreel-720.mp4",
+      "offer": "Cita de cortesía sin compromiso",
+      "offer_short": "Cita de cortesía",
+      "urgency": ""
     },
     {
       "id": "redaccion-ejecutiva",
@@ -179,8 +257,13 @@
       "price": "",
       "benefit": "claridad",
       "ages": "Profesionales",
-      "audience": ["adultos"],
-      "showreel_url": "https://ultravelozmente.com/images/redaccion-ejecutiva-showreel-720.mp4"
+      "audience": [
+        "adultos"
+      ],
+      "showreel_url": "https://ultravelozmente.com/images/redaccion-ejecutiva-showreel-720.mp4",
+      "offer": "Clase muestra gratuita",
+      "offer_short": "Clase muestra gratis",
+      "urgency": ""
     },
     {
       "id": "universidad-dominical",
@@ -191,8 +274,13 @@
       "price": "",
       "benefit": "título",
       "ages": "Adultos",
-      "audience": ["adultos"],
-      "showreel_url": "https://ultravelozmente.com/images/universidad-dominical-showreel-720.mp4"
+      "audience": [
+        "adultos"
+      ],
+      "showreel_url": "https://ultravelozmente.com/images/universidad-dominical-showreel-720.mp4",
+      "offer": "Evaluación diagnóstica sin costo",
+      "offer_short": "Evaluación sin costo",
+      "urgency": "Cupos limitados"
     },
     {
       "id": "alfa-cash",
@@ -203,8 +291,13 @@
       "price": "",
       "benefit": "control",
       "ages": "Ejecutivos",
-      "audience": ["adultos"],
-      "showreel_url": "https://ultravelozmente.com/images/alfa-cash-showreel-720.mp4"
+      "audience": [
+        "adultos"
+      ],
+      "showreel_url": "https://ultravelozmente.com/images/alfa-cash-showreel-720.mp4",
+      "offer": "",
+      "offer_short": "",
+      "urgency": ""
     }
   ]
 }

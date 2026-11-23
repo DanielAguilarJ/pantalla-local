@@ -2,6 +2,8 @@
 //  - ~40% reels, ~35% comerciales generados, ~25% anuncios manuales (largo plazo).
 //  - Nunca dos ítems seguidos del mismo tipo (si hay más de un tipo disponible).
 //  - Dentro de cada tipo, "bolsa barajada": no se repite un ítem hasta agotar los demás.
+//  - Cada ítem puede traer `weight` (por defecto 1): en cada vuelta de la bolsa aparece ~weight veces.
+//    Así se segmenta por franja horaria (más programas infantiles a la salida de escuelas, etc.).
 
 export type MediaType = "reel" | "commercial" | "manual";
 
@@ -9,8 +11,12 @@ export const TYPE_WEIGHTS: Record<MediaType, number> = { reel: 0.4, commercial: 
 const TYPES: MediaType[] = ["reel", "commercial", "manual"];
 
 type Rand = () => number;
+export interface QueueItem {
+  id: string;
+  weight?: number;
+}
 
-class ShuffleBag<T extends { id: string }> {
+class ShuffleBag<T extends QueueItem> {
   private items: T[] = [];
   private bag: T[] = [];
   private lastId: string | null = null;
@@ -32,30 +38,58 @@ class ShuffleBag<T extends { id: string }> {
     for (const item of fresh) this.bag.splice(Math.floor(this.rand() * (this.bag.length + 1)), 0, item);
   }
 
-  next(): T | null {
-    if (!this.items.length) return null;
-    if (!this.bag.length) {
-      this.bag = this.items.slice();
-      for (let i = this.bag.length - 1; i > 0; i--) {
-        const j = Math.floor(this.rand() * (i + 1));
-        const t = this.bag[i];
-        this.bag[i] = this.bag[j];
-        this.bag[j] = t;
-      }
-      // Evita repetir en la frontera entre dos bolsas.
-      if (this.bag.length > 1 && this.bag[0].id === this.lastId) {
-        const t = this.bag[0];
-        this.bag[0] = this.bag[1];
-        this.bag[1] = t;
+  /** Copias por vuelta según el peso: 1.6 → 1 copia segura + 60 % de probabilidad de una segunda. */
+  private copies(item: T): number {
+    const w = Math.max(0, Math.min(4, item.weight === undefined ? 1 : item.weight));
+    const whole = Math.floor(w);
+    return whole + (this.rand() < w - whole ? 1 : 0);
+  }
+
+  private refill(): void {
+    let bag: T[] = [];
+    for (const item of this.items) for (let k = this.copies(item); k > 0; k--) bag.push(item);
+    if (!bag.length) bag = this.items.slice(); // nadie se queda fuera para siempre
+    for (let i = bag.length - 1; i > 0; i--) {
+      const j = Math.floor(this.rand() * (i + 1));
+      const t = bag[i];
+      bag[i] = bag[j];
+      bag[j] = t;
+    }
+    // Separa copias contiguas del mismo ítem (y del último que salió).
+    for (let i = 0; i < bag.length; i++) {
+      const prev = i === 0 ? this.lastId : bag[i - 1].id;
+      if (bag[i].id !== prev) continue;
+      for (let j = i + 1; j < bag.length; j++) {
+        if (bag[j].id !== prev && (j + 1 >= bag.length || bag[j + 1].id !== bag[i].id) && (j === 0 || bag[j - 1].id !== bag[i].id)) {
+          const t = bag[i];
+          bag[i] = bag[j];
+          bag[j] = t;
+          break;
+        }
       }
     }
-    const item = this.bag.shift() as T;
+    this.bag = bag;
+  }
+
+  next(): T | null {
+    if (!this.items.length) return null;
+    if (!this.bag.length) this.refill();
+    // Nunca el mismo ítem dos veces seguidas (si hay otro disponible).
+    let idx = 0;
+    if (this.items.length > 1 && this.bag[0].id === this.lastId) {
+      idx = this.bag.findIndex((x) => x.id !== this.lastId);
+      if (idx < 0) {
+        this.refill();
+        idx = Math.max(0, this.bag.findIndex((x) => x.id !== this.lastId));
+      }
+    }
+    const item = this.bag.splice(idx, 1)[0];
     this.lastId = item.id;
     return item;
   }
 }
 
-export class WeightedQueue<R extends { id: string }, C extends { id: string }, M extends { id: string }> {
+export class WeightedQueue<R extends QueueItem, C extends QueueItem, M extends QueueItem> {
   private bags: { reel: ShuffleBag<R>; commercial: ShuffleBag<C>; manual: ShuffleBag<M> };
   private credit: Record<MediaType, number> = { reel: 0, commercial: 0, manual: 0 };
   private lastType: MediaType | null = null;

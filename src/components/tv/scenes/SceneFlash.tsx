@@ -3,7 +3,7 @@
 import { QrBadge } from "../QrCode";
 import type { CoursePlay } from "../engine";
 import { BRAND } from "@/lib/brand";
-import { ArrowIcon, BrandBug, StaggerWords } from "./shared";
+import { ArrowIcon, BrandBug, ctaLabel, offerTag, offerWord, StaggerWords } from "./shared";
 
 function burstPoints(spikes: number, outer: number, inner: number): string {
   const pts: string[] = [];
@@ -42,7 +42,7 @@ export function SceneFlash({ play }: { play: CoursePlay }) {
           </div>
           <div className="fl-cta">
             <span className="cta display pop-in" style={{ animationDelay: "4200ms" }}>
-              Inscribirme <ArrowIcon /> escanea el QR
+              {ctaLabel(play.featured.offerShort, course.hook_headline)} <ArrowIcon /> escanea el QR
             </span>
           </div>
         </div>
@@ -54,13 +54,13 @@ export function SceneFlash({ play }: { play: CoursePlay }) {
             <polygon points={BURST} />
           </svg>
           <div className="fl-burst-text display">
-            <span className="fl-burst-inner">{course.price || BRAND.noPriceBadge}</span>
+            <span className="fl-burst-inner">{course.price || offerWord(play.featured.offer) || BRAND.noPriceBadge}</span>
           </div>
         </div>
       </div>
 
       <BrandBug className="brand-tl" />
-      <QrBadge url={course.course_url} dark={palette.qrDark} className="fl-qr" />
+      <QrBadge url={course.course_url} dark={palette.qrDark} className="fl-qr" offer={offerTag(course.hook_headline, play.featured.offerShort)} urgency={play.featured.urgency} />
     </div>
   );
 }

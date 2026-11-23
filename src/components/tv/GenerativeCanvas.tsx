@@ -44,7 +44,9 @@ export function GenerativeCanvas({ pattern, seed, bg, ink, accent, className }: 
     };
 
     const frame = (now: number) => {
-      const t = (now - t0) / 1000;
+      // El timestamp de rAF puede ser anterior a t0 en el primer cuadro: sin el max() saldría un radio negativo
+      // y arc() lanzaría una excepción que detiene la animación.
+      const t = Math.max(0, (now - t0) / 1000);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, w, h);
