@@ -8,6 +8,7 @@ export const BRAND = {
   siteLabel: "ultravelozmente.com",
   whatsappDisplay: "55 7810 7837",
   whatsappUrl: "https://wa.me/525578107837?text=Hola,%20quiero%20informes",
+  whatsappNumber: "525578107837",
   /** Datos verificables del sitio: se usan en copys y en la pantalla, nunca se inventan promesas. */
   facts: {
     since: "2000",
@@ -36,3 +37,12 @@ export const BRAND = {
     ink: "#161512",
   },
 } as const;
+
+/**
+ * Enlace de WhatsApp con mensaje prellenado. "(vi la pantalla)" permite contar cuántos prospectos llegan
+ * por la pantalla del local (atribución), sin herramientas extra.
+ */
+export function whatsappLink(program?: string): string {
+  const text = program ? `Hola, quiero informes de ${program} (vi la pantalla)` : "Hola, quiero informes de los programas (vi la pantalla)";
+  return `https://wa.me/${BRAND.whatsappNumber}?text=${encodeURIComponent(text)}`;
+}

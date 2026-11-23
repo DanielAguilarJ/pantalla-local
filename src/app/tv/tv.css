@@ -94,17 +94,22 @@ html.tv-mode body {
   to { transform: scale(1.06); }
 }
 
-/* <video> invisible 1x1 en bucle: mantiene viva la reproducción para que webOS no lance el salvapantallas. */
-.keepalive {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  width: 1px;
-  height: 1px;
-  opacity: 0.01;
+/*
+ * Video de fondo a pantalla completa (ver KeepAwake.tsx): webOS no lanza el salvapantallas mientras hay un
+ * video a pantalla completa. Queda debajo de todo y lo tapa .ambient-cover con el color del día.
+ */
+.ambient,
+.ambient-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  z-index: 1;
 }
+.ambient { z-index: 0; object-fit: fill; background: var(--bg); }
+.ambient-cover { z-index: 0; background: var(--bg); transition: background-color 0.6s ease; }
+.tv-stage > .slide { z-index: 1; }
 
 .idle {
   display: flex;

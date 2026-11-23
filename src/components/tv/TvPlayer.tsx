@@ -9,6 +9,7 @@ import { dailySeed } from "@/lib/seed";
 import { daypartAt, type Daypart } from "@/lib/sede-time";
 import type { Playlist, PlaylistManual, PlaylistReel } from "@/lib/types";
 import { CommercialSlide } from "./CommercialSlide";
+import { EndCard, END_CARD_MS, type EndCardInfo } from "./EndCard";
 import {
   COMMERCIAL_MS,
   isSceneId,
@@ -35,11 +36,40 @@ type Current =
   | { key: number; type: "showreel"; reel: PlaylistReel; info: NonNullable<PlaylistReel["showreel"]> }
   | { key: number; type: "manual-video"; src: string }
   | { key: number; type: "manual-image"; src: string; durationSec: number }
-  | { key: number; type: "commercial"; play: CommercialPlay };
+  | { key: number; type: "commercial"; play: CommercialPlay }
+  | { key: number; type: "endcard"; info: EndCardInfo };
+
+const GENERIC_END: EndCardInfo = { program: "", offer: "", urgency: "" };
+
+/** Datos del cierre según el anuncio que terminó (programa, oferta y escasez reales). */
+function endCardFor(c: Current): EndCardInfo {
+  if (c.type === "commercial") {
+    const f = c.play.featured;
+    return { program: f.course.title, offer: f.offer, urgency: f.urgency };
+  }
+  if (c.type === "showreel") return { program: c.info.title, offer: c.info.offer, urgency: "" };
+  return GENERIC_END;
+}
+
+/** Todos los anuncios llevan cierre, salvo los que ya SON un QR/teléfono gigante (no se repite dos veces seguidas). */
+function wantsEndCard(c: Current): boolean {
+  if (c.type === "endcard") return false;
+  if (c.type === "commercial") {
+    if (c.play.kind === "course" && c.play.scene === "scan") return false;
+    if (c.play.kind === "brand" && c.play.spot === "contact") return false;
+  }
+  return true;
+}
+
+/** Mientras no suene un video de anuncio, suena el video de fondo a pantalla completa (anti-salvapantallas). */
+function needsAmbient(c: Current | null): boolean {
+  return !c || (c.type !== "reel" && c.type !== "showreel" && c.type !== "manual-video");
+}
 
 /** Tiempo máximo razonable de cada slide: si se supera, el watchdog del reproductor fuerza el avance. */
 function maxMsFor(c: Current): number {
   if (c.type === "commercial") return COMMERCIAL_MS + 10_000;
+  if (c.type === "endcard") return END_CARD_MS + 10_000;
   if (c.type === "manual-image") return c.durationSec * 1000 + 25_000;
   if (c.type === "showreel" && c.reel.maxSec) return c.reel.maxSec * 1000 + 25_000;
   return 16 * 60_000;
@@ -134,17 +164,25 @@ export function TvPlayer({ initial, demo, preview, forceScene, forcePalette }: P
       const planned = planCommercial(src, index, new Date(), isSceneId(forceScene) ? forceScene : undefined);
       const play = forcePalette ? { ...planned, palette: forcePalette } : planned;
       setPalette(play.palette);
-      show({ key, type: "commercial", play });
+      // Vista previa del cierre: se muestra directo el cierre del anuncio que tocaba.
+      if (forceScene === "endcard") show({ key, type: "endcard", info: endCardFor({ key, type: "commercial", play }) });
+      else show({ key, type: "commercial", play });
     }
   }, [preview, show, forceScene, forcePalette]);
 
-  /** Cada slide recibe un "terminé" atado a su key: avisos duplicados o tardíos no saltan otro anuncio. */
+  /**
+   * Cada slide recibe un "terminé" atado a su key: avisos duplicados o tardíos no saltan otro anuncio.
+   * Al terminar un anuncio aparece su cierre (QR + WhatsApp gigante); al terminar el cierre, el siguiente anuncio.
+   */
   const onDone = useMemo(() => {
     const key = current?.key;
     return () => {
-      if (key !== undefined && currentRef.current?.key === key) advance();
+      const c = currentRef.current;
+      if (key === undefined || !c || c.key !== key) return;
+      if (wantsEndCard(c) && forceScene !== "endcard") show({ key: ++keyRef.current, type: "endcard", info: endCardFor(c) });
+      else advance();
     };
-  }, [current?.key, advance]);
+  }, [current?.key, advance, show, forceScene]);
 
   const applyPlaylist = useCallback(
     (p: Playlist) => {
@@ -234,11 +272,14 @@ export function TvPlayer({ initial, demo, preview, forceScene, forcePalette }: P
     else if (current.type === "manual-video") slide = <VideoSlide src={current.src} fit="auto" onDone={onDone} />;
     else if (current.type === "manual-image")
       slide = <ImageSlide src={current.src} durationSec={current.durationSec} onDone={onDone} />;
+    else if (current.type === "endcard") slide = <EndCard info={current.info} palette={palette} onDone={onDone} />;
     else slide = <CommercialSlide play={current.play} onDone={onDone} />;
   }
 
   return (
     <div className="tv-stage" style={paletteCssVars(palette) as CSSProperties}>
+      {/* Va antes del anuncio: libera el video de fondo antes de que el video del anuncio pida el decodificador. */}
+      {preview ? null : <KeepAwake active={needsAmbient(current)} />}
       {current ? (
         <SlideBoundary key={current.key} onError={onDone}>
           {slide}
@@ -254,8 +295,6 @@ export function TvPlayer({ initial, demo, preview, forceScene, forcePalette }: P
           <span className="idle-dot" />
         </div>
       ) : null}
-
-      {preview ? null : <KeepAwake />}
     </div>
   );
 }

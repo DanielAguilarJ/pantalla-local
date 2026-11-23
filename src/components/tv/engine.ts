@@ -166,7 +166,12 @@ export function isSpotId(v: unknown): v is SpotId {
   return typeof v === "string" && (SPOTS as string[]).includes(v);
 }
 
-export type PreviewTarget = SceneId | SpotId;
+/** "endcard" = solo cierres (QR + WhatsApp gigante), para revisarlos en /admin. */
+export type PreviewTarget = SceneId | SpotId | "endcard";
+
+export function isPreviewTarget(v: unknown): v is PreviewTarget {
+  return v === "endcard" || isSceneId(v) || isSpotId(v);
+}
 
 /** Todo lo visual se decide con la semilla del día (YYYY-MM-DD) + curso: cambia sola cada 24 h. */
 export function planCommercial(
