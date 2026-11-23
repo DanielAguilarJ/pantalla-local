@@ -35,16 +35,46 @@ export const STATE_FILE = process.env.SIGNAGE_STATE_FILE || "/tmp/signage-state.
 
 let redisClient: Redis | null | undefined;
 
+/**
+ * Busca credenciales REST de Upstash. Acepta los nombres estándar y también los que Vercel crea cuando
+ * se conecta el store con un prefijo personalizado (p. ej. STORAGE_KV_REST_API_URL).
+ */
+function redisCredentials(): { url: string; token: string } | null {
+  const env = process.env;
+  const pairs: Array<[string, string]> = [
+    ["UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"],
+    ["KV_REST_API_URL", "KV_REST_API_TOKEN"],
+  ];
+  for (const key of Object.keys(env)) {
+    for (const suffix of ["_UPSTASH_REDIS_REST_URL", "_KV_REST_API_URL"]) {
+      if (key.endsWith(suffix)) pairs.push([key, key.replace(/_URL$/, "_TOKEN")]);
+    }
+  }
+  for (const [urlKey, tokenKey] of pairs) {
+    const url = env[urlKey];
+    const token = env[tokenKey];
+    if (url && token) return { url, token };
+  }
+  return null;
+}
+
 function redis(): Redis | null {
   if (redisClient !== undefined) return redisClient;
-  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
-  redisClient = url && token ? new Redis({ url, token }) : null;
+  const creds = redisCredentials();
+  redisClient = creds ? new Redis(creds) : null;
   return redisClient;
 }
 
 export function storageBackend(): "redis" | "file" {
   return redis() ? "redis" : "file";
+}
+
+/**
+ * En Vercel cada ruta corre en su propia función con su propio /tmp: sin Redis, lo que guarda el webhook
+ * no lo ve /api/playlist. Ahí el almacenamiento de archivo no sirve para compartir datos.
+ */
+export function storageIsShared(): boolean {
+  return storageBackend() === "redis" || !process.env.VERCEL;
 }
 
 // ---- Backend de archivo ----

@@ -83,7 +83,7 @@ muestra solo una escena; `scene` se ignora fuera de `preview=1`.
 ```
 
 Respuestas: `200` (guardado; incluye `dropped` si se descartó algún elemento inválido), `401`, `400` (JSON roto),
-`413` (> 1 MB), `422` (estructura inválida; se conserva el contenido anterior). Las claves extra se eliminan.
+`413` (> 1 MB), `422` (estructura inválida; se conserva el contenido anterior), `500` (falta `SYNC_SECRET`), `503` (en Vercel sin Upstash Redis). Las claves extra se eliminan.
 Si `hook_headline`/`hook_subheadline` llegan vacíos, se completan con `data/benfrank-templates.json`.
 
 ## Cómo funciona `/tv`
