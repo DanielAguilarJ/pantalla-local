@@ -3,7 +3,7 @@
 import { Fragment, type CSSProperties } from "react";
 import type { NewsItem } from "@/lib/types";
 import { QrBadge } from "../QrCode";
-import type { CommercialPlay } from "../engine";
+import type { CoursePlay } from "../engine";
 import { BrandLogo } from "@/components/BrandLogo";
 import { BRAND } from "@/lib/brand";
 import { CourseImage, PriceOrContact } from "./shared";
@@ -38,7 +38,7 @@ function Track({ items, reverse, seconds }: { items: string[]; reverse?: boolean
 }
 
 /** Escena 3 · Cintas de noticias arriba y abajo; al centro, la noticia del día y luego el curso relacionado. */
-export function SceneTicker({ play }: { play: CommercialPlay }) {
+export function SceneTicker({ play }: { play: CoursePlay }) {
   const { course, palette, featuredNews } = play;
   // Sin noticias del día, las cintas muestran datos reales de WorldBrain en vez de repetir el gancho.
   const items = tickerItems(play.news, BRAND.tickerFacts);

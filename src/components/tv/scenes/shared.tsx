@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState, type CSSProperties } from "react";
+import { Fragment, useEffect, useRef, useState, type CSSProperties } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { BRAND } from "@/lib/brand";
 import { shortCourseName } from "@/lib/copy";
@@ -35,18 +35,41 @@ export function StaggerWords({
   );
 }
 
-/** Imagen del curso con respaldo tipográfico si la URL falla (nunca un hueco en blanco). */
+/**
+ * Imagen del curso. Mientras carga (o si falla) muestra una placa tipográfica con el nombre del programa:
+ * nunca un hueco de color plano. Al cargar, la foto aparece con un fundido.
+ */
 export function CourseImage({ src, title, style }: { src: string; title: string; style?: CSSProperties }) {
-  const [failed, setFailed] = useState(!src);
-  if (failed) {
-    return (
-      <div className="no-img display" style={{ width: "100%", height: "100%", ...style }}>
-        {shortCourseName(title).split(" ")[0]}
-      </div>
-    );
-  }
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt="" decoding="async" style={style} onError={() => setFailed(true)} />;
+  const [state, setState] = useState<"loading" | "loaded" | "failed">(src ? "loading" : "failed");
+  const ref = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    // Si la imagen ya venía en caché y terminó antes de enganchar onLoad.
+    const img = ref.current;
+    if (img && img.complete && img.naturalWidth > 0) setState("loaded");
+  }, [src]);
+
+  return (
+    <>
+      {state !== "loaded" ? (
+        <div className="no-img img-ph display" aria-hidden="true">
+          {shortCourseName(title).split(" ")[0]}
+        </div>
+      ) : null}
+      {state !== "failed" ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          ref={ref}
+          src={src}
+          alt=""
+          decoding="async"
+          style={{ ...style, opacity: state === "loaded" ? 1 : 0, transition: "opacity .5s ease" }}
+          onLoad={() => setState("loaded")}
+          onError={() => setState("failed")}
+        />
+      ) : null}
+    </>
+  );
 }
 
 /** Logo de WorldBrain sobre una ficha del color de fondo (legible encima de cualquier escena). */

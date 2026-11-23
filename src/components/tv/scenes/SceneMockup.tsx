@@ -1,13 +1,13 @@
 "use client";
 
 import { QrBadge } from "../QrCode";
-import type { CommercialPlay } from "../engine";
+import type { CoursePlay } from "../engine";
 import { useOrientation } from "../useOrientation";
 import { BRAND } from "@/lib/brand";
 import { BrandBug, CheckIcon, CourseImage, PointerIcon, PriceOrContact, StaggerWords } from "./shared";
 
 /** Escena 1 · Smartphone/laptop 3D flotante con la landing real del curso y un cursor que hace clic. */
-export function SceneMockup({ play }: { play: CommercialPlay }) {
+export function SceneMockup({ play }: { play: CoursePlay }) {
   const { course, palette } = play;
   const portrait = useOrientation() === "portrait";
   const device = portrait ? "phone" : play.device;

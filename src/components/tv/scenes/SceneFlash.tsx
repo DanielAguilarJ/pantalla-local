@@ -1,7 +1,7 @@
 "use client";
 
 import { QrBadge } from "../QrCode";
-import type { CommercialPlay } from "../engine";
+import type { CoursePlay } from "../engine";
 import { BRAND } from "@/lib/brand";
 import { ArrowIcon, BrandBug, StaggerWords } from "./shared";
 
@@ -21,7 +21,7 @@ const BURST = burstPoints(18, 50, 40);
  * Escena 5 · Cartel editorial de urgencia: sello gigante, palabras estampadas y pulso rítmico de escala.
  * El pulso es de 0.75 s (≈1.3 Hz) y sin destellos de color a pantalla completa (seguro para fotosensibilidad).
  */
-export function SceneFlash({ play }: { play: CommercialPlay }) {
+export function SceneFlash({ play }: { play: CoursePlay }) {
   const { course, palette } = play;
 
   return (

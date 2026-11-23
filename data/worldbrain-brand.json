@@ -1,0 +1,56 @@
+{
+  "source": "https://ultravelozmente.com/ (secciones Correspondencia, El método, Así empieza una clase, Programas para cada etapa; noviembre 2026)",
+  "note": "Textos institucionales para los anuncios de marca de la pantalla. Se copian tal como los publica WorldBrain; no se inventan datos.",
+  "testimonials": [
+    { "id": "t01", "program": "robotics-code", "quote": "Mi hijo de 12 años creó su propia app. Antes solo jugaba, ahora entiende cómo funcionan las cosas.", "name": "Laura M.", "role": "Mamá de Andrés, 12 años", "result": "Creó su primera app en Robotics Junior" },
+    { "id": "t02", "program": "robotics-code", "quote": "En 3 meses pasó de armar bloques en Scratch a programar sensores de movimiento reales.", "name": "Roberto C.", "role": "Papá de Mateo, 9 años", "result": "Robot seguidor de línea completado" },
+    { "id": "t03", "program": "robotics-code", "quote": "La atención en grupos pequeños de 7 alumnos hace toda la diferencia. El profesor está al pendiente.", "name": "Sofia P.", "role": "Mamá de Gabriel, 15 años", "result": "Proyecto Python & IA presentado" },
+    { "id": "t04", "program": "fastkids", "quote": "Mi hija le tenía pavor al inglés. A los 3 meses en FastKids ya cantaba y se presentaba sola en inglés. Los 5 Minutos del inicio de clase son magia pura.", "name": "Mariana G.", "role": "Mamá de Sofi, 8 años · Cuautitlán Izcalli", "result": "Se presenta sola en inglés tras tres meses" },
+    { "id": "t05", "program": "fastkids", "quote": "Grupos de 7 alumnos de verdad. Al maestro le alcanza el tiempo para que TODOS hablen en cada clase. Nada que ver con las escuelas de 30 niños por salón.", "name": "Ricardo H.", "role": "Papá de Leo, 11 años · CDMX", "result": "Todos hablan en cada clase en grupos de 7" },
+    { "id": "t06", "program": "fastkids", "quote": "Aprender por frases en vez de palabras sueltas cambió todo. Pasé del diagnóstico A1 a B1 y ya veo series sin subtítulos.", "name": "Dani V.", "role": "Alumna, 15 años", "result": "Del diagnóstico A1 a B1" },
+    { "id": "t07", "program": "lectoescritura", "quote": "Leo no quería ni abrir un libro. A la tercera semana me pidió que lo dejara terminar el cuento él solo. Ahora me lee él a mí antes de dormir.", "name": "Ana P.", "role": "Mamá de Leo, 5 años", "result": "De rechazar los libros a leer solo · 3 semanas" },
+    { "id": "t08", "program": "lectoescritura", "quote": "En el kínder decían que se distraía. Aquí descubrieron que estaba aburrida: el material era demasiado fácil. En dos meses su maestra preguntó qué habíamos hecho.", "name": "Carlos M.", "role": "Papá de Sofía, 6 años", "result": "Primer lugar de su clase en lectura" },
+    { "id": "t09", "program": "lectoescritura", "quote": "Diego confundía letras y odiaba escribir. Hoy hace sus tareas sin pelear y su letra es de las mejores del salón.", "name": "Mariana R.", "role": "Mamá de Diego, 7 años", "result": "Escritura clara y tareas sin conflicto" },
+    { "id": "t10", "program": "grandes-lideres", "quote": "Llegó a casa y nos pidió la mesa para exponernos por qué merecía más tiempo de consola. Con datos. Perdimos la discusión.", "name": "Adriana R.", "role": "Mamá de Emiliano, 11 años · Cuautitlán Izcalli", "result": "Expuso su caso en casa con datos" },
+    { "id": "t11", "program": "grandes-lideres", "quote": "La maestra nos habló para preguntar qué habíamos hecho. En dos meses pasó de no participar a coordinar su equipo.", "name": "Jorge M.", "role": "Papá de Regina, 14 años · Atizapán", "result": "De no participar a coordinar su equipo" },
+    { "id": "t12", "program": "grandes-lideres", "quote": "Antes me temblaba la voz nomás de pensar en pasar al frente. Ahora es mi parte favorita de la clase.", "name": "Valeria S.", "role": "Alumna, 13 años · Tlalnepantla", "result": "Pasar al frente es su parte favorita" }
+  ],
+  "method": {
+    "kicker": "El método · Tres momentos",
+    "headline": "Conoce tu punto de partida. Practica. Haz visible tu avance.",
+    "steps": [
+      { "numeral": "I", "verb": "Observa", "title": "Punto de partida", "text": "Definimos qué quieres fortalecer y observamos cómo resuelves hoy las tareas de tu programa." },
+      { "numeral": "II", "verb": "Practica", "title": "Práctica guiada", "text": "Cada sesión combina explicaciones claras, ejercicios y oportunidades para aplicar lo aprendido." },
+      { "numeral": "III", "verb": "Avanza", "title": "Progreso visible", "text": "Retomamos actividades comparables para reconocer avances y decidir dónde enfocar la siguiente práctica." }
+    ]
+  },
+  "ritual": {
+    "kicker": "Así empieza una clase",
+    "headline": "Cinco minutos para activar la atención.",
+    "items": [
+      { "icon": "body", "title": "Activa el cuerpo", "text": "Un ejercicio breve reúne la atención." },
+      { "icon": "music", "title": "Crea una transición", "text": "La música marca el cambio de ritmo." },
+      { "icon": "leaf", "title": "Prepara el ambiente", "text": "Una bienvenida cuidada para cada participante." },
+      { "icon": "dice", "title": "Abre la curiosidad", "text": "Un juego guiado da la primera razón para explorar." }
+    ]
+  },
+  "stages": {
+    "kicker": "Programas para cada etapa",
+    "headline": "¿Para quién buscas el programa?",
+    "items": [
+      { "audience": "ninos", "label": "Primeras habilidades", "ages": "Desde 4 años", "summary": "Lectoescritura" },
+      { "audience": "ninos", "label": "Etapa escolar", "ages": "Primaria y secundaria", "summary": "Cálculo, idiomas y tecnología" },
+      { "audience": "adultos", "label": "Jóvenes y adultos", "ages": "15+ años", "summary": "Lectura, memoria y comunicación" }
+    ]
+  },
+  "numbers": {
+    "kicker": "WorldBrain en números",
+    "headline": "Aprender mejor se entrena.",
+    "items": [
+      { "value": "2000", "label": "Año fundacional" },
+      { "prefix": "Máx.", "value": "7", "label": "Participantes por grupo" },
+      { "value": "17", "label": "Programas" },
+      { "text": "Izcalli", "label": "Sede central · Cuautitlán" }
+    ]
+  }
+}

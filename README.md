@@ -12,6 +12,29 @@ Pantalla de escaparate de [WorldBrain México](https://ultravelozmente.com/), en
 | `GET /api/cron/fallback-sync` | Motor de respaldo sin IA (Vercel Cron). Solo actúa si Make.com lleva > 26 h sin enviar datos. |
 | `GET /api/playlist` | JSON que consume la TV cada 15 min. |
 
+## Anuncios generados (12 s cada uno, CSS/SVG/Canvas, cero IA)
+
+| Tipo | Diseño | `?scene=` |
+| --- | --- | --- |
+| Curso | Celular / laptop 3D con cursor que hace clic | `mockup` |
+| Curso | Tipografía cinética con subrayado SVG y bloque de color | `kinetic` |
+| Curso | Cintas de noticias + curso relacionado | `ticker` |
+| Curso | Pantalla dividida con patrón generativo en Canvas | `split` |
+| Curso | Oferta flash tipo cartel | `flash` |
+| Curso | **Portada editorial** (vertical primero): foto que se destapa y palabra-beneficio gigante | `cover` |
+| Curso | **Índice de programas** (vertical primero): la lista se desplaza hasta el programa y lo marca | `index` |
+| Marca | **Testimonios** de ultravelozmente.com con sello giratorio (12, rotan sin repetirse) | `testimonial` |
+| Marca | **El método** en tres momentos con línea de avance | `method` |
+| Marca | **En números**: 2000 · máx. 7 · 17 · Izcalli con contador tipo odómetro | `numbers` |
+| Marca | **Los 5 Minutos** con anillo que se completa por cuartos | `ritual` |
+| Marca | **¿Para quién?**: tres etapas con sus programas reales | `stages` |
+
+Todos cierran con un QR al temario del programa (en los de marca, el programa recomendado o el del
+testimonio). Los textos institucionales están en `data/worldbrain-brand.json`, copiados del sitio.
+En la rotación, los anuncios de marca ocupan ~30% de los comerciales (los testimonios cuentan triple).
+Para revisar un diseño: `/tv?preview=1&scene=<id>&palette=<acido|worldbrain|coral|menta|senal|chicle>`, o desde
+`/admin → Vista previa → Diseño`.
+
 ## WorldBrain en la pantalla
 
 - **Catálogo oficial** (`data/worldbrain-catalog.json`): los 17 programas de ultravelozmente.com con descripción, imagen,
