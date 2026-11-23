@@ -18,6 +18,7 @@ const DESIGNS: { id: string; label: string }[] = [
   { id: "split", label: "Curso · Pantalla dividida" },
   { id: "flash", label: "Curso · Oferta flash" },
   { id: "testimonial", label: "Marca · Testimonios" },
+  { id: "story", label: "Marca · Antes / Después (caras reales)" },
   { id: "method", label: "Marca · El método" },
   { id: "numbers", label: "Marca · En números" },
   { id: "ritual", label: "Marca · Los 5 Minutos" },

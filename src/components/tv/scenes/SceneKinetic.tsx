@@ -53,7 +53,7 @@ export function SceneKinetic({ play }: { play: CoursePlay }) {
       <div className="fill kn-b">
         {/* Foto del programa en el espacio libre del bloque de color (arriba en vertical, a la derecha en horizontal). */}
         <div className="kn-b-photo">
-          <CourseImage src={course.image_url} title={course.title} />
+          <CourseImage src={play.featured.photo || course.image_url} title={course.title} />
         </div>
         <div className="kn-b-sub">
           <StaggerWords text={course.hook_subheadline} startMs={6600} stepMs={70} />

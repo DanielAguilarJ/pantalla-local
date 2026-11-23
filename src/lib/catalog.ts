@@ -15,6 +15,8 @@ export interface CatalogProgram extends Course {
   offer_short: string;
   /** Escasez real publicada en la página (p. ej. "Cupos limitados por semana"). */
   urgency: string;
+  /** Foto con personas publicada en la página del programa (vacía si no hay). */
+  photo_url: string;
 }
 
 export const CATALOG: CatalogProgram[] = (catalogData.programs as Array<Omit<CatalogProgram, "hook_headline" | "hook_subheadline">>).map(

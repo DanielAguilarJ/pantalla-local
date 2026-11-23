@@ -3,9 +3,11 @@
 import type { CSSProperties } from "react";
 import type { CoursePlay } from "../engine";
 import { EdFooter, Masthead, pad2, Reveal, Stage, usePhase } from "../spots/kit";
+import { useOrientation } from "../useOrientation";
 import { ArrowIcon } from "./shared";
 
-const VISIBLE_ROWS = 6;
+/** Filas visibles: 5 en vertical (más grandes, para exterior) y 6 en horizontal. */
+const VISIBLE_ROWS = { portrait: 5, landscape: 6 };
 
 /**
  * Escena 7 · Índice de programas (como el índice de ultravelozmente.com).
@@ -14,9 +16,10 @@ const VISIBLE_ROWS = 6;
  */
 export function SceneIndex({ play }: { play: CoursePlay }) {
   const { course, featured, palette, roster } = play;
-  const phase = usePhase([700, 3300]);
+  const phase = usePhase([250, 1500]);
+  const rows = VISIBLE_ROWS[useOrientation()];
   const k = Math.max(0, roster.findIndex((r) => r.id === featured.id));
-  const offset = Math.max(0, Math.min(k - 2, roster.length - VISIBLE_ROWS));
+  const offset = Math.max(0, Math.min(k - 2, roster.length - rows));
   const listStyle = {
     transform: phase >= 1 ? `translateY(calc(${-offset} * var(--row)))` : "translateY(0)",
   } as CSSProperties;
@@ -53,21 +56,21 @@ export function SceneIndex({ play }: { play: CoursePlay }) {
 
       <div className="ix-detail">
         {featured.offer ? (
-          <div className="ix-offer ed-up" style={{ animationDelay: "3300ms" }}>
+          <div className="ix-offer ed-up" style={{ animationDelay: "1500ms" }}>
             {featured.offer}
           </div>
         ) : null}
-        <div className="ix-hook display ed-up" style={{ animationDelay: "3500ms" }}>
+        <div className="ix-hook display ed-up" style={{ animationDelay: "1650ms" }}>
           {course.hook_headline}
         </div>
         {course.hook_subheadline && !featured.offer ? (
-          <div className="ix-sub ed-up" style={{ animationDelay: "3800ms" }}>
+          <div className="ix-sub ed-up" style={{ animationDelay: "1800ms" }}>
             {course.hook_subheadline}
           </div>
         ) : null}
       </div>
 
-      <EdFooter featured={featured} palette={palette} delayMs={4200} />
+      <EdFooter featured={featured} palette={palette} delayMs={900} />
     </Stage>
   );
 }

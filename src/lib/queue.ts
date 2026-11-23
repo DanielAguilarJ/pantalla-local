@@ -92,6 +92,8 @@ class ShuffleBag<T extends QueueItem> {
 export class WeightedQueue<R extends QueueItem, C extends QueueItem, M extends QueueItem> {
   private bags: { reel: ShuffleBag<R>; commercial: ShuffleBag<C>; manual: ShuffleBag<M> };
   private credit: Record<MediaType, number> = { reel: 0, commercial: 0, manual: 0 };
+  private weights: Record<MediaType, number> = { ...TYPE_WEIGHTS };
+  private allowRepeat = new Set<MediaType>();
   private lastType: MediaType | null = null;
 
   constructor(private rand: Rand = Math.random) {
@@ -104,6 +106,14 @@ export class WeightedQueue<R extends QueueItem, C extends QueueItem, M extends Q
     this.bags.manual.set(sources.manual);
   }
 
+  /** Ajusta la proporción de un tipo (p. ej. menos showreels 16:9 cuando la pantalla está en vertical). */
+  setTypeWeights(overrides: Partial<Record<MediaType, number>>, allowRepeat: MediaType[] = []): void {
+    this.weights = { ...TYPE_WEIGHTS, ...overrides };
+    // Con solo dos tipos, "nunca dos seguidos del mismo tipo" obliga a alternar 50/50; para que el peso
+    // tenga efecto, un tipo puede declararse repetible (sus ítems igual nunca se repiten seguidos).
+    this.allowRepeat = new Set(allowRepeat);
+  }
+
   get isEmpty(): boolean {
     return TYPES.every((t) => this.bags[t].size === 0);
   }
@@ -112,12 +122,13 @@ export class WeightedQueue<R extends QueueItem, C extends QueueItem, M extends Q
     const available = TYPES.filter((t) => this.bags[t].size > 0);
     if (!available.length) return null;
 
-    const total = available.reduce((s, t) => s + TYPE_WEIGHTS[t], 0);
+    const total = available.reduce((s, t) => s + this.weights[t], 0);
     // "Smooth weighted round-robin" con ruido: respeta las proporciones a largo plazo sin ser predecible.
-    for (const t of available) this.credit[t] += (TYPE_WEIGHTS[t] / total) * (0.6 + 0.8 * this.rand());
+    for (const t of available) this.credit[t] += (this.weights[t] / total) * (0.6 + 0.8 * this.rand());
     for (const t of TYPES) if (!available.includes(t)) this.credit[t] = 0;
 
-    const candidates = available.length > 1 ? available.filter((t) => t !== this.lastType) : available;
+    const candidates =
+      available.length > 1 ? available.filter((t) => t !== this.lastType || this.allowRepeat.has(t)) : available;
     let chosen = candidates[0];
     for (const t of candidates) if (this.credit[t] > this.credit[chosen]) chosen = t;
     this.credit[chosen] -= 1;

@@ -26,22 +26,22 @@ export function SpotContact({ play }: { play: BrandPlay }) {
             <WhatsIcon />
           </span>
         </div>
-        <div className="ed-mono ct-label ed-up" style={{ animationDelay: "1000ms" }}>
+        <div className="ed-mono ct-label ed-up" style={{ animationDelay: "300ms" }}>
           Escríbenos por WhatsApp
         </div>
         <div className="ct-number display">
           {groups.map((g, i) => (
             <span key={i} className="rv-w">
-              <span className="rv-i" style={{ animationDelay: `${1200 + i * 180}ms` }}>
+              <span className="rv-i" style={{ animationDelay: `${350 + i * 120}ms` }}>
                 {g}
               </span>
             </span>
           ))}
         </div>
-        <div className="ct-sub ed-up" style={{ animationDelay: "2100ms" }}>
+        <div className="ct-sub ed-up" style={{ animationDelay: "800ms" }}>
           {c.sub}
         </div>
-        <div className="ed-mono ct-hours ed-up" style={{ animationDelay: "2400ms" }}>
+        <div className="ed-mono ct-hours ed-up" style={{ animationDelay: "900ms" }}>
           {BRAND.facts.hours}
         </div>
       </div>

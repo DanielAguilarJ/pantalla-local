@@ -8,6 +8,7 @@ import { SpotMethod } from "./SpotMethod";
 import { SpotNumbers } from "./SpotNumbers";
 import { SpotRitual } from "./SpotRitual";
 import { SpotStages } from "./SpotStages";
+import { SpotStory } from "./SpotStory";
 import { SpotTestimonial } from "./SpotTestimonial";
 
 /** Anuncios institucionales de WorldBrain (12 s, CSS/SVG puro, con QR al programa recomendado). */
@@ -27,6 +28,8 @@ export function BrandSpot({ play }: { play: BrandPlay }) {
       return <SpotHours play={play} />;
     case "gallery":
       return <SpotGallery play={play} />;
+    case "story":
+      return <SpotStory play={play} />;
     default:
       return <SpotStages play={play} />;
   }

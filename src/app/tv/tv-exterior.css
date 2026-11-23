@@ -1,0 +1,324 @@
+/*
+ * ===================================================================================================
+ *  MODO EXTERIOR · LG StanbyMe 2 de 27″ en vertical, en el escaparate, frente a banqueta y estacionamiento.
+ *  Se carga al final: manda sobre tv.css y tv-spots.css.
+ *
+ *  Medidas (vertical): área visible 33,6 × 59,8 cm → 1 vmin = 3,36 mm · 1 vh = 6 mm.
+ *  Reglas de publicidad exterior aplicadas (auditadas con un script, ver README):
+ *   1. Titular ≥ 8 vmin (≈ 2,7 cm): impacto a ~3 m, legible a ~8 m. Palabra protagonista ≥ 14 vmin.
+ *   2. Texto de apoyo ≥ 3,6 vmin (≈ 1,2 cm, legible a ~3,5 m). Lo más chico solo en etiquetas
+ *      para quien ya se acercó (QR, cabecera).
+ *   3. Una idea por cuadro: se ocultan párrafos en vertical; queda verbo / cifra / oferta.
+ *   4. Todo el mensaje visible en ~1,2 s (escalonados con tope de 0,6 s).
+ *   5. Serif delgada solo en tamaños grandes; lo demás en Geist gruesa (con reflejo de sol,
+ *      los trazos finos desaparecen).
+ *   6. Teléfono en todo cuadro ≥ 6,6 vmin (≈ 2,2 cm) y gigante en el cierre.
+ * ===================================================================================================
+ */
+
+/* ---------- Brillo de atención: destello que cruza el botón de WhatsApp cada 3 s ---------- */
+.phone-cta { position: relative; overflow: hidden; }
+.phone-cta::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -40%;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+  transform: skewX(-20deg) translateX(0);
+  animation: cta-glint 3s ease-in-out 1.4s infinite;
+  pointer-events: none;
+}
+@keyframes cta-glint {
+  0% { transform: skewX(-20deg) translateX(0); }
+  40%, 100% { transform: skewX(-20deg) translateX(520%); }
+}
+
+/* =================== Antes / Después (ambas orientaciones) =================== */
+.st-panels { position: absolute; top: 12vh; left: var(--mx); right: var(--mx); }
+.st-panel {
+  position: relative;
+  height: 25vh;
+  overflow: hidden;
+  border-radius: 2.6vmin;
+  background: var(--pop);
+}
+.st-before { animation: ed-up 0.6s cubic-bezier(0.2, 0.9, 0.2, 1) 0.15s both; }
+.st-after { animation: st-in 0.8s cubic-bezier(0.2, 1.2, 0.3, 1) 0.7s both; }
+@keyframes st-in {
+  from { opacity: 0; transform: translateY(6vh) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+.st-photo { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.st-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+/* El "antes" en gris y el "después" a color: contraste que se entiende sin leer. */
+.st-before .st-photo img { filter: grayscale(1) contrast(1.05) brightness(0.95); }
+.st-after .st-photo img { animation: kenburns 9s ease-out 0.7s both; }
+.st-cap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  padding: 1.8vmin 3vmin 2vmin;
+}
+.st-before .st-cap, .st-before .st-label { background: var(--ink); color: var(--bg); }
+.st-after .st-label { background: var(--accent); color: var(--accent-ink); }
+.st-after .st-cap { background: var(--accent); color: var(--accent-ink); }
+/* Etiqueta ANTES / DESPUÉS como sello sobre la foto; el texto ocupa todo el ancho de la banda. */
+.st-label {
+  position: absolute;
+  z-index: 2;
+  top: 2.4vmin;
+  left: 2.4vmin;
+  padding: 1vmin 2.6vmin;
+  border-radius: 99vmin;
+  box-shadow: 0 0.8vmin 2vmin rgba(0, 0, 0, 0.25);
+  font-size: 3.8vmin;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.st-text { font-size: 8.6vmin; line-height: 0.95; white-space: nowrap; }
+.st-time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 6vh;
+  color: var(--ink);
+  font-size: 6.4vmin;
+  animation: pop-in 0.6s cubic-bezier(0.2, 1.6, 0.4, 1) 0.5s both;
+}
+.st-time span {
+  padding: 0.6vmin 3vmin 0.4vmin;
+  border-radius: 99vmin;
+  background: var(--pop);
+  color: var(--pop-ink);
+}
+.st-source { position: absolute; top: 69vh; left: var(--mx); right: var(--mx); font-size: 3.6vmin; font-weight: 700; }
+@media (orientation: landscape) {
+  .st-panels { top: 15vh; right: var(--main-r); display: flex; align-items: stretch; }
+  .st-panel { flex: 1; height: 62vh; }
+  .st-time { flex-shrink: 0; width: 15vmin; height: auto; font-size: 4vmin; text-align: center; line-height: 1; }
+  .st-time span { padding: 1.2vmin 1.4vmin; }
+  .st-text { font-size: 5.2vmin; }
+  .st-label { font-size: 2.8vmin; }
+  .st-source { top: auto; bottom: 6vh; right: var(--main-r); font-size: 2.8vmin; }
+  .st-panels { bottom: 12vh; }
+}
+
+/* =================== Showreel en vertical: video al máximo ancho + paneles de cartel =================== */
+.srp-top,
+.srp-bottom {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  padding: 0 7vmin;
+  background: var(--bg);
+  color: var(--ink);
+}
+.srp-top {
+  top: 0;
+  height: calc(50vh - 28.125vw);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 3.6vmin;
+}
+.srp-brand {
+  position: absolute;
+  top: 4vh;
+  left: 7vmin;
+  right: 7vmin;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.srp-logo { font-size: 7vmin; }
+.srp-ages {
+  padding: 0.9vmin 2.4vmin;
+  border-radius: 99vmin;
+  border: 0.45vmin solid currentColor;
+  font-size: 3.6vmin;
+  font-weight: 800;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.srp-title { font-size: 11vmin; line-height: 0.92; animation: rise-in 0.6s cubic-bezier(0.2, 1.2, 0.3, 1) 0.15s both; }
+.srp-benefit { margin-top: 0.6vmin; font-size: 13vmin; font-style: italic; line-height: 1; animation: rise-in 0.6s cubic-bezier(0.2, 1.2, 0.3, 1) 0.35s both; }
+.srp-edge { position: absolute; z-index: 3; left: 0; right: 0; height: 1.4vmin; background: var(--accent); }
+.srp-edge.e-top { top: calc(50vh - 28.125vw - 1.4vmin); }
+.srp-edge.e-bottom { top: calc(50vh + 28.125vw); }
+.srp-bottom { top: calc(50vh + 28.125vw + 1.4vmin); bottom: 0; padding-top: 3.4vmin; }
+.srp-offer {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 1.3vmin 3vmin 1.3vmin 2.2vmin;
+  border-radius: 99vmin;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 4.4vmin;
+  font-weight: 800;
+  line-height: 1.1;
+  animation: pop-in 0.6s cubic-bezier(0.2, 1.6, 0.4, 1) 0.5s both;
+}
+.srp-star { flex-shrink: 0; width: 1.2em; height: 1.2em; margin-right: 0.5em; }
+.srp-row { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 3.4vmin; }
+.srp-call { min-width: 0; padding-bottom: 1vmin; animation: ed-up 0.6s cubic-bezier(0.2, 0.9, 0.2, 1) 0.6s both; }
+.srp-call-lbl { display: flex; align-items: center; font-size: 4vmin; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
+.srp-call-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 7.6vmin;
+  height: 7.6vmin;
+  margin-right: 1.8vmin;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.srp-call-ico svg { width: 60%; height: 60%; animation: ring 2.2s ease-in-out 1s infinite; }
+.srp-call-num { margin-top: 1.2vmin; font-size: 9vmin; line-height: 0.95; white-space: nowrap; }
+.srp .srp-qr { --q: 30vmin; flex-shrink: 0; }
+
+/* =================== Ajustes de exterior en vertical =================== */
+@media (orientation: portrait) {
+  /* Marca constante y visible en todos los anuncios. */
+  .brand-bug { font-size: 4.6vmin; }
+  .ed-mast-logo { font-size: 6.6vmin; }
+  .ed-mast-label { max-width: 50%; font-size: 2vmin; }
+  .brand-logo-suffix { font-size: 0.46em; }
+
+  /* WhatsApp más grande en el cierre editorial (cabe junto al QR de 31 vmin). */
+  .ed-foot .phone-cta { padding: 0.8vmin 2.4vmin 0.8vmin 0.8vmin; }
+  .ed-foot .phone-ico { width: 7.2vmin; height: 7.2vmin; }
+  .ed-foot .phone-txt { margin-left: 1.8vmin; }
+  .ed-foot .phone-lbl { font-size: 2.6vmin; }
+  .ed-foot .phone-num { font-size: 6.6vmin; }
+  .ed-foot-offer { max-width: 100%; font-size: 3.6vmin; white-space: normal; line-height: 1.1; }
+  .ed-foot-meta { font-size: 3.6vmin; }
+  .phone-m .phone-num, .phone-cta.phone-m .phone-num { font-size: 7.2vmin; }
+  .phone-m .phone-ico { width: 8.4vmin; height: 8.4vmin; }
+  .phone-m .phone-lbl { font-size: 2.6vmin; }
+
+  /* Escena 1 · mockup */
+  .mk-kicker { font-size: 4.2vmin; }
+  /* Escena 2 · cinética */
+  .kn-tag { font-size: 4vmin; }
+  /* Escena 3 · ticker: cintas más altas y legibles */
+  .tk-band { height: 11vmin; font-size: 6.6vmin; }
+  .tk-intro-label { font-size: 4.4vmin; }
+  .tk-intro-src { font-size: 3.6vmin; }
+  .tk-hook { font-size: 4.6vmin; }
+  .tk-brand { font-size: 6.4vmin; }
+  /* Escena 4 · dividida */
+  .sp-kicker { font-size: 4.2vmin; }
+
+  /* Escena 6 · portada */
+  .cv-caption { display: none; }
+  .cv-title { font-size: 7.4vmin; }
+  .cv-sticker-text { font-size: 3.4vmin; }
+  .cv-deck { font-family: var(--font-sans), Arial, sans-serif; font-weight: 800; font-size: 5.4vmin; line-height: 1.12; }
+
+  /* Escena 7 · índice: 5 filas grandes en sans gruesa */
+  .sc-index { --row: 7vh; }
+  .ix-title { font-size: 8vmin; }
+  .ix-window { top: 23vh; height: calc(var(--row) * 5); }
+  .ix-num { font-size: 3.2vmin; width: 9vmin; }
+  .ix-name { font-family: var(--font-sans), Arial, sans-serif; font-weight: 800; font-size: 5.6vmin; letter-spacing: -0.01em; }
+  .ix-benefit { font-family: var(--font-sans), Arial, sans-serif; font-style: normal; font-weight: 600; font-size: 3.8vmin; }
+  .ix-detail { top: 61vh; }
+  .ix-sub { display: none; }
+  .ix-offer { font-size: 3.8vmin; }
+
+  /* Escena 8 · QR gigante */
+  .scn-noapp { font-size: 3.6vmin; }
+  .scn-urgency { font-size: 3.6vmin; }
+  .scn-offer { font-size: 3.8vmin; }
+
+  /* Testimonios: fragmento textual grande + resultado */
+  .tm-quote.q-xl { font-size: 11.5vmin; line-height: 1.02; }
+  .tm-quote.q-l { font-size: 10vmin; line-height: 1.04; }
+  .tm-quote.q-m { font-size: 8.8vmin; line-height: 1.05; }
+  .tm-result { margin-top: 3.4vmin; font-size: 4.4vmin; }
+  .tm-author { margin-top: 3vmin; }
+  .tm-name { font-size: 5vmin; }
+  .tm-role { display: block; margin-top: 0.6vmin; font-size: 3.6vmin; font-weight: 600; }
+
+  /* El método: verbo gigante + título; sin párrafos */
+
+  .me-head { font-size: 8vmin; }
+  .me-steps { top: 29.5vh; }
+  .me-step + .me-step { margin-top: 3vh; }
+  .me-dot { width: 15vmin; height: 15vmin; }
+  .me-numeral { font-size: 8vmin; }
+  .me-line { top: 7.5vmin; bottom: 7.5vmin; left: 7.25vmin; }
+  .me-verb { font-size: 11.5vmin; }
+  .me-title { font-size: 3.8vmin; }
+  .me-text { display: none; }
+
+  /* En números */
+  .nu-label { font-family: var(--font-sans), Arial, sans-serif; font-weight: 800; letter-spacing: 0.01em; font-size: 4vmin; }
+  .nu-prefix { font-size: 3.6vmin; }
+
+  /* Los 5 Minutos: íconos grandes y títulos; sin párrafos */
+  .ri-items { top: 52vh; grid-row-gap: 4vh; }
+  .ri-icon { width: 11vmin; height: 11vmin; }
+  .ri-title { font-size: 4.8vmin; }
+  .ri-text { display: none; }
+  .ri-min { font-size: 3.8vmin; }
+
+  /* Etapas: resumen en sans gruesa y solo el programa recomendado como chip */
+  .sg-top { font-size: 3.4vmin; }
+  .sg-label { font-size: 7vmin; }
+  .sg-summary { font-family: var(--font-sans), Arial, sans-serif; font-style: normal; font-weight: 700; font-size: 4.4vmin; }
+  .sg-chip:not(.hot) { display: none; }
+  .sg-chip.hot { font-size: 3.8vmin; }
+
+  /* WhatsApp gigante */
+  .ct-head { font-size: 9vmin; }
+  .ct-label { font-size: 3.6vmin; }
+  .ct-sub { display: none; }
+  .ct-hours { font-family: var(--font-sans), Arial, sans-serif; font-weight: 800; letter-spacing: 0; font-size: 4vmin; }
+  .ct-qr-offer { font-size: 3.8vmin; }
+
+  /* Horario en vivo */
+  .hr-status { font-size: 3.8vmin; }
+  .hr-detail { font-size: 4.4vmin; }
+  .hr-week { margin-top: 4vmin; }
+  .hr-row { height: 4.4vh; }
+  .hr-day { font-family: var(--font-sans), Arial, sans-serif; font-weight: 700; font-size: 4.8vmin; }
+  .hr-time { font-size: 4.2vmin; }
+  .hr-today { font-size: 3.6vmin; }
+  .hr-note { display: none; }
+
+  /* Muro de programas: fotos grandes, sin pies de foto diminutos */
+  .gl-title { font-size: 9vmin; }
+  .gl-wall { top: 31vh; height: 40vh; }
+  .gl-cap { display: none; }
+  .gl-tile { padding-bottom: 2.4vmin; }
+
+  /* Cierre (EndCard) */
+  .ec-hint { font-size: 3.6vmin; }
+  .ec-offer { font-size: 4.4vmin; }
+  .ec-tag { font-size: 3vmin; }
+  .ec-phone-lbl { font-size: 3.8vmin; }
+}
+
+@media (orientation: landscape) {
+  .tm-quote.q-xl { font-size: 8.4vmin; }
+  .tm-quote.q-l { font-size: 7.2vmin; }
+  .tm-quote.q-m { font-size: 6.2vmin; }
+  .tm-role { display: block; margin-top: 0.6vmin; font-size: 2.6vmin; font-weight: 600; }
+}
+
+@media (orientation: portrait) {
+  .sg-list { top: 24vh; }
+  .sg-label { font-size: 6.6vmin; }
+  .sg-card + .sg-card { margin-top: 1.6vh; }
+  .cv-sticker-text { font-size: 3.6vmin; }
+}

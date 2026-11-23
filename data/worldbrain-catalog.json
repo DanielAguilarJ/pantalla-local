@@ -1,6 +1,6 @@
 {
   "source": "https://ultravelozmente.com/ (índice de programas, noviembre 2026)",
-  "note": "Catálogo base de WorldBrain México. La pantalla lo usa cuando Make.com no envía cursos y Make.com puede leerlo en GET /api/catalog. El sitio no publica precios, por eso price va vacío. offer/offer_short/urgency copian la oferta publicada en la página de cada programa (vacío si la página no publica una).",
+  "note": "Catálogo base de WorldBrain México. La pantalla lo usa cuando Make.com no envía cursos y Make.com puede leerlo en GET /api/catalog. El sitio no publica precios, por eso price va vacío. offer/offer_short/urgency copian la oferta publicada en la página de cada programa (vacío si la página no publica una). photo_url: foto con personas publicada en la página del programa (las caras atraen la mirada más que una captura de pantalla); vacío si no hay.",
   "programs": [
     {
       "id": "fotolectura",
@@ -18,7 +18,8 @@
       "showreel_url": "",
       "offer": "",
       "offer_short": "",
-      "urgency": ""
+      "urgency": "",
+      "photo_url": "https://ultravelozmente.com/images/fotolectura-encaje-lectura-enfocada.webp"
     },
     {
       "id": "mathekids",
@@ -35,7 +36,8 @@
       "showreel_url": "",
       "offer": "Clase muestra y diagnóstico sin costo",
       "offer_short": "Clase muestra gratis",
-      "urgency": ""
+      "urgency": "",
+      "photo_url": ""
     },
     {
       "id": "juniormath",
@@ -52,7 +54,8 @@
       "showreel_url": "https://ultravelozmente.com/images/juniormath-showreel-720.mp4",
       "offer": "Clase muestra gratis",
       "offer_short": "Clase muestra gratis",
-      "urgency": ""
+      "urgency": "",
+      "photo_url": ""
     },
     {
       "id": "lectoescritura",
@@ -69,7 +72,8 @@
       "showreel_url": "https://ultravelozmente.com/images/lectoescritura-showreel-720.mp4",
       "offer": "Clase gratis con evaluación de nivel lector",
       "offer_short": "Clase gratis",
-      "urgency": ""
+      "urgency": "",
+      "photo_url": ""
     },
     {
       "id": "robotics-code",
@@ -87,7 +91,8 @@
       "showreel_url": "https://ultravelozmente.com/images/robotics-showreel-720.mp4",
       "offer": "Primera clase gratis",
       "offer_short": "1.ª clase gratis",
-      "urgency": ""
+      "urgency": "",
+      "photo_url": ""
     },
     {
       "id": "fastkids",
@@ -106,7 +111,8 @@
       "showreel_url": "https://ultravelozmente.com/images/fastkids-showreel-720.mp4",
       "offer": "Clase muestra gratis + diagnóstico de nivel",
       "offer_short": "Clase muestra gratis",
-      "urgency": ""
+      "urgency": "",
+      "photo_url": ""
     },
     {
       "id": "ciencia-astronomia",
@@ -123,7 +129,8 @@
       "showreel_url": "https://ultravelozmente.com/images/ciencia-astronomia-showreel-720.mp4",
       "offer": "Clase muestra sin costo y sin compromiso",
       "offer_short": "Clase muestra sin costo",
-      "urgency": ""
+      "urgency": "",
+      "photo_url": ""
     },
     {
       "id": "homeschool-veloz",
@@ -141,7 +148,8 @@
       "showreel_url": "https://ultravelozmente.com/images/homeschool-showreel-720.mp4",
       "offer": "Sesión informativa gratuita",
       "offer_short": "Sesión informativa gratis",
-      "urgency": "Cupos limitados por semana"
+      "urgency": "Cupos limitados por semana",
+      "photo_url": ""
     },
     {
       "id": "memoria-prodigiosa",
@@ -159,7 +167,8 @@
       "showreel_url": "https://ultravelozmente.com/images/memoria-prodigiosa-showreel-720.mp4",
       "offer": "Clase muestra gratis de 45 minutos",
       "offer_short": "Clase muestra gratis",
-      "urgency": ""
+      "urgency": "",
+      "photo_url": ""
     },
     {
       "id": "admision-universitaria",
@@ -176,7 +185,8 @@
       "showreel_url": "https://ultravelozmente.com/images/admision-universitaria-showreel-720.mp4",
       "offer": "Diagnóstico de cortesía + simulador de regalo",
       "offer_short": "Diagnóstico de cortesía",
-      "urgency": "Cupo limitado · grupos reducidos"
+      "urgency": "Cupo limitado · grupos reducidos",
+      "photo_url": ""
     },
     {
       "id": "comipems",
@@ -193,7 +203,8 @@
       "showreel_url": "https://ultravelozmente.com/images/comipems-showreel-720.mp4",
       "offer": "Diagnóstico gratuito en línea o presencial",
       "offer_short": "Diagnóstico gratis",
-      "urgency": ""
+      "urgency": "",
+      "photo_url": ""
     },
     {
       "id": "regularizacion-express",
@@ -211,7 +222,8 @@
       "showreel_url": "",
       "offer": "Clase de diagnóstico sin costo",
       "offer_short": "Diagnóstico sin costo",
-      "urgency": ""
+      "urgency": "",
+      "photo_url": ""
     },
     {
       "id": "grandes-lideres",
@@ -229,7 +241,8 @@
       "showreel_url": "https://ultravelozmente.com/images/grandes-lideres-showreel-720.mp4",
       "offer": "Sesión diagnóstica de 60 minutos sin costo",
       "offer_short": "Sesión diagnóstica gratis",
-      "urgency": ""
+      "urgency": "",
+      "photo_url": "https://ultravelozmente.com/images/gl-after-confident.webp"
     },
     {
       "id": "neurocomunicacion",
@@ -246,7 +259,8 @@
       "showreel_url": "https://ultravelozmente.com/images/neurocomunicacion-showreel-720.mp4",
       "offer": "Cita de cortesía sin compromiso",
       "offer_short": "Cita de cortesía",
-      "urgency": ""
+      "urgency": "",
+      "photo_url": ""
     },
     {
       "id": "redaccion-ejecutiva",
@@ -263,7 +277,8 @@
       "showreel_url": "https://ultravelozmente.com/images/redaccion-ejecutiva-showreel-720.mp4",
       "offer": "Clase muestra gratuita",
       "offer_short": "Clase muestra gratis",
-      "urgency": ""
+      "urgency": "",
+      "photo_url": ""
     },
     {
       "id": "universidad-dominical",
@@ -280,7 +295,8 @@
       "showreel_url": "https://ultravelozmente.com/images/universidad-dominical-showreel-720.mp4",
       "offer": "Evaluación diagnóstica sin costo",
       "offer_short": "Evaluación sin costo",
-      "urgency": "Cupos limitados"
+      "urgency": "Cupos limitados",
+      "photo_url": "https://ultravelozmente.com/images/hero-dominical.webp"
     },
     {
       "id": "alfa-cash",
@@ -297,7 +313,8 @@
       "showreel_url": "https://ultravelozmente.com/images/alfa-cash-showreel-720.mp4",
       "offer": "",
       "offer_short": "",
-      "urgency": ""
+      "urgency": "",
+      "photo_url": ""
     }
   ]
 }

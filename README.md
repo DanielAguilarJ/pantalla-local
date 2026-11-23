@@ -55,18 +55,44 @@ Vista previa: `/tv?preview=1&scene=endcard`.
 ## Pantalla siempre activa
 
 Un «toque simulado» desde la página no sirve: el navegador no deja que una página genere toques reales y los eventos
-sintéticos no reinician el temporizador de la TV. Lo que sí respeta webOS es su regla publicada: **no lanza el
-salvapantallas mientras se reproduce un video a pantalla completa**, y solo admite un video a la vez. Por eso
-`KeepAwake.tsx`:
+sintéticos no reinician el temporizador de la TV. Lo que sí respeta webOS es su regla publicada (webOS TV FAQ):
+**no lanza el salvapantallas mientras se reproduce un video a pantalla completa**, entendido como un `<video>` que
+ocupa el 100 % del viewport en (0,0), sin `border`, `transform` ni `opacity` en él o en sus ancestros. Además solo
+admite un video a la vez. Por eso:
 
-- reproduce `public/ambient.mp4` (320×180, 14 KB, en bucle) a pantalla completa debajo de cada anuncio que no es
-  video (comerciales, cierres, imágenes), tapado por el fondo del anuncio;
-- lo libera justo antes de que empiece un video de anuncio (nunca hay dos videos con `src` a la vez);
-- cada 15 s revisa que siga sonando y lo reinicia si se detuvo o se atascó; también vuelve a pedir la Screen Wake Lock.
+- **Todos** los `<video>` (fondo y anuncios) usan la clase `.fsv`: `position: fixed; 0,0; 100vw × 100vh`, sin
+  borde, transform ni transparencia. Los showreels 16:9 en vertical también: el elemento llena la pantalla y el
+  cuadro se ve con `object-fit: contain`; los paneles de texto van encima.
+- `public/ambient.mp4` (320×180, 14 KB, en bucle) suena debajo de todo lo que no es video (comerciales, cierres,
+  imágenes), tapado por el fondo del anuncio, y se libera justo antes de cada video de anuncio.
+- Cada 15 s se revisa que siga sonando y se reinicia si se detuvo; un video de anuncio que no arranca en 6 s se salta.
+- Al primer toque o botón del control remoto se pide pantalla completa del navegador.
+- Resultado medido en 3 min de rotación real: 99,8 % del tiempo con un video conforme a la regla de LG y nunca dos
+  videos a la vez.
 
 En la TV hay que dejar apagado lo que el código no puede controlar: **Ahorro de energía**, el **apagado automático
 por inactividad** (en muchos modelos LG está en los temporizadores como «Apagado automático de 4 horas») y cualquier
 temporizador de apagado. La StanbyMe 2 debe estar **conectada a la corriente**: con batería el sistema puede suspenderse.
+
+## Modo exterior (vertical, banqueta y estacionamiento)
+
+`src/app/tv/tv-exterior.css` se carga al final y manda sobre lo demás. En la StanbyMe 2 vertical
+1 vmin = 3,36 mm y 1 vh = 6 mm.
+
+- **Letra mínima 3,6 vmin (≈ 1,2 cm, legible a ~3,5 m)** en todo texto de mensaje; titulares ≥ 8 vmin (≈ 2,7 cm).
+  Solo la cabecera y la etiqueta del QR quedan más chicas (son para quien ya se acercó). Se audita con un script que
+  mide cada texto visible en los 20 diseños.
+- **Una idea por cuadro**: en vertical se quitan los párrafos (método, 5 Minutos, horario, etapas) y quedan
+  verbo / cifra / oferta. Los testimonios muestran un fragmento **textual** corto (`pull`, validado por
+  `npm run check:templates`) en lugar del párrafo entero.
+- **Todo el mensaje en ~1,2 s**: los escalonados tienen tope de 0,6 s; nada entra después de 2 s.
+- **Videos que no son miniaturas**: el showreel 16:9 en vertical ocupa todo el ancho (33,6 × 18,9 cm) sin recortar
+  sus textos, y su parte en la rotación baja al 20 % porque los reels de Instagram (9:16) sí llenan la pantalla.
+- **Caras**: nuevo anuncio «Antes / Después» con las fotos reales de Grandes Líderes (antes en gris, después a color) y
+  el testimonio publicado de Jorge M.; fotos con personas en las escenas de portada y tipografía cinética cuando el
+  programa las tiene.
+- **Serif delgada solo en tamaños grandes**; con reflejo de sol los trazos finos desaparecen.
+- **Teléfono en todo cuadro** (≥ 6,6 vmin) con un destello que cruza el botón cada 3 s, y gigante en el cierre.
 
 ## Técnicas de publicidad aplicadas
 

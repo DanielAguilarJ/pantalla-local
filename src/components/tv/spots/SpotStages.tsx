@@ -39,7 +39,7 @@ export function SpotStages({ play }: { play: BrandPlay }) {
             <div
               key={it.label}
               className={`sg-card${i === featuredStage ? " on" : ""}`}
-              style={{ animationDelay: `${1100 + i * 450}ms` }}
+              style={{ animationDelay: `${400 + i * 180}ms` }}
             >
               <div className="sg-top">
                 <span className="ed-mono sg-num">{pad2(i + 1)}</span>

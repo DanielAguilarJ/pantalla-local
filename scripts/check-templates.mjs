@@ -35,3 +35,18 @@ console.log(
   `OK: ${data.headlines.length} fórmulas (≤ 8 palabras). Por público → ${byAudience}. ` +
     `Con {{curso}}: ${count((h) => h.text.includes("{{curso}}"))}, con {{noticia}}: ${count((h) => h.text.includes("{{noticia}}"))}.`,
 );
+
+// Los fragmentos de testimonio deben ser textuales (no se inventa ni se edita lo que dijo una familia).
+const brand = JSON.parse(readFileSync(new URL("../data/worldbrain-brand.json", import.meta.url), "utf8"));
+const norm = (s) => s.replace(/^[…\s]+|[.…\s]+$/g, "");
+const bad = brand.testimonials.filter((t) => !t.pull || !t.quote.includes(norm(t.pull)) || t.pull.split(/\s+/).length > 16);
+if (bad.length) {
+  console.error("Fragmentos de testimonio que no son textuales o pasan de 16 palabras:", bad.map((t) => t.id).join(", "));
+  process.exit(1);
+}
+const tr = brand.transformation;
+if (tr && !brand.testimonials.some((t) => t.id === tr.testimonial)) {
+  console.error("transformation.testimonial no existe");
+  process.exit(1);
+}
+console.log(`OK: ${brand.testimonials.length} fragmentos de testimonio textuales.`);

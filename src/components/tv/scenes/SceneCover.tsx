@@ -22,7 +22,7 @@ export function SceneCover({ play }: { play: CoursePlay }) {
 
       <div className="cv-photo">
         <div className="cv-photo-img">
-          <CourseImage src={course.image_url} title={course.title} />
+          <CourseImage src={featured.photo || course.image_url} title={course.title} />
         </div>
         <div className="cv-curtain" />
         {featured.offer ? (
@@ -40,13 +40,13 @@ export function SceneCover({ play }: { play: CoursePlay }) {
 
       <div className="cv-text">
         <div className="cv-hero ed-serif" style={heroStyle}>
-          <LetterRise text={`${hero}.`} startMs={1300} stepMs={55} />
+          <LetterRise text={`${hero}.`} startMs={600} stepMs={40} />
         </div>
-        <div className="cv-title display ed-up" style={{ animationDelay: "2300ms" }}>
+        <div className="cv-title display ed-up" style={{ animationDelay: "900ms" }}>
           {course.title}
         </div>
         <div className="cv-deck ed-serif">
-          <Reveal text={course.hook_headline} startMs={2800} stepMs={90} />
+          <Reveal text={course.hook_headline} startMs={1100} stepMs={60} />
         </div>
       </div>
 
