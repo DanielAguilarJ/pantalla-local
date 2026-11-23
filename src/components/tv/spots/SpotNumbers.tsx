@@ -39,7 +39,7 @@ function Odometer({ value, on, delayMs }: { value: string; on: boolean; delayMs:
 /** Anuncio de marca · WorldBrain en números (datos publicados en el sitio). */
 export function SpotNumbers({ play }: { play: BrandPlay }) {
   const n = BRAND_CONTENT.numbers;
-  const phase = usePhase([500]);
+  const phase = usePhase([250]);
   return (
     <Stage className="sp-numbers">
       <Masthead label={n.kicker} />
@@ -52,7 +52,7 @@ export function SpotNumbers({ play }: { play: BrandPlay }) {
             <div className="nu-value display">
               {"prefix" in it && it.prefix ? <span className="nu-prefix ed-mono">{it.prefix}</span> : null}
               {"value" in it && it.value ? (
-                <Odometer value={it.value} on={phase >= 1} delayMs={i * 350} />
+                <Odometer value={it.value} on={phase >= 1} delayMs={i * 150} />
               ) : (
                 <span className="nu-text">{"text" in it ? it.text : ""}</span>
               )}

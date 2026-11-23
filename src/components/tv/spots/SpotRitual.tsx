@@ -35,8 +35,8 @@ const ICONS: Record<string, ReactElement> = {
   ),
 };
 
-const ITEM_START = 1500;
-const ITEM_EVERY = 1500;
+const ITEM_START = 700;
+const ITEM_EVERY = 200;
 
 /** Anuncio de marca · "Los 5 Minutos": anillo que se completa por cuartos mientras aparecen los 4 momentos. */
 export function SpotRitual({ play }: { play: BrandPlay }) {

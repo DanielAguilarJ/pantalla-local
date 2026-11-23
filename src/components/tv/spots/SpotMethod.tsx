@@ -3,8 +3,8 @@
 import { BRAND_CONTENT, type BrandPlay } from "../engine";
 import { EdFooter, Masthead, Reveal, Stage } from "./kit";
 
-const STEP_START = 1700;
-const STEP_EVERY = 1900;
+const STEP_START = 600;
+const STEP_EVERY = 350;
 
 /** Anuncio de marca · El método en tres momentos, con una línea que avanza de paso en paso. */
 export function SpotMethod({ play }: { play: BrandPlay }) {

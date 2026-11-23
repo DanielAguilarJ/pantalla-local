@@ -35,8 +35,12 @@ export function pad2(n: number): string {
  * Revelado editorial: cada palabra sube desde detrás de una máscara (overflow: hidden).
  * Solo anima transform, así que es fluido en la TV.
  */
+/** Tope de escalonado: por larga que sea la frase, la última palabra entra a más tardar 0,6 s después de la primera. */
+export const MAX_STAGGER_MS = 600;
+
 export function Reveal({ text, startMs = 0, stepMs = 70, className = "" }: { text: string; startMs?: number; stepMs?: number; className?: string }) {
   const words = text.trim().split(/\s+/).filter(Boolean);
+  stepMs = words.length > 1 ? Math.min(stepMs, MAX_STAGGER_MS / (words.length - 1)) : stepMs;
   return (
     <span className={className}>
       {words.map((w, i) => (
@@ -55,6 +59,7 @@ export function Reveal({ text, startMs = 0, stepMs = 70, className = "" }: { tex
 
 /** Letras que suben una por una (palabra protagonista de la portada). */
 export function LetterRise({ text, startMs = 0, stepMs = 45 }: { text: string; startMs?: number; stepMs?: number }) {
+  stepMs = text.length > 1 ? Math.min(stepMs, MAX_STAGGER_MS / (text.length - 1)) : stepMs;
   return (
     <span className="rv-w">
       {Array.from(text).map((ch, i) => (

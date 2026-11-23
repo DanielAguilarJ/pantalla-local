@@ -111,6 +111,7 @@ export function TvPlayer({ initial, demo, preview, forceScene, forcePalette }: P
   const versionRef = useRef("");
   const playlistRef = useRef<Playlist | null>(null);
   const daypartRef = useRef<Daypart>(daypartAt(new Date()));
+  const portraitRef = useRef(false);
   const lastSyncRef = useRef(0);
   const lastAdvanceRef = useRef(Date.now());
   const bootRef = useRef(Date.now());
@@ -191,6 +192,13 @@ export function TvPlayer({ initial, demo, preview, forceScene, forcePalette }: P
       daypartRef.current = daypartAt(new Date());
       // Pesos por franja horaria: el público que más pasa frente al local a esta hora ve más sus programas.
       const sources = toSources(p, daypartRef.current);
+      // En vertical, los showreels 16:9 solo ocupan la franja central: se reducen al 20 % de la rotación
+      // (los reels de Instagram, que son 9:16 y llenan la pantalla, conservan su 40 %).
+      portraitRef.current = window.matchMedia("(orientation: portrait)").matches;
+      const onlyShowreels = sources.reel.length > 0 && sources.reel.every((r) => !!r.showreel);
+      // Como entre anuncio y anuncio siempre va el cierre, dos comerciales seguidos no se sienten repetidos.
+      if (portraitRef.current && onlyShowreels) queueRef.current?.setTypeWeights({ reel: 0.2, commercial: 0.8 }, ["commercial"]);
+      else queueRef.current?.setTypeWeights({});
       if (!forceScene) queueRef.current?.setSources(sources);
       else {
         const commercial = sources.commercial.filter((s) =>
@@ -253,7 +261,10 @@ export function TvPlayer({ initial, demo, preview, forceScene, forcePalette }: P
       const c = currentRef.current;
       if (c && now - lastAdvanceRef.current > maxMsFor(c)) advance();
       // Cambió la franja (p. ej. 12:00 → salida de escuelas): se recalculan los pesos sin cortar el anuncio.
-      if (playlistRef.current && daypartAt(new Date()) !== daypartRef.current) applyPlaylist(playlistRef.current);
+      const portraitNow = window.matchMedia("(orientation: portrait)").matches;
+      if (playlistRef.current && (daypartAt(new Date()) !== daypartRef.current || portraitNow !== portraitRef.current)) {
+        applyPlaylist(playlistRef.current);
+      }
     };
     const interval = setInterval(() => void tick(), TICK_MS);
     const onOnline = () => void sync();

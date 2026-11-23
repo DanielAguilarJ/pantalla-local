@@ -108,6 +108,27 @@ html.tv-mode body {
   pointer-events: none;
 }
 .ambient { z-index: 0; object-fit: fill; background: var(--bg); }
+
+/*
+ * Regla publicada por LG (webOS TV FAQ): "video a pantalla completa" = el área del video ocupa el 100 % del
+ * viewport y está en (0,0). Evitar border, transform y opacity en el video y sus ancestros, o webOS
+ * puede lanzar el salvapantallas. Todos los videos (fondo y anuncios) usan esta clase.
+ */
+video.fsv {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  transform: none;
+  opacity: 1;
+  display: block;
+}
+/* Los slides con video no se animan con opacity (afectaría al video). */
+.slide.slide-v { animation: none; }
 .ambient-cover { z-index: 0; background: var(--bg); transition: background-color 0.6s ease; }
 .tv-stage > .slide { z-index: 1; }
 

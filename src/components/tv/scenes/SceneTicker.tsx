@@ -42,7 +42,8 @@ export function SceneTicker({ play }: { play: CoursePlay }) {
   const { course, palette, featuredNews } = play;
   // Sin noticias del día, las cintas muestran datos reales de WorldBrain en vez de repetir el gancho.
   const items = tickerItems(play.news, BRAND.tickerFacts);
-  const seconds = Math.max(25, Math.round(items.join(" ").length / 9));
+  // Lento a propósito: en exterior, un texto que corre rápido no se alcanza a leer.
+  const seconds = Math.max(32, Math.round(items.join(" ").length / 5));
   const courseAt = featuredNews ? "4300ms" : "400ms";
 
   return (

@@ -21,6 +21,9 @@ export function StaggerWords({
   startMs?: number;
   stepMs?: number;
 }) {
+  const n = splitWords(text).length;
+  // Mismo tope que Reveal: la frase completa se lee en menos de un segundo.
+  stepMs = n > 1 ? Math.min(stepMs, 600 / (n - 1)) : stepMs;
   return (
     <>
       {splitWords(text).map((w, i) => (

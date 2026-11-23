@@ -18,12 +18,18 @@ export function releaseVideo(el: HTMLVideoElement | null): void {
 }
 
 const STALL_MS = 15_000; // sin avanzar currentTime durante 15 s => se salta
+// Si el video no arranca en 6 s (red lenta), se salta: mientras carga no hay video sonando y webOS podría
+// lanzar el salvapantallas. El siguiente anuncio no-video reactiva el video de fondo.
+const START_MS = 6_000;
 const MAX_MS = 15 * 60_000; // tope absoluto por si duration nunca llega
 
 export interface ManagedVideoProps {
   src: string;
-  /** "cover" siempre recorta (reels). "auto" recorta solo si la proporción es parecida a la pantalla. */
-  fit: "cover" | "auto";
+  /**
+   * "cover" recorta (reels 9:16), "contain" muestra el cuadro completo (showreels 16:9 en vertical),
+   * "auto" recorta solo si la proporción es parecida a la pantalla.
+   */
+  fit: "cover" | "contain" | "auto";
   /** Corta la reproducción antes del final (p. ej. showreels de 60 s). */
   maxMs?: number;
   onDone: () => void;
@@ -35,7 +41,7 @@ export function ManagedVideo({ src, fit, maxMs, onDone, className = "" }: Manage
   const ref = useRef<HTMLVideoElement>(null);
   const doneRef = useRef(false);
   const onDoneRef = useRef(onDone);
-  const [mode, setMode] = useState<"cover" | "contain">("cover");
+  const [mode, setMode] = useState<"cover" | "contain">(fit === "contain" ? "contain" : "cover");
 
   useLayoutEffect(() => {
     onDoneRef.current = onDone;
@@ -77,7 +83,8 @@ export function ManagedVideo({ src, fit, maxMs, onDone, className = "" }: Manage
       }
       const duration = isFinite(el.duration) && el.duration > 0 ? el.duration * 1000 + 8000 : MAX_MS;
       const limit = Math.min(duration, maxMs || MAX_MS, MAX_MS);
-      if (Date.now() - lastProgress > STALL_MS || Date.now() - started > limit) finish();
+      const neverStarted = lastTime <= 0 && Date.now() - started > START_MS;
+      if (neverStarted || Date.now() - lastProgress > STALL_MS || Date.now() - started > limit) finish();
     }, 500);
 
     return () => {
@@ -88,7 +95,7 @@ export function ManagedVideo({ src, fit, maxMs, onDone, className = "" }: Manage
 
   const onMeta = () => {
     const el = ref.current;
-    if (!el || fit === "cover" || !el.videoWidth || !el.videoHeight) return;
+    if (!el || fit !== "auto" || !el.videoWidth || !el.videoHeight) return;
     const videoRatio = el.videoWidth / el.videoHeight;
     const screenRatio = el.clientWidth / Math.max(1, el.clientHeight);
     setMode(Math.abs(Math.log(videoRatio / screenRatio)) < 0.25 ? "cover" : "contain");
@@ -102,9 +109,11 @@ export function ManagedVideo({ src, fit, maxMs, onDone, className = "" }: Manage
   // `src` se asigna en el layout effect (no en el JSX): así el video de fondo de KeepAwake se libera antes
   // de que este video pida el decodificador. webOS solo reproduce un video a la vez.
   return (
+    // .fsv = regla de LG para "video a pantalla completa": 100 % del viewport en (0,0), sin border,
+    // transform ni opacity. Así webOS no lanza el salvapantallas mientras suena (ver KeepAwake.tsx).
     <video
       ref={ref}
-      className={`media-${mode} ${className}`}
+      className={`fsv media-${mode} ${className}`}
       autoPlay
       muted
       playsInline

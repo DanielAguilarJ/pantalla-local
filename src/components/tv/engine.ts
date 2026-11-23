@@ -2,6 +2,7 @@ import brandData from "@data/worldbrain-brand.json";
 import { findProgram } from "@/lib/catalog";
 import { FLASH_LABELS, isSensitiveNews, relatedNews, TICKER_INTROS } from "@/lib/copy";
 import { paletteForSeed, type Palette } from "@/lib/palettes";
+import { tvMediaUrl } from "@/lib/media-proxy";
 import { DAYPART_WEIGHTS, daypartAt, type Daypart } from "@/lib/sede-time";
 import { dailySeed, pick, rngFrom, shuffle } from "@/lib/seed";
 import type { Course, NewsItem, Playlist, PlaylistManual, PlaylistReel } from "@/lib/types";
@@ -13,8 +14,8 @@ export type SceneId = "mockup" | "kinetic" | "ticker" | "split" | "flash" | "cov
 export const SCENES: SceneId[] = ["mockup", "kinetic", "ticker", "split", "flash", "cover", "index", "scan"];
 
 /** Anuncios institucionales de WorldBrain (no dependen de un solo curso). */
-export type SpotId = "testimonial" | "method" | "numbers" | "ritual" | "stages" | "contact" | "hours" | "gallery";
-export const SPOTS: SpotId[] = ["testimonial", "method", "numbers", "ritual", "stages", "contact", "hours", "gallery"];
+export type SpotId = "testimonial" | "method" | "numbers" | "ritual" | "stages" | "contact" | "hours" | "gallery" | "story";
+export const SPOTS: SpotId[] = ["testimonial", "method", "numbers", "ritual", "stages", "contact", "hours", "gallery", "story"];
 
 export type PatternId = "truchet" | "rings" | "stripes" | "dots" | "blocks";
 const PATTERNS: PatternId[] = ["truchet", "rings", "stripes", "dots", "blocks"];
@@ -34,6 +35,8 @@ export interface RosterItem {
   offer: string;
   offerShort: string;
   urgency: string;
+  /** Foto con personas (por el proxy /wb-media/); vacía si el programa no tiene. */
+  photo: string;
 }
 
 export type CommercialSource =
@@ -86,6 +89,7 @@ function buildRoster(courses: Course[]): RosterItem[] {
       offer: p?.offer || "",
       offerShort: p?.offer_short || "",
       urgency: p?.urgency || "",
+      photo: p?.photo_url ? tvMediaUrl(p.photo_url) : "",
     };
   });
 }
@@ -135,10 +139,13 @@ export function toSources(
   const testimonials = brandData.testimonials.filter((t) => rosterFind(roster, t.program));
   // Los testimonios (prueba social) entran 3 veces en la bolsa: salen más seguido que los demás anuncios de marca
   // y, como comparten contador, cada aparición muestra un testimonio distinto.
+  // La historia Antes/Después (caras reales + transformación) cuenta doble; solo si su programa está en pantalla.
+  const storyOn = !!rosterFind(roster, brandData.transformation.program);
   const spotSlots: SpotId[] = roster.length
     ? SPOTS.reduce<SpotId[]>((acc, s) => {
-        if (s !== "testimonial") return acc.concat(s);
-        return testimonials.length ? acc.concat([s, s, s]) : acc;
+        if (s === "testimonial") return testimonials.length ? acc.concat([s, s, s]) : acc;
+        if (s === "story") return storyOn ? acc.concat([s, s]) : acc;
+        return acc.concat(s);
       }, [])
     : [];
   const brandSources: CommercialSource[] = spotSlots.map((spot, i) => ({
@@ -189,6 +196,7 @@ export function planCommercial(
     let testimonialIndex = 0;
     // El programa recomendado también sigue la franja horaria (p. ej. infantiles a la salida de escuelas).
     let featured = weightedPick(rng, src.roster, daypartAt(now));
+    if (src.spot === "story") featured = rosterFind(src.roster, brandData.transformation.program) || featured;
     if (src.spot === "testimonial" && src.testimonials.length) {
       // Recorre los testimonios en orden barajado del día: no se repite uno hasta mostrarlos todos.
       const order = shuffle(rngFrom("testimonials", seed), src.testimonials);
@@ -215,6 +223,7 @@ export function planCommercial(
     offer: "",
     offerShort: "",
     urgency: "",
+    photo: "",
   };
   return {
     kind: "course",

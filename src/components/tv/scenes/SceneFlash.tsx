@@ -35,13 +35,13 @@ export function SceneFlash({ play }: { play: CoursePlay }) {
         </div>
         <div className="fl-panel">
           <div className="fl-headline display">
-            <StaggerWords text={course.hook_headline} className="" startMs={1300} stepMs={260} />
+            <StaggerWords text={course.hook_headline} className="" startMs={700} stepMs={120} />
           </div>
-          <div className="fl-course rise-in" style={{ animationDelay: "3600ms" }}>
+          <div className="fl-course rise-in" style={{ animationDelay: "1400ms" }}>
             {course.title}
           </div>
           <div className="fl-cta">
-            <span className="cta display pop-in" style={{ animationDelay: "4200ms" }}>
+            <span className="cta display pop-in" style={{ animationDelay: "1600ms" }}>
               {ctaLabel(play.featured.offerShort, course.hook_headline)} <ArrowIcon /> escanea el QR
             </span>
           </div>

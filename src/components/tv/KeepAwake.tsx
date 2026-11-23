@@ -12,6 +12,27 @@ interface WakeLockLike {
 }
 
 const AMBIENT_SRC = "/ambient.mp4";
+
+type FsDoc = Document & { webkitFullscreenElement?: Element | null };
+type FsEl = HTMLElement & { webkitRequestFullscreen?: () => void };
+
+/**
+ * Pantalla completa real del navegador (oculta la barra de webOS y deja el viewport = pantalla).
+ * El navegador solo la permite tras un gesto: la primera vez que alguien toque la pantalla o presione
+ * un botón del control remoto. Después de la recarga de cada 6 h hay que volver a presionar; el modo
+ * "pantalla completa" del navegador de webOS, si se activó en su menú, sí se conserva.
+ */
+function enterFullscreen(): void {
+  const d = document as FsDoc;
+  if (d.fullscreenElement || d.webkitFullscreenElement) return;
+  const el = document.documentElement as FsEl;
+  try {
+    if (el.requestFullscreen) el.requestFullscreen().catch(() => undefined);
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  } catch {
+    /* sin soporte */
+  }
+}
 /** Revisión de salud del modo "siempre activa". */
 export const PULSE_MS = 15_000;
 
@@ -88,6 +109,10 @@ export function KeepAwake({ active }: { active: boolean }) {
     const onVisibility = () => {
       if (document.visibilityState === "visible") pulse();
     };
+    const onInput = () => {
+      enterFullscreen();
+      pulse();
+    };
     const onError = () => {
       // Si el archivo falla (red), se reintenta en el siguiente pulso.
       lastTime = -1;
@@ -96,8 +121,8 @@ export function KeepAwake({ active }: { active: boolean }) {
     void requestLock();
     const interval = setInterval(pulse, PULSE_MS);
     document.addEventListener("visibilitychange", onVisibility);
-    window.addEventListener("keydown", pulse);
-    window.addEventListener("pointerdown", pulse);
+    window.addEventListener("keydown", onInput);
+    window.addEventListener("pointerdown", onInput);
     const v = videoRef.current;
     v?.addEventListener("error", onError);
 
@@ -105,8 +130,8 @@ export function KeepAwake({ active }: { active: boolean }) {
       disposed = true;
       clearInterval(interval);
       document.removeEventListener("visibilitychange", onVisibility);
-      window.removeEventListener("keydown", pulse);
-      window.removeEventListener("pointerdown", pulse);
+      window.removeEventListener("keydown", onInput);
+      window.removeEventListener("pointerdown", onInput);
       v?.removeEventListener("error", onError);
       releaseVideo(videoRef.current);
       if (lock && !lock.released) lock.release().catch(() => undefined);
@@ -115,7 +140,7 @@ export function KeepAwake({ active }: { active: boolean }) {
 
   return (
     <>
-      <video ref={videoRef} className="ambient" muted loop playsInline preload="auto" aria-hidden="true" tabIndex={-1} />
+      <video ref={videoRef} className="ambient fsv" muted loop playsInline preload="auto" aria-hidden="true" tabIndex={-1} />
       {/* Fondo del anuncio encima del video: el video cuenta como "pantalla completa" pero no se ve. */}
       <div className="ambient-cover" aria-hidden="true" />
     </>
