@@ -3,7 +3,7 @@
 import type { CoursePlay } from "../engine";
 import { QrCode } from "../QrCode";
 import { Masthead, Reveal, Stage } from "../spots/kit";
-import { PhoneCta } from "./shared";
+import { offerTag, PhoneCta } from "./shared";
 
 /**
  * Escena 8 · "Apunta tu cámara aquí": el QR es el protagonista (más de la mitad del ancho en vertical),
@@ -26,6 +26,10 @@ export function SceneScan({ play }: { play: CoursePlay }) {
             <Reveal text="aquí." startMs={800} stepMs={110} />
           </em>
         </div>
+        {/* Quitar fricción: mucha gente cree que necesita una app para leer un QR. */}
+        <div className="ed-mono scn-noapp ed-up" style={{ animationDelay: "900ms" }}>
+          Sin descargar nada · solo abre la cámara
+        </div>
       </div>
 
       <div className="scn-arrow" aria-hidden="true">
@@ -45,6 +49,8 @@ export function SceneScan({ play }: { play: CoursePlay }) {
           <span className="scn-laser" />
         </div>
         <div className="scn-label">Escanea para ver temario</div>
+        {offerTag(course.hook_headline, featured.offerShort) ? <div className="scn-offer">+ {featured.offer}</div> : null}
+        {featured.urgency ? <div className="ed-mono scn-urgency">{featured.urgency}</div> : null}
       </div>
 
       <div className="scn-foot">

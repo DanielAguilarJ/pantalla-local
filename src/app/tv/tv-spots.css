@@ -1015,3 +1015,210 @@
 
 /* Showreels: el WhatsApp también acompaña los videos del sitio. */
 .sr-phone { margin-top: 1.8vmin; }
+
+/* =====================================================================================
+ * Calibración para la LG StanbyMe 2 de 27″ (QHD) detrás del escaparate.
+ * Área visible ≈ 59,8 × 33,6 cm → 1 vmin ≈ 3,4 mm en cualquier orientación.
+ *  - Titulares ≥ 8 vmin (≈ 2,7 cm): se leen a 3–5 m.  - Texto de apoyo ≥ 3,4 vmin (≈ 1,1 cm): 1,5–2 m.
+ *  - Letra chica ≥ 2,3 vmin (≈ 8 mm): solo para quien ya se acercó a escanear.
+ *  - QR: regla 10:1 → 31 vmin (≈ 10,5 cm) se escanea a ~1 m; el de la escena «scan» (≈ 18 cm) a ~1,8 m.
+ * ===================================================================================== */
+.tv-stage { --q-tag: 0vmin; }
+.qr-badge.has-offer { --q-tag: 8vmin; }
+.tv-stage .slide { --q-tag: 8vmin; } /* las escenas reservan lugar para la etiqueta de oferta */
+
+.qr-frame { position: relative; }
+/* Etiqueta de oferta colgada del QR: la razón para escanear, pegada a la acción. */
+.qr-offer {
+  position: relative;
+  z-index: 3;
+  margin-bottom: 1.8vmin;
+  padding: 1.2vmin 1.4vmin 1vmin;
+  border-radius: 1.6vmin;
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 1vmin 2.6vmin rgba(0, 0, 0, 0.2);
+  text-align: center;
+  font-family: var(--font-display), Impact, sans-serif;
+  font-size: 3.2vmin;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  animation: qr-tag-in 0.6s cubic-bezier(0.2, 1.5, 0.4, 1) 0.9s both;
+}
+.qr-offer::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -1.4vmin;
+  margin-left: -1.4vmin;
+  border-left: 1.4vmin solid transparent;
+  border-right: 1.4vmin solid transparent;
+  border-top: 1.4vmin solid var(--accent);
+}
+@keyframes qr-tag-in {
+  from { opacity: 0; transform: translateY(-3vmin) rotate(-4deg); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Cierre editorial: la oferta en una sola línea (no crece el cierre ni tapa el contenido). */
+.ed-foot-offer {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  margin-top: 1.6vmin;
+  padding: 0.9vmin 2.2vmin 0.9vmin 1.6vmin;
+  border-radius: 99vmin;
+  background: var(--pop);
+  color: var(--pop-ink);
+  font-size: 2.9vmin;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.ed-star { flex-shrink: 0; width: 1.2em; height: 1.2em; margin-right: 0.45em; }
+.ed-foot-phone { margin-top: 1.6vmin; }
+.ed-foot-title { font-size: 6.6vmin; }
+.ct-qr-offer {
+  display: inline-block;
+  margin-top: 1.6vmin;
+  padding: 0.9vmin 2vmin;
+  border-radius: 99vmin;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 2.8vmin;
+  font-weight: 800;
+}
+
+/* Portada: sello circular de la oferta sobre la foto. */
+.cv-sticker {
+  position: absolute;
+  z-index: 3;
+  right: -2vmin;
+  bottom: -5vmin;
+  width: 24vmin;
+  height: 24vmin;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2.6vmin;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  text-align: center;
+  box-shadow: 0 1.6vmin 4vmin rgba(0, 0, 0, 0.25);
+  transform: rotate(-10deg);
+  animation: sticker-in 0.7s cubic-bezier(0.2, 1.6, 0.4, 1) 1.1s both, sticker-beat 2.4s ease-in-out 2s infinite;
+}
+.cv-sticker-word { font-size: 6vmin; line-height: 0.95; text-transform: uppercase; }
+.cv-sticker-text { margin-top: 0.8vmin; font-size: 2.5vmin; font-weight: 800; line-height: 1.05; }
+@keyframes sticker-in {
+  from { opacity: 0; transform: scale(0.3) rotate(-40deg); }
+  to { opacity: 1; transform: rotate(-10deg); }
+}
+@keyframes sticker-beat {
+  0%, 100% { transform: rotate(-10deg) scale(1); }
+  12% { transform: rotate(-10deg) scale(1.07); }
+  24% { transform: rotate(-10deg) scale(0.98); }
+}
+
+/* Índice y escena «scan»: oferta destacada. */
+.ix-offer {
+  display: inline-block;
+  margin-bottom: 1.6vmin;
+  padding: 0.9vmin 2vmin;
+  border-radius: 99vmin;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 2.8vmin;
+  font-weight: 800;
+}
+.scn-noapp { margin-top: 1.6vmin; font-size: 2.5vmin; }
+.scn-offer {
+  margin: 2vmin auto 0;
+  max-width: 64vmin;
+  padding: 1.2vmin 2.4vmin;
+  border-radius: 99vmin;
+  background: var(--accent);
+  color: var(--accent-ink);
+  text-align: center;
+  font-size: 3vmin;
+  font-weight: 800;
+}
+
+/* Piso de legibilidad (antes había textos de 1,5–2,2 vmin: 5–7 mm en esta pantalla). */
+.phone-lbl { font-size: 2.2vmin; }
+.phone-s .phone-lbl { font-size: 1.9vmin; }
+.phone-s .phone-num { font-size: 4.8vmin; }
+.ed-mast-label { font-size: 2.4vmin; }
+.ed-foot-label { font-size: 2.5vmin; }
+.ed-foot-meta { font-size: 2.6vmin; }
+.cv-caption { font-size: 2.3vmin; }
+.ix-num { font-size: 2.6vmin; }
+.tm-role { font-size: 2.6vmin; }
+.me-title { font-size: 2.6vmin; }
+.nu-label { font-size: 2.7vmin; }
+.ri-min { font-size: 2.8vmin; }
+.ri-text { font-size: 2.9vmin; }
+.sg-top { font-size: 2.5vmin; }
+.sg-chip { font-size: 2.7vmin; }
+.ct-hours { font-size: 2.6vmin; }
+.ct-qr-kicker { font-size: 2.5vmin; }
+.hr-today { font-size: 2.2vmin; }
+.hr-note { font-size: 2.4vmin; }
+.gl-num { font-size: 2.2vmin; }
+.gl-name { font-size: 2.6vmin; }
+.tk-intro-src { font-size: 2.8vmin; }
+@media (orientation: landscape) {
+  .tv-stage { --q: 26vmin; }
+  .ed { --q: 24vmin; }
+  .qr-label { font-size: 2vmin; }
+  .qr-offer { font-size: 2.8vmin; }
+  .ed-mast-label { font-size: 2.2vmin; }
+  .ix-ages { font-size: 2.2vmin; }
+  .nu-label { font-size: 2.3vmin; }
+  .nu-prefix { font-size: 2.4vmin; }
+  .ri-text { font-size: 2.5vmin; }
+  .sg-chip { font-size: 2.3vmin; }
+  .gl-name { font-size: 2.3vmin; }
+  .hr-time { font-size: 2.6vmin; }
+  .ed-foot-offer { font-size: 2.4vmin; white-space: normal; }
+  .ed-foot-title { font-size: 5.4vmin; }
+  .cv-sticker { width: 20vmin; height: 20vmin; right: -3vmin; bottom: auto; top: -3vmin; }
+  .cv-sticker-word { font-size: 5vmin; }
+  .cv-sticker-text { font-size: 2.1vmin; }
+}
+
+/* Escasez real y ajustes de densidad. */
+.qr-offer-txt { display: block; }
+.qr-offer-urg {
+  display: block;
+  margin-top: 0.5vmin;
+  font-family: var(--font-sans), Arial, sans-serif;
+  font-size: 1.9vmin;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+.scn-urgency { margin-top: 1.4vmin; text-align: center; font-size: 2.4vmin; }
+.sg-card { padding: 1.8vmin 3vmin 2.2vmin; }
+.sg-card + .sg-card { margin-top: 1.4vh; }
+.sg-summary { font-size: 4vmin; }
+@media (orientation: landscape) {
+  .sg-card { padding: 2.4vmin 2.6vmin 3vmin; }
+  .sg-card + .sg-card { margin-top: 0; }
+}
+
+/* Ajustes tras revisar a 2560×1440 / 1440×2560. */
+@media (orientation: portrait) {
+  .kn-b-photo { height: 26vh; }
+}
+@media (orientation: landscape) {
+  .kn-b .kn-b-sub, .kn-b .kn-b-title { max-width: 40vw; }
+  .ed { --foot-w: 24vw; }
+  .ed-foot .ed-foot-title { font-size: 4.8vmin; }
+  .ed-foot .phone-cta { padding: 0.7vmin 2vmin 0.7vmin 0.7vmin; }
+  .ed-foot .phone-ico { width: 4.6vmin; height: 4.6vmin; }
+  .ed-foot .phone-txt { margin-left: 1.4vmin; }
+  .ed-foot .phone-lbl { font-size: 1.7vmin; }
+  .ed-foot .phone-num { font-size: 4vmin; }
+}

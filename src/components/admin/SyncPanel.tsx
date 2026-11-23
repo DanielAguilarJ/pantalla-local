@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { AdminState, ContentSummary } from "@/lib/admin-state";
 import type { SyncReport } from "@/lib/types";
+import { DAYPART_LABEL, daypartAt } from "@/lib/sede-time";
 import { MakeCard } from "./MakeCard";
 import { api, Button, Card, Notice, timeAgo } from "./ui";
 
@@ -82,7 +83,10 @@ export function SyncPanel({ state, refresh }: { state: AdminState; refresh: () =
             <Notice tone="info">En pantalla: catálogo oficial de WorldBrain con copys automáticos y showreels del sitio.</Notice>
           ) : null}
         </div>
-        <p className="mt-3 text-xs text-stone-500">
+        <p className="mt-3 text-sm text-stone-700">
+          Franja horaria ahora: <b>{DAYPART_LABEL[daypartAt(new Date())]}</b>. Los programas de ese público salen más seguido.
+        </p>
+        <p className="mt-2 text-xs text-stone-500">
           Si Make.com pasa más de {status.staleHours} h sin enviar datos, el cron diario y las propias pantallas activan el respaldo
           automáticamente. Las pantallas sincronizan cada 15 minutos sin cortar el anuncio en curso.
         </p>

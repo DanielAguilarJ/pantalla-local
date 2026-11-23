@@ -66,6 +66,14 @@ export function LetterRise({ text, startMs = 0, stepMs = 45 }: { text: string; s
   );
 }
 
+function StarIcon() {
+  return (
+    <svg className="ed-star" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 2.5l2.6 6.1 6.6.6-5 4.4 1.5 6.5L12 16.7l-5.7 3.4 1.5-6.5-5-4.4 6.6-.6z" fill="currentColor" />
+    </svg>
+  );
+}
+
 /** Cabecera tipo revista: logo, etiqueta en monoespaciada y filete que se traza. */
 export function Masthead({ label }: { label: string }) {
   return (
@@ -88,7 +96,7 @@ export function EdFooter({
   palette,
   label = "Programa recomendado",
   variant = "program",
-  delayMs = 900,
+  delayMs = 700,
 }: {
   featured: RosterItem;
   palette: Palette;
@@ -96,7 +104,9 @@ export function EdFooter({
   variant?: "program" | "contact";
   delayMs?: number;
 }) {
-  const style = { animationDelay: `${delayMs}ms` } as CSSProperties;
+  // Prueba del "cuadro congelado": la llamada a la acción tiene que estar visible desde el primer segundo,
+  // porque quien pasa caminando mira la pantalla 2–3 s.
+  const style = { animationDelay: `${Math.min(delayMs, 900)}ms` } as CSSProperties;
   return (
     <div className="ed-foot">
       <div className="ed-foot-info ed-up" style={style}>
@@ -104,9 +114,15 @@ export function EdFooter({
           <>
             <div className="ed-mono ed-foot-label">{label}</div>
             <div className="ed-foot-title display">{featured.course.title}</div>
-            <div className="ed-mono ed-foot-meta">
-              {[featured.ages, featured.benefit].filter(Boolean).join(" · ")}
-            </div>
+            {featured.offer ? (
+              // La oferta real reemplaza a los datos secundarios: es la razón para escanear.
+              <div className="ed-foot-offer">
+                <StarIcon />
+                <span>{featured.offerShort}</span>
+              </div>
+            ) : (
+              <div className="ed-mono ed-foot-meta">{[featured.ages, featured.benefit].filter(Boolean).join(" · ")}</div>
+            )}
             <PhoneCta size="s" className="ed-foot-phone" />
           </>
         ) : (
@@ -122,7 +138,7 @@ export function EdFooter({
           </>
         )}
       </div>
-      <QrBadge url={featured.course.course_url} dark={palette.qrDark} className="qr-inline" />
+      <QrBadge url={featured.course.course_url} dark={palette.qrDark} className="qr-inline" offer={featured.urgency ? "Cupo limitado" : ""} />
     </div>
   );
 }

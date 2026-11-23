@@ -2,6 +2,7 @@ import brandData from "@data/worldbrain-brand.json";
 import { findProgram } from "@/lib/catalog";
 import { FLASH_LABELS, isSensitiveNews, relatedNews, TICKER_INTROS } from "@/lib/copy";
 import { paletteForSeed, type Palette } from "@/lib/palettes";
+import { DAYPART_WEIGHTS, daypartAt, type Daypart } from "@/lib/sede-time";
 import { dailySeed, pick, rngFrom, shuffle } from "@/lib/seed";
 import type { Course, NewsItem, Playlist, PlaylistManual, PlaylistReel } from "@/lib/types";
 
@@ -29,11 +30,15 @@ export interface RosterItem {
   benefit: string;
   ages: string;
   audience: string[];
+  /** Oferta real del programa (vacía si su página no publica una). */
+  offer: string;
+  offerShort: string;
+  urgency: string;
 }
 
 export type CommercialSource =
-  | { id: string; kind: "course"; course: Course; news: NewsItem[]; roster: RosterItem[] }
-  | { id: string; kind: "brand"; spot: SpotId; roster: RosterItem[]; testimonials: Testimonial[] };
+  | { id: string; weight: number; kind: "course"; course: Course; news: NewsItem[]; roster: RosterItem[] }
+  | { id: string; weight: number; kind: "brand"; spot: SpotId; roster: RosterItem[]; testimonials: Testimonial[] };
 
 interface PlayBase {
   seed: string;
@@ -78,6 +83,9 @@ function buildRoster(courses: Course[]): RosterItem[] {
       benefit: p?.benefit || "",
       ages: p?.ages || "",
       audience: p?.audience || [],
+      offer: p?.offer || "",
+      offerShort: p?.offer_short || "",
+      urgency: p?.urgency || "",
     };
   });
 }
@@ -86,10 +94,43 @@ function rosterFind(roster: RosterItem[], programId: string): RosterItem | undef
   return roster.find((r) => findProgram(r.course)?.id === programId || r.id === programId);
 }
 
-export function toSources(p: Playlist): { reel: PlaylistReel[]; commercial: CommercialSource[]; manual: PlaylistManual[] } {
+/** Peso por franja: el público del programa con mayor peso en esta hora (programas sin público → 1). */
+function audienceWeight(r: RosterItem, daypart: Daypart | undefined): number {
+  if (!daypart || !r.audience.length) return 1;
+  const w = DAYPART_WEIGHTS[daypart] as Record<string, number>;
+  return Math.max(...r.audience.map((a) => (w[a] === undefined ? 1 : w[a])));
+}
+
+/** En la noche y el domingo la sede está cerrada: se refuerzan "escríbenos" y el horario. */
+function spotWeight(spot: SpotId, daypart: Daypart | undefined): number {
+  if (daypart === "noche" && (spot === "contact" || spot === "hours")) return 2;
+  return 1;
+}
+
+function weightedPick(rng: () => number, roster: RosterItem[], daypart: Daypart): RosterItem {
+  const weights = roster.map((r) => audienceWeight(r, daypart));
+  let x = rng() * weights.reduce((a, b) => a + b, 0);
+  for (let i = 0; i < roster.length; i++) {
+    x -= weights[i];
+    if (x <= 0) return roster[i];
+  }
+  return roster[roster.length - 1];
+}
+
+export function toSources(
+  p: Playlist,
+  daypart?: Daypart,
+): { reel: PlaylistReel[]; commercial: CommercialSource[]; manual: PlaylistManual[] } {
   const news = p.news.filter((n) => !isSensitiveNews(n.headline));
   const roster = buildRoster(p.courses);
-  const courseSources: CommercialSource[] = roster.map((r) => ({ id: r.id, kind: "course", course: r.course, news, roster }));
+  const courseSources: CommercialSource[] = roster.map((r) => ({
+    id: r.id,
+    weight: audienceWeight(r, daypart),
+    kind: "course",
+    course: r.course,
+    news,
+    roster,
+  }));
   // Testimonios solo de programas que están en pantalla (si el admin apaga uno, sus testimonios desaparecen).
   const testimonials = brandData.testimonials.filter((t) => rosterFind(roster, t.program));
   // Los testimonios (prueba social) entran 3 veces en la bolsa: salen más seguido que los demás anuncios de marca
@@ -102,6 +143,7 @@ export function toSources(p: Playlist): { reel: PlaylistReel[]; commercial: Comm
     : [];
   const brandSources: CommercialSource[] = spotSlots.map((spot, i) => ({
     id: `brand-${spot}-${i}`,
+    weight: spotWeight(spot, daypart),
     kind: "brand",
     spot,
     roster,
@@ -140,7 +182,8 @@ export function planCommercial(
     const rng = rngFrom("spot", seed, src.spot, playIndex);
     let testimonial: Testimonial | null = null;
     let testimonialIndex = 0;
-    let featured = pick(rng, src.roster);
+    // El programa recomendado también sigue la franja horaria (p. ej. infantiles a la salida de escuelas).
+    let featured = weightedPick(rng, src.roster, daypartAt(now));
     if (src.spot === "testimonial" && src.testimonials.length) {
       // Recorre los testimonios en orden barajado del día: no se repite uno hasta mostrarlos todos.
       const order = shuffle(rngFrom("testimonials", seed), src.testimonials);
@@ -164,6 +207,9 @@ export function planCommercial(
     benefit: "",
     ages: "",
     audience: [],
+    offer: "",
+    offerShort: "",
+    urgency: "",
   };
   return {
     kind: "course",

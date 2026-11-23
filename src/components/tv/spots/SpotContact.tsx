@@ -46,10 +46,11 @@ export function SpotContact({ play }: { play: BrandPlay }) {
         </div>
       </div>
 
-      <div className="ct-qr-row ed-up" style={{ animationDelay: "2800ms" }}>
+      <div className="ct-qr-row ed-up" style={{ animationDelay: "700ms" }}>
         <div className="ct-qr-text">
           <div className="ed-mono ct-qr-kicker">O mira el temario de</div>
           <div className="ct-qr-title display">{play.featured.course.title}</div>
+          {play.featured.offer ? <div className="ct-qr-offer">{play.featured.offer}</div> : null}
         </div>
         <QrBadge url={play.featured.course.course_url} dark={play.palette.qrDark} className="qr-inline" />
       </div>

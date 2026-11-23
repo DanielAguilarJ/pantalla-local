@@ -88,7 +88,7 @@ export interface PlaylistReel {
   /** Corta la reproducción a los N segundos (showreels largos del sitio). */
   maxSec?: number;
   /** Presente cuando el video es el showreel oficial de un programa (se muestra con marca y QR). */
-  showreel?: { title: string; course_url: string; benefit: string; ages: string };
+  showreel?: { title: string; course_url: string; benefit: string; ages: string; offer: string };
 }
 
 export interface PlaylistManual {

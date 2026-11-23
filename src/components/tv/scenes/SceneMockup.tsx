@@ -4,7 +4,7 @@ import { QrBadge } from "../QrCode";
 import type { CoursePlay } from "../engine";
 import { useOrientation } from "../useOrientation";
 import { BRAND } from "@/lib/brand";
-import { BrandBug, CheckIcon, CourseImage, PointerIcon, PriceOrContact, StaggerWords } from "./shared";
+import { BrandBug, CheckIcon, CourseImage, offerTag, PointerIcon, PriceOrContact, StaggerWords } from "./shared";
 
 /** Escena 1 · Smartphone/laptop 3D flotante con la landing real del curso y un cursor que hace clic. */
 export function SceneMockup({ play }: { play: CoursePlay }) {
@@ -30,7 +30,7 @@ export function SceneMockup({ play }: { play: CoursePlay }) {
       </div>
       <div className="dev-body">
         <div className="dev-title display">{course.title}</div>
-        <div className="dev-price">{course.price || BRAND.noPriceBadge}</div>
+        <div className="dev-price">{course.price || play.featured.offerShort || BRAND.noPriceBadge}</div>
         <div className="dev-btn-wrap">
           <span className="dev-btn display">
             <span className="btn-a">Inscribirme</span>
@@ -81,7 +81,7 @@ export function SceneMockup({ play }: { play: CoursePlay }) {
       </div>
 
       <BrandBug />
-      <QrBadge url={course.course_url} dark={palette.qrDark} className="mk-qr" />
+      <QrBadge url={course.course_url} dark={palette.qrDark} className="mk-qr" offer={offerTag(course.hook_headline, play.featured.offerShort)} urgency={play.featured.urgency} />
     </div>
   );
 }

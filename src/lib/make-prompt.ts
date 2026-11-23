@@ -9,7 +9,7 @@ DISPARADOR
 
 PASO 1 · Catálogo de programas
 - Módulo HTTP "Make a request": GET ${origin}/api/catalog
-- Parsear la respuesta como JSON. Usar el arreglo "courses" (programas oficiales con id, title, description, image_url, course_url, price, benefit, ages y audience).
+- Parsear la respuesta como JSON. Usar el arreglo "courses" (programas oficiales con id, title, description, image_url, course_url, price, benefit, ages, audience, offer, offer_short y urgency).
 
 PASO 2 · Reels de Instagram
 - Módulo Instagram for Business: listar las publicaciones más recientes de la cuenta de WorldBrain (límite 25).
@@ -26,8 +26,11 @@ PASO 4 · Copy con IA (un registro por programa)
   · hook_headline: máximo 8 palabras, ingenioso, irónico y directo (estilo Ben & Frank), español de México.
     Si audience incluye "ninos" háblale a mamás y papás; "jovenes" a estudiantes; "adultos" a profesionales.
     Puede mencionar con respeto una noticia del Paso 3 si encaja.
-  · hook_subheadline: máximo 14 palabras, beneficio concreto basado en description, benefit y ages.
-- Prohibido inventar precios, descuentos, becas, garantías o resultados. WorldBrain tiene grupos de máximo 7 participantes y está en Cuautitlán Izcalli desde 2000; solo usa esos datos.
+  · hook_subheadline: máximo 14 palabras. Si el programa trae "offer", úsala tal cual como protagonista
+    (p. ej. "Clase muestra gratis + diagnóstico de nivel: escanea y agenda"). Si no, beneficio concreto
+    basado en description, benefit y ages. Si trae "urgency", puede cerrar con ella.
+  · Reglas de publicidad exterior: se lee en 3 segundos, una sola idea, verbos de acción, sin signos de más.
+- Prohibido inventar precios, descuentos, becas, garantías, ofertas o resultados: solo las ofertas que vienen en "offer". WorldBrain tiene grupos de máximo 7 participantes y está en Cuautitlán Izcalli desde 2000; solo usa esos datos.
 - Conservar sin cambios id, title, description, image_url, course_url y price tal como llegan del Paso 1.
 
 PASO 5 · Enviar a la pantalla

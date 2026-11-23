@@ -6,7 +6,7 @@ import { QrBadge } from "../QrCode";
 import type { CoursePlay } from "../engine";
 import { BrandLogo } from "@/components/BrandLogo";
 import { BRAND } from "@/lib/brand";
-import { CourseImage, PriceOrContact } from "./shared";
+import { CourseImage, offerTag, PriceOrContact } from "./shared";
 
 /** Repite los titulares hasta tener suficiente texto para un bucle continuo sin huecos. */
 function tickerItems(news: NewsItem[], fallback: readonly string[]): string[] {
@@ -79,7 +79,7 @@ export function SceneTicker({ play }: { play: CoursePlay }) {
           </div>
         </div>
 
-        <QrBadge url={course.course_url} dark={palette.qrDark} className="tk-qr" />
+        <QrBadge url={course.course_url} dark={palette.qrDark} className="tk-qr" offer={offerTag(course.hook_headline, play.featured.offerShort)} urgency={play.featured.urgency} />
       </div>
 
       <div className="tk-band tk-bottom display">

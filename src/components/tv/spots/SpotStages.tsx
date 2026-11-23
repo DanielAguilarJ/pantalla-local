@@ -6,7 +6,7 @@ import { useOrientation } from "../useOrientation";
 import { EdFooter, Masthead, pad2, Reveal, Stage } from "./kit";
 
 // Vertical: una sola fila de chips. Horizontal: las tarjetas tienen alto para varias filas.
-const MAX_CHIPS = { portrait: 2, landscape: 4 };
+const MAX_CHIPS = { portrait: 2, landscape: 3 };
 
 /** Reparte los programas en pantalla entre las 3 etapas que publica el sitio. */
 function stageOf(r: RosterItem): number {
