@@ -6,6 +6,7 @@ import { BRAND } from "@/lib/brand";
 import type { Palette } from "@/lib/palettes";
 import { QrBadge } from "../QrCode";
 import type { RosterItem } from "../engine";
+import { PhoneCta, WhatsIcon } from "../scenes/shared";
 
 /** Fases temporizadas de un anuncio: devuelve cuántos tiempos (ms) ya pasaron desde el montaje. */
 export function usePhase(times: number[]): number {
@@ -106,11 +107,17 @@ export function EdFooter({
             <div className="ed-mono ed-foot-meta">
               {[featured.ages, featured.benefit].filter(Boolean).join(" · ")}
             </div>
+            <PhoneCta size="s" className="ed-foot-phone" />
           </>
         ) : (
           <>
-            <div className="ed-mono ed-foot-label">Informes por WhatsApp</div>
-            <div className="ed-foot-title display">{BRAND.whatsappDisplay}</div>
+            <div className="ed-mono ed-foot-label ed-foot-wa">
+              <span className="ed-foot-wa-ico">
+                <WhatsIcon />
+              </span>
+              Informes por WhatsApp
+            </div>
+            <div className="ed-foot-number display">{BRAND.whatsappDisplay}</div>
             <div className="ed-mono ed-foot-meta">{BRAND.siteLabel}</div>
           </>
         )}

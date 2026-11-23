@@ -90,29 +90,53 @@ export function PriceOrContact({ price, delayMs }: { price: string; delayMs: num
       </span>
     );
   }
+  return <PhoneCta size="m" delayMs={delayMs} />;
+}
+
+/** Ícono de WhatsApp simplificado (burbuja + auricular), en SVG para no depender de fuentes de la TV. */
+export function WhatsIcon() {
   return (
-    <span className="contact-pill pop-in" style={{ animationDelay: `${delayMs}ms` }}>
-      <ChatIcon />
-      <span className="contact-pill-label">Informes</span>
-      <span className="contact-pill-number display">{BRAND.whatsappDisplay}</span>
-    </span>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M12 2.6a9.4 9.4 0 0 0-8.1 14.1L2.6 21.4l4.8-1.3A9.4 9.4 0 1 0 12 2.6Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.1"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M8.7 7.6c.3-.2.8-.2 1 .2l.9 1.8c.1.3.1.6-.1.8l-.6.7c.6 1.3 1.6 2.3 2.9 2.9l.7-.6c.2-.2.5-.3.8-.1l1.8.9c.4.2.5.7.2 1-.5.8-1.4 1.3-2.3 1.1-3.1-.6-5.5-3-6.1-6.1-.2-.9.3-1.8 1.1-2.3Z"
+        fill="currentColor"
+      />
+    </svg>
   );
 }
 
-function ChatIcon() {
+/** Píldora de WhatsApp con el número grande y un ícono que "timbra" cada pocos segundos. */
+export function PhoneCta({
+  size = "m",
+  delayMs,
+  label = "Informes por WhatsApp",
+  className = "",
+}: {
+  size?: "s" | "m" | "l";
+  delayMs?: number;
+  label?: string;
+  className?: string;
+}) {
   return (
-    <svg className="icon contact-icon" viewBox="0 0 24 24" aria-hidden="true">
-      <path
-        d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinejoin="round"
-      />
-      <circle cx="8.5" cy="12" r="1.3" fill="currentColor" />
-      <circle cx="12" cy="12" r="1.3" fill="currentColor" />
-      <circle cx="15.5" cy="12" r="1.3" fill="currentColor" />
-    </svg>
+    <span
+      className={`phone-cta phone-${size} ${delayMs !== undefined ? "pop-in" : ""} ${className}`}
+      style={delayMs !== undefined ? { animationDelay: `${delayMs}ms` } : undefined}
+    >
+      <span className="phone-ico">
+        <WhatsIcon />
+      </span>
+      <span className="phone-txt">
+        <span className="phone-lbl">{label}</span>
+        <span className="phone-num display">{BRAND.whatsappDisplay}</span>
+      </span>
+    </span>
   );
 }
 

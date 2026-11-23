@@ -3,7 +3,7 @@
 import type { CSSProperties } from "react";
 import { QrBadge } from "../QrCode";
 import type { CoursePlay } from "../engine";
-import { ArrowIcon, BrandBug, PriceOrContact, splitWords, StaggerWords } from "./shared";
+import { ArrowIcon, BrandBug, CourseImage, PriceOrContact, splitWords, StaggerWords } from "./shared";
 
 const UNDERLINE_PATH = "M2 18 C 40 6, 80 26, 120 14 S 190 4, 230 16 S 280 22, 298 10";
 
@@ -51,6 +51,10 @@ export function SceneKinetic({ play }: { play: CoursePlay }) {
       </div>
 
       <div className="fill kn-b">
+        {/* Foto del programa en el espacio libre del bloque de color (arriba en vertical, a la derecha en horizontal). */}
+        <div className="kn-b-photo">
+          <CourseImage src={course.image_url} title={course.title} />
+        </div>
         <div className="kn-b-sub">
           <StaggerWords text={course.hook_subheadline} startMs={6600} stepMs={70} />
         </div>

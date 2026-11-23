@@ -17,8 +17,8 @@ type SearchParams = Promise<Record<string, string | string[] | undefined>>;
  * /tv            -> reproductor de la pantalla LG
  * /tv?demo=1     -> contenido de demostración (para probar el motor sin Make.com)
  * /tv?preview=1  -> vista previa dentro de /admin (sin wake lock ni recargas)
- * /tv?preview=1&scene=mockup|kinetic|ticker|split|flash|cover|index -> solo esa escena de curso
- * /tv?preview=1&scene=testimonial|method|numbers|ritual|stages      -> solo ese anuncio de marca
+ * /tv?preview=1&scene=mockup|kinetic|ticker|split|flash|cover|index|scan -> solo esa escena de curso
+ * /tv?preview=1&scene=testimonial|method|numbers|ritual|stages|contact|hours|gallery -> solo ese anuncio de marca
  * /tv?preview=1&palette=acido|worldbrain|coral|menta|senal|chicle   -> fija una paleta (solo vista previa)
  */
 export default async function TvPage({ searchParams }: { searchParams: SearchParams }) {

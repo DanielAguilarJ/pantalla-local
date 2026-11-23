@@ -16,7 +16,7 @@ html.tv-mode body {
 }
 
 .tv-stage {
-  --q: 20vmin; /* tamaño del QR */
+  --q: 24vmin; /* tamaño del QR (grande: se escanea desde la banqueta) */
   --pad: 6vmin;
   position: fixed;
   top: 0;
@@ -35,7 +35,7 @@ html.tv-mode body {
 
 @media (orientation: portrait) {
   .tv-stage {
-    --q: 25vmin;
+    --q: 31vmin;
   }
 }
 
@@ -183,32 +183,115 @@ html.tv-mode body {
 
 /* ===================== Piezas comunes de los comerciales ===================== */
 
+/* QR: tarjeta blanca + visor animado (esquinas y pulso FUERA de la tarjeta: nunca tapan módulos). */
 .qr-badge {
   position: absolute;
   z-index: 40;
   width: var(--q);
-  padding: 1.1vmin 1.1vmin 1.2vmin;
-  background: #fff;
-  border-radius: 1.8vmin;
-  box-shadow: 0 1.2vmin 3.5vmin rgba(0, 0, 0, 0.22);
   animation: qr-in 0.7s cubic-bezier(0.2, 1.5, 0.4, 1) 0.5s both;
+}
+.qr-card {
+  position: relative;
+  z-index: 1;
+  padding: 1.3vmin 1.3vmin 1.5vmin;
+  background: #fff;
+  border-radius: 2vmin;
+  box-shadow: 0 1.4vmin 4vmin rgba(0, 0, 0, 0.25);
 }
 .qr-svg {
   display: block;
   width: 100%;
-  height: calc(var(--q) - 2.2vmin);
+  height: calc(var(--q) - 2.6vmin);
 }
 .qr-label {
-  margin-top: 0.7vmin;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1vmin;
   color: #111;
-  text-align: center;
+  text-align: left;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.02em;
-  font-size: 1.8vmin;
-  font-size: clamp(11px, 1.8vmin, 30px);
-  line-height: 1.1;
+  font-size: 2.1vmin;
+  font-size: clamp(12px, 2.1vmin, 36px);
+  line-height: 1.08;
 }
+.qr-ico { flex-shrink: 0; width: 1.9em; height: 1.9em; margin-right: 0.45em; }
+.qr-pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 2.4vmin;
+  border: 0.7vmin solid var(--accent);
+  opacity: 0;
+  animation: qr-pulse 2.4s ease-out 1.3s infinite;
+}
+@keyframes qr-pulse {
+  0% { opacity: 0.9; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.2); }
+}
+.qr-corner {
+  position: absolute;
+  z-index: 2;
+  width: 6vmin;
+  height: 6vmin;
+  border: 0 solid var(--accent);
+}
+.c-tl { top: -2vmin; left: -2vmin; border-top-width: 0.9vmin; border-left-width: 0.9vmin; border-top-left-radius: 2.6vmin; animation: qr-tl 1.3s ease-in-out infinite alternate; }
+.c-tr { top: -2vmin; right: -2vmin; border-top-width: 0.9vmin; border-right-width: 0.9vmin; border-top-right-radius: 2.6vmin; animation: qr-tr 1.3s ease-in-out infinite alternate; }
+.c-bl { bottom: -2vmin; left: -2vmin; border-bottom-width: 0.9vmin; border-left-width: 0.9vmin; border-bottom-left-radius: 2.6vmin; animation: qr-bl 1.3s ease-in-out infinite alternate; }
+.c-br { bottom: -2vmin; right: -2vmin; border-bottom-width: 0.9vmin; border-right-width: 0.9vmin; border-bottom-right-radius: 2.6vmin; animation: qr-br 1.3s ease-in-out infinite alternate; }
+@keyframes qr-tl { to { transform: translate(-0.9vmin, -0.9vmin); } }
+@keyframes qr-tr { to { transform: translate(0.9vmin, -0.9vmin); } }
+@keyframes qr-bl { to { transform: translate(-0.9vmin, 0.9vmin); } }
+@keyframes qr-br { to { transform: translate(0.9vmin, 0.9vmin); } }
+
+/* WhatsApp: píldora con ícono que "timbra". Tamaños s / m / l. */
+.phone-cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.9vmin 3vmin 0.9vmin 0.9vmin;
+  border-radius: 99vmin;
+  background: var(--accent);
+  color: var(--accent-ink);
+  white-space: nowrap;
+  box-shadow: 0 1vmin 3vmin rgba(0, 0, 0, 0.16);
+}
+.phone-ico {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 7vmin;
+  height: 7vmin;
+  border-radius: 50%;
+  background: var(--accent-ink);
+  color: var(--accent);
+}
+.phone-ico svg { width: 58%; height: 58%; animation: ring 2.6s ease-in-out 1s infinite; }
+@keyframes ring {
+  0%, 62%, 100% { transform: none; }
+  66% { transform: rotate(-16deg); }
+  70% { transform: rotate(14deg); }
+  74% { transform: rotate(-12deg); }
+  78% { transform: rotate(10deg); }
+  82% { transform: rotate(0); }
+}
+.phone-txt { display: block; margin-left: 2vmin; }
+.phone-lbl { display: block; font-size: 1.9vmin; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.phone-num { display: block; margin-top: 0.3vmin; font-size: 5.6vmin; line-height: 0.95; letter-spacing: 0.01em; }
+.phone-s { padding-right: 2.4vmin; }
+.phone-s .phone-ico { width: 5.4vmin; height: 5.4vmin; }
+.phone-s .phone-lbl { font-size: 1.5vmin; }
+.phone-s .phone-num { font-size: 4.2vmin; }
+.phone-l { padding-right: 3.6vmin; }
+.phone-l .phone-ico { width: 10vmin; height: 10vmin; }
+.phone-l .phone-txt { margin-left: 2.6vmin; }
+.phone-l .phone-lbl { font-size: 2.4vmin; }
+.phone-l .phone-num { font-size: 8.4vmin; }
 .qr-br { right: 3.5vmin; bottom: 3.5vmin; }
 .qr-tr { right: 3.5vmin; top: 3.5vmin; }
 @keyframes qr-in {
@@ -946,7 +1029,7 @@ html.tv-mode body {
   /* El showreel es 16:9: en vertical va al centro, con marca arriba y ficha + QR abajo. */
   .sr-video { top: 24vh; height: 56.25vw; }
   .sr-head { top: 8vh; left: 0; right: 0; text-align: center; }
-  .sr-logo { font-size: 6vmin; background: transparent; }
+  .sr-logo { font-size: 8.6vmin; background: transparent; }
   .sr-panel { top: calc(24vh + 56.25vw + 4vmin); bottom: auto; max-width: calc(100% - var(--q) - 11vmin); box-shadow: none; padding-left: 0; background: transparent; }
   .sr-title { font-size: 10vmin; }
   .sr-meta { font-size: 4vmin; }

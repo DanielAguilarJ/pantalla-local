@@ -1,6 +1,9 @@
 "use client";
 
 import type { BrandPlay } from "../engine";
+import { SpotContact } from "./SpotContact";
+import { SpotGallery } from "./SpotGallery";
+import { SpotHours } from "./SpotHours";
 import { SpotMethod } from "./SpotMethod";
 import { SpotNumbers } from "./SpotNumbers";
 import { SpotRitual } from "./SpotRitual";
@@ -18,6 +21,12 @@ export function BrandSpot({ play }: { play: BrandPlay }) {
       return <SpotNumbers play={play} />;
     case "ritual":
       return <SpotRitual play={play} />;
+    case "contact":
+      return <SpotContact play={play} />;
+    case "hours":
+      return <SpotHours play={play} />;
+    case "gallery":
+      return <SpotGallery play={play} />;
     default:
       return <SpotStages play={play} />;
   }

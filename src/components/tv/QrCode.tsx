@@ -56,12 +56,36 @@ function QrCodeImpl({ value, dark, light = "#FFFFFF", className }: Props) {
 
 export const QrCode = memo(QrCodeImpl);
 
-/** Tarjeta blanca con QR + "Escanea para ver temario". La posición la decide cada escena vía className. */
+function ScanIcon() {
+  return (
+    <svg className="qr-ico" viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="6" y="2" width="12" height="20" rx="2.6" fill="none" stroke="currentColor" strokeWidth="2" />
+      <path d="M9.5 8h2v2h-2zM12.5 8h2v2h-2zM9.5 11h2v2h-2zM13 12h1.5v1.5H13z" fill="currentColor" />
+      <path d="M10.5 18.5h3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/**
+ * Tarjeta blanca con QR + "Escanea para ver temario", con esquinas de visor que "respiran" y un pulso
+ * alrededor para atraer la mirada (solo transform/opacity; las esquinas nunca tapan los módulos del QR).
+ * La posición la decide cada escena vía className.
+ */
 export function QrBadge({ url, dark, className = "" }: { url: string; dark: string; className?: string }) {
   return (
     <div className={`qr-badge ${className}`}>
-      <QrCode value={url} dark={dark} className="qr-svg" />
-      <div className="qr-label">Escanea para ver temario</div>
+      <span className="qr-pulse" aria-hidden="true" />
+      <span className="qr-corner c-tl" aria-hidden="true" />
+      <span className="qr-corner c-tr" aria-hidden="true" />
+      <span className="qr-corner c-bl" aria-hidden="true" />
+      <span className="qr-corner c-br" aria-hidden="true" />
+      <div className="qr-card">
+        <QrCode value={url} dark={dark} className="qr-svg" />
+        <div className="qr-label">
+          <ScanIcon />
+          <span>Escanea para ver temario</span>
+        </div>
+      </div>
     </div>
   );
 }
