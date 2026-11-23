@@ -1,0 +1,608 @@
+/*
+ * Diseños editoriales (escenas 6–7 y anuncios de marca), pensados primero para 9:16.
+ * Mismas reglas que tv.css para LG webOS (Chromium 79): sin `gap` en flex, sin `inset`, sin `aspect-ratio`;
+ * solo se animan transform/opacity (y un trazo SVG por anuncio).
+ */
+
+/* ---------- Base editorial ---------- */
+.ed {
+  --mx: 7vmin;
+  --main-r: var(--mx);
+  --foot-w: 22vw;
+  background: var(--bg);
+  color: var(--ink);
+}
+@media (orientation: landscape) {
+  .ed {
+    --mx: 5vmin;
+    --main-r: calc(var(--foot-w) + var(--mx) * 2 + 2vmin);
+    --q: 18vmin;
+  }
+}
+
+.ed-serif {
+  font-family: var(--font-serif), Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+.ed-mono {
+  font-family: var(--font-mono), "Courier New", monospace;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* Revelado por máscara: la palabra sube desde detrás de su línea. */
+.rv-w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0 0.08em 0.1em 0;
+  margin: 0 -0.08em -0.1em 0;
+}
+.rv-i {
+  display: inline-block;
+  animation: rv-up 0.85s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+@keyframes rv-up {
+  from { transform: translateY(110%); }
+  to { transform: none; }
+}
+
+.ed-up { animation: ed-up 0.75s cubic-bezier(0.2, 0.9, 0.2, 1) both; }
+@keyframes ed-up {
+  from { opacity: 0; transform: translateY(4vmin); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------- Cabecera de revista ---------- */
+.ed-mast {
+  position: absolute;
+  z-index: 20;
+  top: 4vh;
+  left: var(--mx);
+  right: var(--mx);
+}
+.ed-mast-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  animation: fade-in 0.6s ease-out 0.1s both;
+}
+.ed-mast-logo { font-size: 6.4vmin; }
+.ed-mast-label { font-size: 2.2vmin; padding-bottom: 0.6vmin; }
+.ed-rule {
+  height: 0.35vmin;
+  margin-top: 1.8vmin;
+  background: currentColor;
+  transform-origin: left center;
+  animation: rule-draw 0.9s cubic-bezier(0.7, 0, 0.2, 1) 0.15s both;
+}
+@keyframes rule-draw {
+  from { transform: scaleX(0); }
+  to { transform: none; }
+}
+@media (orientation: landscape) {
+  .ed-mast { top: 4.5vh; }
+  .ed-mast-logo { font-size: 5vmin; }
+  .ed-mast-label { font-size: 1.9vmin; }
+}
+
+/* ---------- Cierre: programa/contacto + QR ---------- */
+.ed-foot {
+  position: absolute;
+  z-index: 20;
+  left: var(--mx);
+  right: var(--mx);
+  bottom: 4vh;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-top: 2.6vmin;
+  border-top: 0.35vmin solid currentColor;
+}
+.ed-foot-info { flex: 1; min-width: 0; padding-right: 4vmin; }
+.ed-foot-label { font-size: 2.2vmin; opacity: 0.85; }
+.ed-foot-title { margin-top: 1.2vmin; font-size: 7.6vmin; line-height: 0.95; }
+.ed-foot-meta { margin-top: 1.6vmin; font-size: 2.3vmin; }
+.qr-badge.qr-inline {
+  position: relative;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  flex-shrink: 0;
+}
+@media (orientation: landscape) {
+  .ed-foot {
+    left: auto;
+    right: var(--mx);
+    top: 15vh;
+    bottom: 6vh;
+    width: var(--foot-w);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 0 0 0 3.5vmin;
+    border-top: 0;
+    border-left: 0.35vmin solid currentColor;
+  }
+  .ed-foot-info { padding-right: 0; }
+  .ed-foot-title { font-size: 5.6vmin; }
+}
+
+/* =================== Escena 6 · Portada editorial =================== */
+.cv-photo {
+  position: absolute;
+  top: 13.5vh;
+  left: var(--mx);
+  right: var(--mx);
+  height: 35vh;
+}
+.cv-photo-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--pop);
+}
+.cv-photo-img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: kenburns 14s ease-out both;
+}
+.cv-curtain {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: center top;
+  animation: curtain 1s cubic-bezier(0.7, 0, 0.2, 1) 0.45s both;
+}
+@keyframes curtain {
+  from { transform: scaleY(1); }
+  to { transform: scaleY(0); }
+}
+.cv-caption {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 1.4vmin;
+  font-size: 1.9vmin;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  animation: fade-in 0.6s ease-out 1.2s both;
+}
+.cv-text {
+  position: absolute;
+  top: 54vh;
+  left: var(--mx);
+  right: var(--mx);
+}
+.cv-hero {
+  font-style: italic;
+  line-height: 0.92;
+  white-space: nowrap;
+  font-size: 18vmin;
+  font-size: min(26vmin, calc(86vw / (var(--len) * 0.44)));
+}
+.cv-title { margin-top: 2.4vmin; font-size: 6.4vmin; line-height: 0.95; }
+.cv-deck { margin-top: 2vmin; font-size: 5.2vmin; line-height: 1.1; max-width: 92%; }
+
+@media (orientation: landscape) {
+  .cv-photo { top: 15vh; bottom: 9vh; height: auto; right: auto; width: 30vw; }
+  .cv-text { top: 18vh; left: calc(30vw + var(--mx) * 2); right: var(--main-r); }
+  .cv-hero { font-size: 14vmin; font-size: min(20vmin, calc((100vw - 30vw - var(--foot-w) - 24vmin) / (var(--len) * 0.44))); }
+  .cv-title { font-size: 5.4vmin; }
+  .cv-deck { font-size: 4.2vmin; }
+}
+
+/* =================== Escena 7 · Índice de programas =================== */
+.sc-index { --row: 6vh; }
+.ix-head { position: absolute; top: 13vh; left: var(--mx); right: var(--mx); }
+.ix-title { font-size: 7.4vmin; line-height: 1.04; }
+.ix-title em { font-style: italic; }
+.ix-window {
+  position: absolute;
+  top: 26vh;
+  left: var(--mx);
+  right: var(--main-r);
+  height: calc(var(--row) * 6);
+  overflow: hidden;
+  border-top: 0.35vmin solid currentColor;
+  border-bottom: 0.35vmin solid currentColor;
+}
+.ix-list { transition: transform 2.4s cubic-bezier(0.65, 0, 0.25, 1); }
+.ix-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: var(--row);
+  padding: 0 2vmin;
+  border-bottom: 0.2vmin solid currentColor;
+  animation: fade-in 0.5s ease-out both;
+  transition: color 0.35s ease 0.25s;
+}
+.ix-row > * { position: relative; z-index: 1; }
+.ix-row > .ix-hl {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--pop);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.6s cubic-bezier(0.7, 0, 0.2, 1);
+}
+.ph-2 .ix-row.on > .ix-hl { transform: none; }
+.ph-2 .ix-row.on { color: var(--pop-ink); }
+.ix-num { width: 8vmin; flex-shrink: 0; font-size: 2.2vmin; }
+.ix-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 4.8vmin;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ix-benefit { margin-left: 2vmin; font-size: 3.6vmin; font-style: italic; white-space: nowrap; }
+.ix-ages { display: none; margin-left: 3vmin; font-size: 1.9vmin; white-space: nowrap; }
+.ix-arrow { margin-left: 2.4vmin; font-size: 3.4vmin; opacity: 0; transition: opacity 0.3s ease 0.5s; }
+.ph-2 .ix-row.on .ix-arrow { opacity: 1; }
+.ix-detail { position: absolute; top: 64vh; left: var(--mx); right: var(--mx); }
+.ix-hook { font-size: 6.4vmin; line-height: 0.98; }
+.ix-sub { margin-top: 1.6vmin; font-size: 3.4vmin; font-weight: 600; line-height: 1.2; }
+
+@media (orientation: landscape) {
+  .sc-index { --row: 7.4vh; }
+  .ix-head { top: 15vh; right: var(--main-r); }
+  .ix-title { font-size: 5.4vmin; }
+  .ix-window { top: 27vh; }
+  .ix-name { font-size: 4vmin; }
+  .ix-benefit { font-size: 3.2vmin; }
+  .ix-ages { display: block; }
+  .ix-detail { top: auto; bottom: 6vh; right: var(--main-r); }
+  .ix-hook { font-size: 4.8vmin; }
+  .ix-sub { font-size: 2.8vmin; }
+}
+
+/* =================== Marca · Testimonio =================== */
+.tm-seal {
+  position: absolute;
+  z-index: 5;
+  top: 12vh;
+  right: var(--mx);
+  width: 24vmin;
+  height: 24vmin;
+  animation: pop-in 0.7s cubic-bezier(0.2, 1.4, 0.4, 1) 0.4s both;
+}
+.tm-seal-ring { position: absolute; top: 0; left: 0; width: 100%; height: 100%; animation: spin 22s linear infinite; }
+.tm-seal-bg { fill: var(--pop); }
+.tm-seal-inner { fill: none; stroke: var(--pop-ink); stroke-width: 0.8; }
+.tm-seal-ring text {
+  fill: var(--pop-ink);
+  font-family: var(--font-mono), "Courier New", monospace;
+  font-size: 7.4px;
+  letter-spacing: 1px;
+}
+.tm-seal-num {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pop-ink);
+  font-size: 8vmin;
+}
+.tm-body { position: absolute; top: 13vh; left: var(--mx); right: var(--mx); }
+.tm-mark {
+  height: 23vmin;
+  font-size: 38vmin;
+  line-height: 0.9;
+  color: var(--accent);
+  animation: pop-in 0.6s cubic-bezier(0.2, 1.4, 0.4, 1) 0.2s both;
+}
+.tm-quote { margin: 0; line-height: 1.1; }
+.tm-quote.q-l { font-size: 10vmin; }
+.tm-quote.q-m { font-size: 8.4vmin; }
+.tm-quote.q-s { font-size: 7.1vmin; }
+.tm-author { margin-top: 4vmin; }
+.tm-dash { display: block; width: 10vmin; height: 0.5vmin; margin-bottom: 2vmin; background: currentColor; }
+.tm-name { display: block; font-size: 4.6vmin; font-weight: 700; }
+.tm-role { display: block; margin-top: 0.8vmin; font-size: 2.3vmin; }
+.tm-result {
+  display: inline-block;
+  margin-top: 3vmin;
+  padding: 1.5vmin 3vmin 1.5vmin 2.4vmin;
+  border-radius: 99vmin;
+  background: var(--pop);
+  color: var(--pop-ink);
+  font-size: 3.2vmin;
+  font-weight: 700;
+}
+.tm-result .icon { margin-right: 0.5em; }
+
+@media (orientation: landscape) {
+  .tm-seal { top: 14vh; right: var(--main-r); width: 20vmin; height: 20vmin; }
+  .tm-body { top: 14vh; right: calc(var(--main-r) + 24vmin); }
+  .tm-mark { height: 12vmin; font-size: 26vmin; }
+  .tm-quote.q-l { font-size: 7.8vmin; }
+  .tm-quote.q-m { font-size: 6.8vmin; }
+  .tm-quote.q-s { font-size: 5.8vmin; }
+  .tm-author { margin-top: 3vmin; }
+  .tm-name { font-size: 3.6vmin; }
+  .tm-result { font-size: 2.6vmin; }
+}
+
+/* =================== Marca · El método =================== */
+.me-head { position: absolute; top: 13vh; left: var(--mx); right: var(--mx); font-size: 7.8vmin; line-height: 1.04; }
+.me-steps { position: absolute; top: 28vh; left: var(--mx); right: var(--mx); }
+.me-line {
+  position: absolute;
+  top: 7vmin;
+  bottom: 14vmin;
+  left: 6.75vmin;
+  width: 0.5vmin;
+}
+.me-line::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: currentColor;
+  opacity: 0.2;
+}
+.me-line-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: currentColor;
+  transform-origin: center top;
+  animation: grow-y 3.8s cubic-bezier(0.6, 0, 0.3, 1) 1.7s both;
+}
+.me-step + .me-step { margin-top: 2.6vh; }
+.me-step {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  animation: me-on 0.6s ease both;
+}
+@keyframes me-on {
+  from { opacity: 0.25; transform: translateX(-1.5vmin); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes grow-y {
+  from { transform: scaleY(0); }
+  to { transform: none; }
+}
+@keyframes grow-x {
+  from { transform: scaleX(0); }
+  to { transform: none; }
+}
+.me-dot {
+  position: relative;
+  flex-shrink: 0;
+  width: 14vmin;
+  height: 14vmin;
+  border-radius: 50%;
+  border: 0.5vmin solid currentColor;
+  background: var(--bg);
+  overflow: hidden;
+}
+.me-dot-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pop-in 0.6s cubic-bezier(0.2, 1.5, 0.4, 1) both;
+}
+.me-numeral {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-ink);
+  font-size: 7vmin;
+}
+.me-numeral.ink { color: var(--ink); }
+.me-copy { margin-left: 5vmin; min-width: 0; }
+.me-verb { font-size: 7.4vmin; line-height: 0.95; }
+.me-title { margin-top: 0.8vmin; font-size: 2.3vmin; }
+.me-text { margin-top: 1vmin; font-size: 3vmin; line-height: 1.22; }
+
+@media (orientation: landscape) {
+  .me-head { top: 15vh; right: var(--main-r); font-size: 5.8vmin; }
+  .me-steps { top: 40vh; right: var(--main-r); display: flex; }
+  .me-line { top: 6vmin; bottom: auto; left: 6vmin; right: calc((100% - 6vmin) / 3 - 6vmin); width: auto; height: 0.5vmin; }
+  .me-line-fill { transform-origin: left center; animation-name: grow-x; }
+  .me-step { flex: 1; flex-direction: column; min-width: 0; }
+  .me-step + .me-step { margin-top: 0; margin-left: 3vmin; }
+  .me-dot { width: 12vmin; height: 12vmin; }
+  .me-numeral { font-size: 6vmin; }
+  .me-copy { margin-left: 0; margin-top: 3vmin; }
+  .me-verb { font-size: 6.4vmin; }
+  .me-text { font-size: 2.6vmin; }
+}
+
+/* =================== Marca · En números =================== */
+.nu-head { position: absolute; top: 13vh; left: var(--mx); right: var(--mx); font-size: 11vmin; font-style: italic; line-height: 1; }
+.nu-grid {
+  position: absolute;
+  top: 33vh;
+  left: var(--mx);
+  right: var(--mx);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 5vmin;
+  grid-row-gap: 4vh;
+}
+.nu-tile { min-width: 0; padding-top: 2.2vmin; border-top: 0.35vmin solid currentColor; }
+.nu-value { font-size: 18vmin; line-height: 1.1; white-space: nowrap; }
+.nu-prefix { display: inline-block; margin-right: 1.4vmin; font-size: 2.8vmin; vertical-align: top; margin-top: 3vmin; }
+.nu-text { font-size: 0.6em; }
+.nu-label { margin-top: 1vmin; font-size: 2.3vmin; }
+.od { display: inline-block; }
+.od-col { position: relative; display: inline-block; height: 1.1em; overflow: hidden; vertical-align: top; }
+.od-ghost { visibility: hidden; }
+.od-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: transform 1.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.od-d { display: block; height: 1.1em; text-align: center; }
+
+@media (orientation: landscape) {
+  .nu-head { top: 15vh; right: var(--main-r); font-size: 8vmin; }
+  .nu-grid { top: 42vh; right: var(--main-r); grid-template-columns: 1fr 1fr 1fr 1fr; grid-column-gap: 3.5vmin; }
+  .nu-value { font-size: 12vmin; }
+  .nu-prefix { font-size: 2.2vmin; margin-top: 2vmin; }
+  .nu-label { font-size: 1.9vmin; }
+}
+
+/* =================== Marca · Los 5 Minutos =================== */
+.ri-head { position: absolute; top: 13vh; left: var(--mx); right: var(--mx); font-size: 8.4vmin; line-height: 1.04; }
+.ri-ring {
+  position: absolute;
+  top: 28vh;
+  left: 50%;
+  width: 40vmin;
+  height: 40vmin;
+  margin-left: -20vmin;
+}
+.ri-ring svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.ri-track { fill: none; stroke: currentColor; stroke-width: 6; opacity: 0.15; }
+.ri-progress {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: ri-prog 6.5s ease-in-out 0.5s both;
+}
+@keyframes ri-prog {
+  0%, 15% { stroke-dashoffset: 100; }
+  23%, 38% { stroke-dashoffset: 75; }
+  46%, 61% { stroke-dashoffset: 50; }
+  69%, 84% { stroke-dashoffset: 25; }
+  92%, 100% { stroke-dashoffset: 0; }
+}
+.ri-center {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.ri-five { font-size: 19vmin; line-height: 0.9; }
+.ri-min { margin-top: 1vmin; font-size: 2.4vmin; }
+.ri-items {
+  position: absolute;
+  top: 53vh;
+  left: var(--mx);
+  right: var(--mx);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 5vmin;
+  grid-row-gap: 2.6vh;
+}
+.ri-item { display: flex; align-items: flex-start; min-width: 0; }
+.ri-icon {
+  flex-shrink: 0;
+  width: 9vmin;
+  height: 9vmin;
+  padding: 2vmin;
+  border-radius: 50%;
+  background: var(--pop);
+  color: var(--pop-ink);
+}
+.ri-icon svg { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ri-icon svg .fill { fill: currentColor; stroke: none; }
+.ri-copy { display: block; margin-left: 2.6vmin; min-width: 0; }
+.ri-title { display: block; font-size: 3.5vmin; font-weight: 700; line-height: 1.1; }
+.ri-text { display: block; margin-top: 0.8vmin; font-size: 2.7vmin; line-height: 1.25; }
+
+@media (orientation: landscape) {
+  .ri-head { top: 15vh; right: var(--main-r); font-size: 6vmin; }
+  .ri-ring { top: 33vh; left: var(--mx); margin-left: 0; width: 46vh; height: 46vh; }
+  .ri-five { font-size: 16vmin; }
+  .ri-items { top: 34vh; left: calc(var(--mx) + 46vh + 5vmin); right: var(--main-r); grid-row-gap: 5vh; }
+  .ri-icon { width: 8vmin; height: 8vmin; }
+  .ri-title { font-size: 2.9vmin; }
+  .ri-text { font-size: 2.3vmin; }
+}
+
+/* =================== Marca · Programas para cada etapa =================== */
+.sg-head { position: absolute; top: 13vh; left: var(--mx); right: var(--mx); font-size: 8.6vmin; line-height: 1.02; }
+.sg-list { position: absolute; top: 26vh; left: var(--mx); right: var(--mx); }
+.sg-card {
+  padding: 2.2vmin 3vmin 2.6vmin;
+  border: 0.35vmin solid currentColor;
+  border-radius: 2vmin;
+  background: var(--bg);
+  animation: sg-in 0.8s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+.sg-card + .sg-card { margin-top: 1.8vh; }
+.sg-card.on { background: var(--pop); color: var(--pop-ink); border-color: var(--pop); }
+@keyframes sg-in {
+  from { opacity: 0; transform: translateX(30vw); }
+  to { opacity: 1; transform: none; }
+}
+.sg-top { display: flex; justify-content: space-between; font-size: 2.2vmin; }
+.sg-label { margin-top: 1vmin; font-size: 6.4vmin; line-height: 0.95; }
+.sg-summary { margin-top: 0.6vmin; font-size: 4.2vmin; font-style: italic; line-height: 1.1; }
+.sg-chips { display: flex; flex-wrap: nowrap; overflow: hidden; margin-top: 0.6vmin; }
+.sg-chip {
+  margin: 1.2vmin 1.4vmin 0 0;
+  padding: 0.7vmin 1.8vmin;
+  border: 0.3vmin solid currentColor;
+  border-radius: 99vmin;
+  font-size: 2.5vmin;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.sg-chip.hot { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.sg-chip { flex-shrink: 0; }
+
+@media (orientation: landscape) {
+  .sg-head { top: 15vh; right: var(--main-r); font-size: 6.4vmin; }
+  .sg-list { top: 30vh; right: var(--main-r); display: flex; align-items: flex-start; }
+  .sg-card { flex: 1; min-width: 0; padding: 2.4vmin 2.6vmin 3vmin; }
+  .sg-top { display: block; }
+  .sg-ages { display: block; margin-top: 0.6vmin; }
+  .sg-chips { flex-wrap: wrap; }
+  .sg-card + .sg-card { margin-top: 0; margin-left: 2.4vmin; }
+  .sg-label { margin-top: 2vmin; font-size: 5vmin; }
+  .sg-summary { font-size: 3.4vmin; }
+  .sg-chip { font-size: 2vmin; }
+}

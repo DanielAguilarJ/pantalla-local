@@ -10,11 +10,13 @@ import type { Playlist, PlaylistManual, PlaylistReel } from "@/lib/types";
 import { CommercialSlide } from "./CommercialSlide";
 import {
   COMMERCIAL_MS,
+  isSceneId,
+  isSpotId,
   planCommercial,
   toSources,
   type CommercialPlay,
   type CommercialSource,
-  type SceneId,
+  type PreviewTarget,
 } from "./engine";
 import { ImageSlide } from "./ImageSlide";
 import { KeepAwake } from "./KeepAwake";
@@ -56,11 +58,13 @@ interface Props {
   initial: Playlist | null;
   demo: boolean;
   preview: boolean;
-  /** Solo para vista previa/pruebas: reproduce únicamente comerciales con esta escena. */
-  forceScene?: SceneId;
+  /** Solo para vista previa/pruebas: reproduce únicamente esa escena de curso o ese anuncio de marca. */
+  forceScene?: PreviewTarget;
+  /** Solo para vista previa: fija una de las 6 paletas para revisarla sin esperar al día que le toca. */
+  forcePalette?: Palette;
 }
 
-export function TvPlayer({ initial, demo, preview, forceScene }: Props) {
+export function TvPlayer({ initial, demo, preview, forceScene, forcePalette }: Props) {
   const queueRef = useRef<WeightedQueue<PlaylistReel, CommercialSource, PlaylistManual> | null>(null);
   if (!queueRef.current) queueRef.current = new WeightedQueue();
 
@@ -70,7 +74,9 @@ export function TvPlayer({ initial, demo, preview, forceScene }: Props) {
 
   const currentRef = useRef<Current | null>(null);
   const keyRef = useRef(0);
+  // Contadores separados: el de cursos rota escenas; el de cada anuncio de marca rota sus variantes (testimonios).
   const commercialCount = useRef(0);
+  const spotCounts = useRef<Record<string, number>>({});
   const versionRef = useRef("");
   const lastSyncRef = useRef(0);
   const lastAdvanceRef = useRef(Date.now());
@@ -91,7 +97,7 @@ export function TvPlayer({ initial, demo, preview, forceScene }: Props) {
       return;
     }
 
-    const today = paletteForSeed(dailySeed()); // la paleta cambia sola a medianoche
+    const today = forcePalette || paletteForSeed(dailySeed()); // la paleta cambia sola a medianoche
     const next = queueRef.current?.next() ?? null;
     if (!next) {
       setPalette(today);
@@ -114,11 +120,20 @@ export function TvPlayer({ initial, demo, preview, forceScene }: Props) {
           : { key, type: "manual-image", src: next.item.src, durationSec: next.item.durationSec },
       );
     } else {
-      const play = planCommercial(next.item, commercialCount.current++, new Date(), forceScene);
+      const src = next.item;
+      let index: number;
+      if (src.kind === "brand") {
+        index = spotCounts.current[src.spot] || 0;
+        spotCounts.current[src.spot] = index + 1;
+      } else {
+        index = commercialCount.current++;
+      }
+      const planned = planCommercial(src, index, new Date(), isSceneId(forceScene) ? forceScene : undefined);
+      const play = forcePalette ? { ...planned, palette: forcePalette } : planned;
       setPalette(play.palette);
       show({ key, type: "commercial", play });
     }
-  }, [preview, show, forceScene]);
+  }, [preview, show, forceScene, forcePalette]);
 
   /** Cada slide recibe un "terminé" atado a su key: avisos duplicados o tardíos no saltan otro anuncio. */
   const onDone = useMemo(() => {
@@ -132,7 +147,13 @@ export function TvPlayer({ initial, demo, preview, forceScene }: Props) {
     (p: Playlist) => {
       versionRef.current = p.version;
       const sources = toSources(p);
-      queueRef.current?.setSources(forceScene ? { reel: [], commercial: sources.commercial, manual: [] } : sources);
+      if (!forceScene) queueRef.current?.setSources(sources);
+      else {
+        const commercial = sources.commercial.filter((s) =>
+          isSpotId(forceScene) ? s.kind === "brand" && s.spot === forceScene : s.kind === "course",
+        );
+        queueRef.current?.setSources({ reel: [], commercial, manual: [] });
+      }
       // No interrumpe el anuncio en curso; solo arranca si la pantalla estaba vacía.
       if (!currentRef.current) advance();
     },

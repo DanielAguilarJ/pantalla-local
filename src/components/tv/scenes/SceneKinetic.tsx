@@ -2,13 +2,13 @@
 
 import type { CSSProperties } from "react";
 import { QrBadge } from "../QrCode";
-import type { CommercialPlay } from "../engine";
+import type { CoursePlay } from "../engine";
 import { ArrowIcon, BrandBug, PriceOrContact, splitWords, StaggerWords } from "./shared";
 
 const UNDERLINE_PATH = "M2 18 C 40 6, 80 26, 120 14 S 190 4, 230 16 S 280 22, 298 10";
 
 /** Escena 2 · Tipografía cinética: palabras gigantes elásticas, subrayado SVG trazado en vivo y bloque de color. */
-export function SceneKinetic({ play }: { play: CommercialPlay }) {
+export function SceneKinetic({ play }: { play: CoursePlay }) {
   const { course, palette } = play;
   const words = splitWords(course.hook_headline);
   const maxLen = Math.max(4, ...words.map((w) => w.length));

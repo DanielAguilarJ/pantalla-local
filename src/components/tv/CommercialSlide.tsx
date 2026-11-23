@@ -2,11 +2,14 @@
 
 import { useEffect, useRef } from "react";
 import { COMMERCIAL_MS, type CommercialPlay } from "./engine";
+import { SceneCover } from "./scenes/SceneCover";
 import { SceneFlash } from "./scenes/SceneFlash";
+import { SceneIndex } from "./scenes/SceneIndex";
 import { SceneKinetic } from "./scenes/SceneKinetic";
 import { SceneMockup } from "./scenes/SceneMockup";
 import { SceneSplit } from "./scenes/SceneSplit";
 import { SceneTicker } from "./scenes/SceneTicker";
+import { BrandSpot } from "./spots/BrandSpot";
 
 /** Comercial animado de 12 s. Todo es CSS/SVG/Canvas en el navegador: cero IA y cero video pre-renderizado. */
 export function CommercialSlide({ play, onDone }: { play: CommercialPlay; onDone: () => void }) {
@@ -20,6 +23,7 @@ export function CommercialSlide({ play, onDone }: { play: CommercialPlay; onDone
     return () => clearTimeout(t);
   }, []);
 
+  if (play.kind === "brand") return <BrandSpot play={play} />;
   switch (play.scene) {
     case "mockup":
       return <SceneMockup play={play} />;
@@ -29,6 +33,10 @@ export function CommercialSlide({ play, onDone }: { play: CommercialPlay; onDone
       return <SceneTicker play={play} />;
     case "split":
       return <SceneSplit play={play} />;
+    case "cover":
+      return <SceneCover play={play} />;
+    case "index":
+      return <SceneIndex play={play} />;
     default:
       return <SceneFlash play={play} />;
   }

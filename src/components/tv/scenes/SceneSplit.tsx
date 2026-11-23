@@ -4,11 +4,11 @@ import { useId } from "react";
 import { shortCourseName } from "@/lib/copy";
 import { GenerativeCanvas } from "../GenerativeCanvas";
 import { QrBadge } from "../QrCode";
-import type { CommercialPlay } from "../engine";
+import type { CoursePlay } from "../engine";
 import { ArrowIcon, BrandBug, CourseImage, PriceOrContact, StaggerWords } from "./shared";
 
 /** Escena 4 · Mitad patrón generativo (Canvas + SVG), mitad oferta del curso. */
-export function SceneSplit({ play }: { play: CommercialPlay }) {
+export function SceneSplit({ play }: { play: CoursePlay }) {
   const { course, palette } = play;
   const pathId = `ring-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const ringText = `${shortCourseName(course.title)} • Inscríbete • Escanea • `.toUpperCase();
