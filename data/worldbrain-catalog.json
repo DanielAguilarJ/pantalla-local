@@ -1,6 +1,6 @@
 {
   "source": "https://ultravelozmente.com/ (índice de programas, noviembre 2026)",
-  "note": "Catálogo base de WorldBrain México. La pantalla lo usa cuando Make.com no envía cursos y Make.com puede leerlo en GET /api/catalog. El sitio no publica precios, por eso price va vacío. offer/offer_short/urgency copian la oferta publicada en la página de cada programa (vacío si la página no publica una). photo_url: foto con personas publicada en la página del programa (las caras atraen la mirada más que una captura de pantalla); vacío si no hay.",
+  "note": "Catálogo base de WorldBrain México. La pantalla lo usa cuando Make.com no envía cursos y Make.com puede leerlo en GET /api/catalog. El sitio no publica precios, por eso price va vacío. offer/offer_short/urgency copian la oferta publicada en la página de cada programa (vacío si la página no publica una). photo_url: foto con personas publicada en la página del programa (las caras atraen la mirada más que una captura de pantalla); vacío si no hay. question: pregunta publicitaria escrita para la pantalla (no es dato del sitio): segmenta al público en un vistazo; máximo 7 palabras.",
   "programs": [
     {
       "id": "fotolectura",
@@ -19,7 +19,8 @@
       "offer": "",
       "offer_short": "",
       "urgency": "",
-      "photo_url": "https://ultravelozmente.com/images/fotolectura-encaje-lectura-enfocada.webp"
+      "photo_url": "https://ultravelozmente.com/images/fotolectura-encaje-lectura-enfocada.webp",
+      "question": "¿Lees y no retienes?"
     },
     {
       "id": "mathekids",
@@ -37,7 +38,8 @@
       "offer": "Clase muestra y diagnóstico sin costo",
       "offer_short": "Clase muestra gratis",
       "urgency": "",
-      "photo_url": ""
+      "photo_url": "",
+      "question": "¿Le cuestan las matemáticas?"
     },
     {
       "id": "juniormath",
@@ -55,7 +57,8 @@
       "offer": "Clase muestra gratis",
       "offer_short": "Clase muestra gratis",
       "urgency": "",
-      "photo_url": ""
+      "photo_url": "",
+      "question": "¿Se bloquea con los problemas?"
     },
     {
       "id": "lectoescritura",
@@ -73,7 +76,8 @@
       "offer": "Clase gratis con evaluación de nivel lector",
       "offer_short": "Clase gratis",
       "urgency": "",
-      "photo_url": ""
+      "photo_url": "",
+      "question": "¿Le cuesta leer?"
     },
     {
       "id": "robotics-code",
@@ -92,7 +96,8 @@
       "offer": "Primera clase gratis",
       "offer_short": "1.ª clase gratis",
       "urgency": "",
-      "photo_url": ""
+      "photo_url": "",
+      "question": "¿Solo juega con pantallas?"
     },
     {
       "id": "fastkids",
@@ -112,7 +117,8 @@
       "offer": "Clase muestra gratis + diagnóstico de nivel",
       "offer_short": "Clase muestra gratis",
       "urgency": "",
-      "photo_url": ""
+      "photo_url": "",
+      "question": "¿Le da miedo el inglés?"
     },
     {
       "id": "ciencia-astronomia",
@@ -130,7 +136,8 @@
       "offer": "Clase muestra sin costo y sin compromiso",
       "offer_short": "Clase muestra sin costo",
       "urgency": "",
-      "photo_url": ""
+      "photo_url": "",
+      "question": "¿Pregunta todo sobre el espacio?"
     },
     {
       "id": "homeschool-veloz",
@@ -149,7 +156,8 @@
       "offer": "Sesión informativa gratuita",
       "offer_short": "Sesión informativa gratis",
       "urgency": "Cupos limitados por semana",
-      "photo_url": ""
+      "photo_url": "",
+      "question": "¿La escuela no le funciona?"
     },
     {
       "id": "memoria-prodigiosa",
@@ -168,7 +176,8 @@
       "offer": "Clase muestra gratis de 45 minutos",
       "offer_short": "Clase muestra gratis",
       "urgency": "",
-      "photo_url": ""
+      "photo_url": "",
+      "question": "¿Estudias y se te olvida?"
     },
     {
       "id": "admision-universitaria",
@@ -186,7 +195,8 @@
       "offer": "Diagnóstico de cortesía + simulador de regalo",
       "offer_short": "Diagnóstico de cortesía",
       "urgency": "Cupo limitado · grupos reducidos",
-      "photo_url": ""
+      "photo_url": "",
+      "question": "¿Vas por la UNAM o el IPN?"
     },
     {
       "id": "comipems",
@@ -204,7 +214,8 @@
       "offer": "Diagnóstico gratuito en línea o presencial",
       "offer_short": "Diagnóstico gratis",
       "urgency": "",
-      "photo_url": ""
+      "photo_url": "",
+      "question": "¿Vas a presentar el COMIPEMS?"
     },
     {
       "id": "regularizacion-express",
@@ -223,7 +234,8 @@
       "offer": "Clase de diagnóstico sin costo",
       "offer_short": "Diagnóstico sin costo",
       "urgency": "",
-      "photo_url": ""
+      "photo_url": "",
+      "question": "¿Se atrasó en la escuela?"
     },
     {
       "id": "grandes-lideres",
@@ -242,7 +254,8 @@
       "offer": "Sesión diagnóstica de 60 minutos sin costo",
       "offer_short": "Sesión diagnóstica gratis",
       "urgency": "",
-      "photo_url": "https://ultravelozmente.com/images/gl-after-confident.webp"
+      "photo_url": "https://ultravelozmente.com/images/gl-after-confident.webp",
+      "question": "¿Le da pena hablar en público?"
     },
     {
       "id": "neurocomunicacion",
@@ -260,7 +273,8 @@
       "offer": "Cita de cortesía sin compromiso",
       "offer_short": "Cita de cortesía",
       "urgency": "",
-      "photo_url": ""
+      "photo_url": "",
+      "question": "¿Te cuesta hablar en público?"
     },
     {
       "id": "redaccion-ejecutiva",
@@ -278,7 +292,8 @@
       "offer": "Clase muestra gratuita",
       "offer_short": "Clase muestra gratis",
       "urgency": "",
-      "photo_url": ""
+      "photo_url": "",
+      "question": "¿Tus correos no convencen?"
     },
     {
       "id": "universidad-dominical",
@@ -296,7 +311,8 @@
       "offer": "Evaluación diagnóstica sin costo",
       "offer_short": "Evaluación sin costo",
       "urgency": "Cupos limitados",
-      "photo_url": "https://ultravelozmente.com/images/hero-dominical.webp"
+      "photo_url": "https://ultravelozmente.com/images/hero-dominical.webp",
+      "question": "¿Quieres terminar tus estudios?"
     },
     {
       "id": "alfa-cash",
@@ -314,7 +330,8 @@
       "offer": "",
       "offer_short": "",
       "urgency": "",
-      "photo_url": ""
+      "photo_url": "",
+      "question": "¿Tu presupuesto no cuadra?"
     }
   ]
 }

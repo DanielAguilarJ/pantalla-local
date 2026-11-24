@@ -42,6 +42,24 @@ En la rotación, los anuncios de marca ocupan ~37 % de los comerciales (los test
 Para revisar un diseño: `/tv?preview=1&scene=<id>&palette=<acido|worldbrain|coral|menta|senal|chicle>`, o desde
 `/admin → Vista previa → Diseño`.
 
+## Texto gigante (pantalla pequeña)
+
+`FitLines` (`src/components/tv/FitLines.tsx`) mide cada renglón con el texto real y lo agranda hasta ocupar todo
+el ancho disponible (tipografía apilada de espectacular), respetando el alto de su caja. En la StanbyMe 2 vertical
+los titulares de estos formatos quedan entre 16 y 30 vmin (5–10 cm). Son el 60 % de los comerciales de curso.
+
+| Formato | Qué muestra | `?scene=` |
+| --- | --- | --- |
+| Golpes de texto | Beneficio → programa → «GRATIS» → «ESCANEA AQUÍ» con flecha al QR; cambia de color cada ~3 s | `beats` |
+| Pregunta directa | «¿LE CUESTA LEER?» y la respuesta: el programa y su oferta real | `question` |
+| Edad gigante | «6–12 AÑOS»: papás y mamás saben en un segundo si es para su hijo | `age` |
+| Lo que incluye | Tres palomitas: oferta publicada, grupos de máx. 7, práctica guiada | `checklist` |
+| GRATIS (marca) | «GRATIS» + programas con primera sesión sin costo, uno tras otro | `free` |
+| Manifiesto (marca) | El titular del sitio en golpes: «No solo aprendas contenidos. Aprende cómo aprender.» | `slogan` |
+
+Las preguntas (`question` en `data/worldbrain-catalog.json`) son copy publicitario escrito para la pantalla, no datos
+del sitio; `npm run check:templates` valida que sean preguntas de máximo 7 palabras.
+
 ## Cierre después de cada anuncio
 
 Al terminar cada anuncio (comerciales, showreels, reels y anuncios manuales) aparecen 6 s de cierre

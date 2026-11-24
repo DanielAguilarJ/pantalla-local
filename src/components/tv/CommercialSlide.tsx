@@ -2,7 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import { COMMERCIAL_MS, type CommercialPlay } from "./engine";
+import { SceneAge } from "./scenes/SceneAge";
+import { SceneBeats } from "./scenes/SceneBeats";
+import { SceneChecklist } from "./scenes/SceneChecklist";
 import { SceneCover } from "./scenes/SceneCover";
+import { SceneQuestion } from "./scenes/SceneQuestion";
 import { SceneFlash } from "./scenes/SceneFlash";
 import { SceneIndex } from "./scenes/SceneIndex";
 import { SceneKinetic } from "./scenes/SceneKinetic";
@@ -54,6 +58,14 @@ function PlayBody({ play }: { play: CommercialPlay }) {
       return <SceneIndex play={play} />;
     case "scan":
       return <SceneScan play={play} />;
+    case "beats":
+      return <SceneBeats play={play} />;
+    case "question":
+      return <SceneQuestion play={play} />;
+    case "age":
+      return <SceneAge play={play} />;
+    case "checklist":
+      return <SceneChecklist play={play} />;
     default:
       return <SceneFlash play={play} />;
   }

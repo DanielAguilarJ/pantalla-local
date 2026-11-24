@@ -4,6 +4,9 @@ import { Fragment, useEffect, useState, type CSSProperties, type ReactNode } fro
 import { BrandLogo } from "@/components/BrandLogo";
 import { BRAND } from "@/lib/brand";
 import type { Palette } from "@/lib/palettes";
+import { FitLines } from "../FitLines";
+import { breakLines } from "../text";
+import { useOrientation } from "../useOrientation";
 import { QrBadge } from "../QrCode";
 import type { RosterItem } from "../engine";
 import { PhoneCta, WhatsIcon } from "../scenes/shared";
@@ -109,6 +112,7 @@ export function EdFooter({
   variant?: "program" | "contact";
   delayMs?: number;
 }) {
+  const portrait = useOrientation() === "portrait";
   // Prueba del "cuadro congelado": la llamada a la acción tiene que estar visible desde el primer segundo,
   // porque quien pasa caminando mira la pantalla 2–3 s.
   const style = { animationDelay: `${Math.min(delayMs, 900)}ms` } as CSSProperties;
@@ -118,7 +122,13 @@ export function EdFooter({
         {variant === "program" ? (
           <>
             <div className="ed-mono ed-foot-label">{label}</div>
-            <div className="ed-foot-title display">{featured.course.title}</div>
+            <FitLines
+              lines={breakLines(featured.course.title, 13)}
+              maxVmin={portrait ? 6.6 : 5.6}
+              minVmin={3.6}
+              fitHeight={false}
+              className="ed-foot-title"
+            />
             {featured.offer ? (
               // La oferta real reemplaza a los datos secundarios: es la razón para escanear.
               <div className="ed-foot-offer">
