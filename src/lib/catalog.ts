@@ -17,6 +17,8 @@ export interface CatalogProgram extends Course {
   urgency: string;
   /** Foto con personas publicada en la página del programa (vacía si no hay). */
   photo_url: string;
+  /** Pregunta publicitaria para la pantalla (≤ 7 palabras): segmenta al público de un vistazo. */
+  question: string;
 }
 
 export const CATALOG: CatalogProgram[] = (catalogData.programs as Array<Omit<CatalogProgram, "hook_headline" | "hook_subheadline">>).map(

@@ -9,6 +9,12 @@ type Mode = "portrait" | "landscape";
 const DESIGNS: { id: string; label: string }[] = [
   { id: "", label: "Rotación real (todo)" },
   { id: "endcard", label: "Cierre · QR + WhatsApp gigante (tras cada anuncio)" },
+  { id: "beats", label: "Texto gigante · Golpes de texto" },
+  { id: "question", label: "Texto gigante · Pregunta directa" },
+  { id: "age", label: "Texto gigante · Edad gigante" },
+  { id: "checklist", label: "Texto gigante · Lo que incluye" },
+  { id: "free", label: "Texto gigante · GRATIS (marca)" },
+  { id: "slogan", label: "Texto gigante · «Aprende cómo aprender» (marca)" },
   { id: "cover", label: "Curso · Portada editorial" },
   { id: "index", label: "Curso · Índice de programas" },
   { id: "scan", label: "Curso · QR gigante «Apunta tu cámara»" },

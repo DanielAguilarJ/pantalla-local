@@ -14,7 +14,11 @@ type Rand = () => number;
 export interface QueueItem {
   id: string;
   weight?: number;
+  /** Ítems con el mismo grupo (p. ej. dos lugares del mismo anuncio de marca) nunca salen seguidos. */
+  group?: string;
 }
+
+const keyOf = (x: QueueItem): string => x.group || x.id;
 
 class ShuffleBag<T extends QueueItem> {
   private items: T[] = [];
@@ -33,7 +37,7 @@ class ShuffleBag<T extends QueueItem> {
     this.items = items.slice();
     this.bag = this.bag.filter((i) => byId.has(i.id)).map((i) => byId.get(i.id) as T);
     const pending = new Set(this.bag.map((i) => i.id));
-    const fresh = items.filter((i) => !pending.has(i.id) && i.id !== this.lastId);
+    const fresh = items.filter((i) => !pending.has(i.id) && keyOf(i) !== this.lastId);
     // Los nuevos entran en posiciones aleatorias de la bolsa actual.
     for (const item of fresh) this.bag.splice(Math.floor(this.rand() * (this.bag.length + 1)), 0, item);
   }
@@ -55,12 +59,13 @@ class ShuffleBag<T extends QueueItem> {
       bag[i] = bag[j];
       bag[j] = t;
     }
-    // Separa copias contiguas del mismo ítem (y del último que salió).
+    // Separa copias contiguas del mismo ítem o grupo (y del último que salió).
     for (let i = 0; i < bag.length; i++) {
-      const prev = i === 0 ? this.lastId : bag[i - 1].id;
-      if (bag[i].id !== prev) continue;
+      const prev = i === 0 ? this.lastId : keyOf(bag[i - 1]);
+      if (keyOf(bag[i]) !== prev) continue;
+      const k = keyOf(bag[i]);
       for (let j = i + 1; j < bag.length; j++) {
-        if (bag[j].id !== prev && (j + 1 >= bag.length || bag[j + 1].id !== bag[i].id) && (j === 0 || bag[j - 1].id !== bag[i].id)) {
+        if (keyOf(bag[j]) !== prev && (j + 1 >= bag.length || keyOf(bag[j + 1]) !== k) && keyOf(bag[j - 1]) !== k) {
           const t = bag[i];
           bag[i] = bag[j];
           bag[j] = t;
@@ -76,15 +81,16 @@ class ShuffleBag<T extends QueueItem> {
     if (!this.bag.length) this.refill();
     // Nunca el mismo ítem dos veces seguidas (si hay otro disponible).
     let idx = 0;
-    if (this.items.length > 1 && this.bag[0].id === this.lastId) {
-      idx = this.bag.findIndex((x) => x.id !== this.lastId);
+    const groups = new Set(this.items.map(keyOf)).size;
+    if (groups > 1 && keyOf(this.bag[0]) === this.lastId) {
+      idx = this.bag.findIndex((x) => keyOf(x) !== this.lastId);
       if (idx < 0) {
         this.refill();
-        idx = Math.max(0, this.bag.findIndex((x) => x.id !== this.lastId));
+        idx = Math.max(0, this.bag.findIndex((x) => keyOf(x) !== this.lastId));
       }
     }
     const item = this.bag.splice(idx, 1)[0];
-    this.lastId = item.id;
+    this.lastId = keyOf(item);
     return item;
   }
 }

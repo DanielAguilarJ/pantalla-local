@@ -40,6 +40,7 @@ export async function GET() {
       offer: p.offer,
       offer_short: p.offer_short,
       urgency: p.urgency,
+      question: p.question,
     })),
   });
 }

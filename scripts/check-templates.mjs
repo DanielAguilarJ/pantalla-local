@@ -50,3 +50,12 @@ if (tr && !brand.testimonials.some((t) => t.id === tr.testimonial)) {
   process.exit(1);
 }
 console.log(`OK: ${brand.testimonials.length} fragmentos de testimonio textuales.`);
+
+// Preguntas de la pantalla: formato de pregunta y máximo 7 palabras (se leen de un vistazo).
+const catalog = JSON.parse(readFileSync(new URL("../data/worldbrain-catalog.json", import.meta.url), "utf8"));
+const badQ = catalog.programs.filter((p) => !/^¿[^?]+\?$/.test(p.question || "") || p.question.split(/\s+/).length > 7);
+if (badQ.length) {
+  console.error("Preguntas inválidas (¿…?, máx. 7 palabras):", badQ.map((p) => p.id).join(", "));
+  process.exit(1);
+}
+console.log(`OK: ${catalog.programs.length} preguntas de pantalla (≤ 7 palabras).`);

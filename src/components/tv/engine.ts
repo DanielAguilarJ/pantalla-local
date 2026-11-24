@@ -9,13 +9,27 @@ import type { Course, NewsItem, Playlist, PlaylistManual, PlaylistReel } from "@
 
 export const COMMERCIAL_MS = 12_000;
 
-/** Escenas de comercial de un curso (1–5 originales; 6–8 pensadas primero para pantalla vertical). */
-export type SceneId = "mockup" | "kinetic" | "ticker" | "split" | "flash" | "cover" | "index" | "scan";
-export const SCENES: SceneId[] = ["mockup", "kinetic", "ticker", "split", "flash", "cover", "index", "scan"];
+/**
+ * Escenas de comercial de un curso (1–5 originales; 6–8 pensadas primero para vertical;
+ * 9–12 "texto gigante": cada renglón llena el ancho de la pantalla, para leerse desde lejos).
+ */
+export type SceneId =
+  | "mockup" | "kinetic" | "ticker" | "split" | "flash" | "cover" | "index" | "scan"
+  | "beats" | "question" | "age" | "checklist";
+export const SCENES: SceneId[] = [
+  "mockup", "kinetic", "ticker", "split", "flash", "cover", "index", "scan",
+  "beats", "question", "age", "checklist",
+];
+/** Escenas de texto gigante: cuentan triple en el orden del día (60 % de los comerciales de curso). */
+export const BIG_SCENES: SceneId[] = ["beats", "question", "age", "checklist"];
 
 /** Anuncios institucionales de WorldBrain (no dependen de un solo curso). */
-export type SpotId = "testimonial" | "method" | "numbers" | "ritual" | "stages" | "contact" | "hours" | "gallery" | "story";
-export const SPOTS: SpotId[] = ["testimonial", "method", "numbers", "ritual", "stages", "contact", "hours", "gallery", "story"];
+export type SpotId =
+  | "testimonial" | "method" | "numbers" | "ritual" | "stages" | "contact" | "hours" | "gallery" | "story"
+  | "slogan" | "free";
+export const SPOTS: SpotId[] = [
+  "testimonial", "method", "numbers", "ritual", "stages", "contact", "hours", "gallery", "story", "slogan", "free",
+];
 
 export type PatternId = "truchet" | "rings" | "stripes" | "dots" | "blocks";
 const PATTERNS: PatternId[] = ["truchet", "rings", "stripes", "dots", "blocks"];
@@ -37,11 +51,13 @@ export interface RosterItem {
   urgency: string;
   /** Foto con personas (por el proxy /wb-media/); vacía si el programa no tiene. */
   photo: string;
+  /** Pregunta publicitaria del programa (vacía si el curso no está en el catálogo). */
+  question: string;
 }
 
 export type CommercialSource =
   | { id: string; weight: number; kind: "course"; course: Course; news: NewsItem[]; roster: RosterItem[] }
-  | { id: string; weight: number; kind: "brand"; spot: SpotId; roster: RosterItem[]; testimonials: Testimonial[] };
+  | { id: string; weight: number; group: string; kind: "brand"; spot: SpotId; roster: RosterItem[]; testimonials: Testimonial[] };
 
 interface PlayBase {
   seed: string;
@@ -90,6 +106,7 @@ function buildRoster(courses: Course[]): RosterItem[] {
       offerShort: p?.offer_short || "",
       urgency: p?.urgency || "",
       photo: p?.photo_url ? tvMediaUrl(p.photo_url) : "",
+      question: p?.question || "",
     };
   });
 }
@@ -141,15 +158,19 @@ export function toSources(
   // y, como comparten contador, cada aparición muestra un testimonio distinto.
   // La historia Antes/Después (caras reales + transformación) cuenta doble; solo si su programa está en pantalla.
   const storyOn = !!rosterFind(roster, brandData.transformation.program);
+  const offers = roster.filter((r) => r.offer).length;
   const spotSlots: SpotId[] = roster.length
     ? SPOTS.reduce<SpotId[]>((acc, s) => {
         if (s === "testimonial") return testimonials.length ? acc.concat([s, s, s]) : acc;
         if (s === "story") return storyOn ? acc.concat([s, s]) : acc;
+        // "GRATIS" gigante: necesita al menos 2 programas con oferta publicada; cuenta doble.
+        if (s === "free") return offers >= 2 ? acc.concat([s, s]) : acc;
         return acc.concat(s);
       }, [])
     : [];
   const brandSources: CommercialSource[] = spotSlots.map((spot, i) => ({
     id: `brand-${spot}-${i}`,
+    group: `brand-${spot}`,
     weight: spotWeight(spot, daypart),
     kind: "brand",
     spot,
@@ -159,9 +180,38 @@ export function toSources(
   return { reel: p.reels, commercial: courseSources.concat(brandSources), manual: p.manual };
 }
 
-/** Orden de escenas del día: todas aparecen en ciclo y nunca se repite escena en dos comerciales seguidos. */
+/** Separa repetidos contiguos en un ciclo (también entre el último y el primero). */
+function noAdjacent<T>(deck: T[]): T[] {
+  const n = deck.length;
+  const ok = (i: number) => deck[i] !== deck[(i + 1) % n] && deck[i] !== deck[(i - 1 + n) % n];
+  for (let i = 0; i < n; i++) {
+    const k = (i + 1) % n;
+    if (deck[i] !== deck[k]) continue;
+    for (let j = 0; j < n; j++) {
+      if (j === i || j === k) continue;
+      const t = deck[k];
+      deck[k] = deck[j];
+      deck[j] = t;
+      if (ok(k) && ok(j)) break;
+      deck[j] = deck[k];
+      deck[k] = t;
+    }
+  }
+  return deck;
+}
+
+const deckCache: { seed: string; deck: SceneId[] } = { seed: "", deck: [] };
+
+/**
+ * Orden de escenas del día: todas aparecen en ciclo, las de texto gigante tres veces por ciclo,
+ * y nunca se repite escena en dos comerciales seguidos.
+ */
 export function sceneFor(seed: string, playIndex: number): SceneId {
-  const order = shuffle(rngFrom("scenes", seed), SCENES);
+  if (deckCache.seed !== seed) {
+    deckCache.seed = seed;
+    deckCache.deck = noAdjacent(shuffle(rngFrom("scenes", seed), SCENES.concat(BIG_SCENES, BIG_SCENES)));
+  }
+  const order = deckCache.deck;
   return order[playIndex % order.length];
 }
 
@@ -197,6 +247,10 @@ export function planCommercial(
     // El programa recomendado también sigue la franja horaria (p. ej. infantiles a la salida de escuelas).
     let featured = weightedPick(rng, src.roster, daypartAt(now));
     if (src.spot === "story") featured = rosterFind(src.roster, brandData.transformation.program) || featured;
+    if (src.spot === "free") {
+      const withOffer = src.roster.filter((r) => r.offer);
+      if (withOffer.length) featured = weightedPick(rng, withOffer, daypartAt(now));
+    }
     if (src.spot === "testimonial" && src.testimonials.length) {
       // Recorre los testimonios en orden barajado del día: no se repite uno hasta mostrarlos todos.
       const order = shuffle(rngFrom("testimonials", seed), src.testimonials);
@@ -224,6 +278,7 @@ export function planCommercial(
     offerShort: "",
     urgency: "",
     photo: "",
+    question: "",
   };
   return {
     kind: "course",

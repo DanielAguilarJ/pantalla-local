@@ -280,5 +280,46 @@
       "image": "https://ultravelozmente.com/images/gl-after-confident.webp"
     },
     "time": "En dos meses"
+  },
+  "manifesto": {
+    "source": "Titular principal de ultravelozmente.com",
+    "beats": [
+      {
+        "lines": [
+          "No solo",
+          "aprendas",
+          "contenidos."
+        ],
+        "tone": "plain"
+      },
+      {
+        "lines": [
+          "Aprende",
+          "cómo",
+          "aprender."
+        ],
+        "tone": "accent"
+      },
+      {
+        "lines": [
+          "Desde",
+          "2000."
+        ],
+        "tone": "pop"
+      },
+      {
+        "lines": [
+          "Grupos",
+          "de 7."
+        ],
+        "tone": "plain",
+        "sub": "Máximo 7 participantes por grupo"
+      }
+    ]
+  },
+  "free": {
+    "kicker": "Pruébalo antes de inscribirte",
+    "word": "Gratis",
+    "note": "programas · primera sesión sin costo"
   }
 }

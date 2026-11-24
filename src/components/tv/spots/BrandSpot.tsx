@@ -8,6 +8,8 @@ import { SpotMethod } from "./SpotMethod";
 import { SpotNumbers } from "./SpotNumbers";
 import { SpotRitual } from "./SpotRitual";
 import { SpotStages } from "./SpotStages";
+import { SpotFree } from "./SpotFree";
+import { SpotSlogan } from "./SpotSlogan";
 import { SpotStory } from "./SpotStory";
 import { SpotTestimonial } from "./SpotTestimonial";
 
@@ -30,6 +32,10 @@ export function BrandSpot({ play }: { play: BrandPlay }) {
       return <SpotGallery play={play} />;
     case "story":
       return <SpotStory play={play} />;
+    case "slogan":
+      return <SpotSlogan play={play} />;
+    case "free":
+      return <SpotFree play={play} />;
     default:
       return <SpotStages play={play} />;
   }
